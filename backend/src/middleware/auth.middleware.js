@@ -2,19 +2,26 @@ import jwt from "jsonwebtoken";
 
 export const verifyJWT = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization || req.cookies?.jwt;
-    // console.log("Auth Header:", authHeader);
-    // Check header
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    // First, check the Authorization header for Bearer token
+    let token = null;
+    const authHeader = req.headers.authorization;
+
+    if (authHeader?.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    } else if (req.cookies?.jwt) {
+      // If no Bearer token, use the refresh token from cookies to get a new access token
+      // For now, just verify it's valid
+      token = req.cookies.jwt;
+    }
+
+    if (!token) {
       return res.status(401).json({
         message: "Unauthorized: No token provided",
       });
     }
-    const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); //verify token
-    // Attach user info to request
-    req.userId = decoded.userId; //userId from payload
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    req.userId = decoded.userId;
     next();
   } catch (error) {
     return res.status(401).json({

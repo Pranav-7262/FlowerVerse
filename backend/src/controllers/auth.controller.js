@@ -11,12 +11,15 @@ export const registerUser = async_handler(async (req, res) => {
   if ([userName, email, password].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
   }
+
   const isExitsUser = await User.findOne({
     $or: [{ email }, { userName }],
   });
+
   if (isExitsUser) {
     throw new ApiError(409, "User with email or username already exists");
   }
+
   const user = await User.create({
     email,
     userName,
@@ -31,9 +34,16 @@ export const registerUser = async_handler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
+  // Just return user - NO TOKENS YET
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered Successfully"));
+    .json(
+      new ApiResponse(
+        201,
+        createdUser,
+        "User registered successfully. Please login.",
+      ),
+    );
 });
 
 export const loginUser = async_handler(async (req, res) => {
