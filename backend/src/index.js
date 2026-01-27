@@ -21,14 +21,12 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use(cookieParser());
+
 app.use(express.json({ limit: "10mb" }));
 
 app.use(morgan("dev"));
-app.get("/", (req, res) => {
-  res.status(200).send({ message: "HELLO !!" });
-});
 
-app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/flowers", flowerRoutes);
 app.use("/api/cart", cartRoutes);

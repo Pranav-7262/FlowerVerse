@@ -1,27 +1,28 @@
 import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
-export const verifyJWT = (req, res, next) => {
+export const verifyJWT = async (req, res, next) => {
   try {
     // First, check the Authorization header for Bearer token
-    let token = null;
-    const authHeader = req.headers.authorization;
+    const token =
+      req.cookies?.accessToken ||
+      req.header("Authorization")?.replace("Bearer ", "");
 
-    if (authHeader?.startsWith("Bearer ")) {
-      token = authHeader.split(" ")[1];
-    } else if (req.cookies?.jwt) {
-      // If no Bearer token, use the refresh token from cookies to get a new access token
-      // For now, just verify it's valid
-      token = req.cookies.jwt;
-    }
-
+    // console.log(token);
     if (!token) {
-      return res.status(401).json({
-        message: "Unauthorized: No token provided",
-      });
+      throw new ApiError(401, "Unauthorized request");
     }
 
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    req.userId = decoded.userId;
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    const user = await User.findById(decodedToken?._id).select(
+      "-password -refreshToken",
+    );
+
+    if (!user) {
+      throw new ApiError(401, "Invalid Access Token");
+    }
+    req.userId = user._id;
     next();
   } catch (error) {
     return res.status(401).json({

@@ -4,8 +4,14 @@ import { useAuth } from "../contexts/AuthContext";
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
-  if (loading) return null;
-  if (!isAuthenticated) return <Navigate to="/login" />;
+  // ⛔ DO NOT redirect while loading
+  if (loading) {
+    return <div>Loading...</div>; // or spinner
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 };

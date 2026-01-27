@@ -6,12 +6,12 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [accessToken, setAccessToken] = useState(null);
 
-  // Load user on app startup (without refreshing token)
+  // Load user on app startup
   const loadUser = async () => {
     try {
-      const res = await api.get("/auth/current-user");
+      const res = await api.get("/auth/current-user"); // cookies sent auto
+      console.log("data : ", res.data.data.user);
       setUser(res.data.data.user);
     } catch {
       setUser(null);
@@ -25,30 +25,34 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await api.post("/auth/login", { email, password });
-    const token = res.data.data.accessToken;
-
-    setAccessToken(token);
-    setUser(res.data.data.user);
-
-    return res.data;
+    try {
+      const res = await api.post("/auth/login", { email, password });
+      console.log("login user : ", res.data.data.user);
+      setUser(res.data.data.user); // cookies already set in response
+      return res.data;
+    } catch (err) {
+      setUser(null);
+      console.log("error in login context :", err?.message);
+    }
   };
 
   const register = async (payload) => {
-    const res = await api.post("/auth/register", payload);
-    setUser(res.data.data);
-
-    return res.data;
+    try {
+      const res = await api.post("/auth/register", payload);
+      return res.data;
+    } catch (error) {
+      console.log("error in register context :", err?.message);
+    }
   };
 
   const logout = async () => {
     try {
-      await api.post("/auth/logout");
+      await api.post("/auth/logout"); // clears cookies
+      setUser(null);
     } catch (err) {
-      console.error("Logout error:", err);
+      console.error("Logout failed:", err);
+      setUser(null);
     }
-    setUser(null);
-    setAccessToken(null);
   };
 
   return (
@@ -57,7 +61,6 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         isAuthenticated: !!user,
-        accessToken,
         login,
         register,
         logout,
@@ -68,13 +71,22 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
-// 1. App loads → AuthContext calls loadUser() → Gets current user (no refresh)
-// 2. User logs in → Sets user + accessToken in state
-// 3. Request made → If 401 → axios interceptor catches it
-// 4. Interceptor refreshes token using httpOnly cookie
-// 5. Request retried with new token → User stays logged in
-// 6. User logs out → Clears state + calls logout endpoint
+// App Load
+//   ├─ loadUser() runs ONCE (useRef protection)
+//   ├─ Try GET /current-user
+//   ├─ If 401 → POST /refresh (interceptor handles auto-refresh too)
+//   ├─ Set accessToken in state & headers
+//   ├─ Retry GET /current-user
+//   └─ setLoading(false) → App renders
+
+// User Login
+//   ├─ POST /login → get token
+//   ├─ Set state & headers
+//   └─ Ready for protected routes
+
+// User Logout
+//   ├─ POST /logout
+//   ├─ Clear state & headers
+//   └─ Redirect to login

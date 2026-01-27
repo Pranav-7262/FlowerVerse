@@ -47,7 +47,7 @@ const Navbar = () => {
           {user ? (
             <>
               <span className="text-sm text-gray-600">
-                Hi, <span className="font-semibold">{user.name}</span>
+                Hi, <span className="font-semibold">{user?.userName}</span>
               </span>
               <button
                 onClick={logout}
