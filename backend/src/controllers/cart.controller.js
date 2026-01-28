@@ -34,28 +34,43 @@ export const addToCart = async_handler(async (req, res) => {
     throw new ApiError(404, "Flower not found");
   }
 
-  if (flower.stock < quantity) {
-    throw new ApiError(400, "Insufficient stock");
-  }
-
   let cart = await Cart.findOne({ user: userId });
+
   if (!cart) {
+    if (quantity > flower.stock) {
+      throw new ApiError(400, "Insufficient stock");
+    }
+
     cart = await Cart.create({
-      user: req.userId,
+      user: userId,
       items: [{ flower: flowerId, quantity }],
     });
   } else {
     const itemIndex = cart.items.findIndex(
-      (item) => item.flower.toString() === flowerId,
+      (item) => item.flower.equals(flowerId), // find the itemIndex with flowerID
     );
+
     if (itemIndex > -1) {
-      // if flower already in cart , update quantity
-      cart.items[itemIndex].quantity += quantity;
+      const newQuantity = cart.items[itemIndex].quantity + quantity; // updates Quantity
+
+      if (newQuantity > flower.stock) {
+        throw new ApiError(400, "Insufficient stock");
+      }
+
+      cart.items[itemIndex].quantity = newQuantity; //newQuantity added to that cart[itemIndex].quantity
     } else {
+      if (quantity > flower.stock) {
+        throw new ApiError(400, "Insufficient stock");
+      }
+
       cart.items.push({ flower: flowerId, quantity });
     }
   }
-  await cart.save();
+
+  flower.stock -= quantity; // reduced stock of flower as per Buyer's quantity
+
+  await Promise.all([cart.save(), flower.save()]); // Saved updated cart and flower data
+
   return res
     .status(200)
     .json(new ApiResponse(200, cart, "Flower added to cart successfully"));
