@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoutes";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -11,6 +12,7 @@ import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import MyFlowers from "./pages/MyFlowers";
 import Checkout from "./pages/Checkout";
+
 const App = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-rose-50 via-white to-emerald-50 text-gray-800 flex flex-col">
@@ -22,8 +24,24 @@ const App = () => {
         <Routes>
           {/* Public */}
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+
           <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
 
           {/* Protected */}
