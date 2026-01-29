@@ -115,9 +115,6 @@ export const loginUser = async_handler(async (req, res) => {
       ),
     );
 });
-// User logs in → receives:
-// Access token in response JSON
-// Refresh token in httpOnly cookie
 
 export const refreshAccessToken = async_handler(async (req, res) => {
   const incomingRefreshToken = req.cookies?.refreshToken;
@@ -208,24 +205,40 @@ export const logoutUser = async_handler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"));
 });
 
-export const updateProfile = async_handler(async (req, res) => {
-  const userId = req.userId; // get current user
-  const { userName, password } = req.body; // no compulsion to update all fields
-  const userData = {};
-  if (userName) {
-    userData.userName = userName;
+export const changeCurrentPassword = async_handler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  const user = await User.findById(req.userId);
+  if (!user) {
+    throw new ApiError(400, "User Does not Existed !!");
   }
-  if (password) {
-    userData.password = password;
+  const isPasswordMatches = await user.comparePassword(oldPassword);
+  if (!isPasswordMatches) {
+    throw new ApiError(400, "Password does not matches original password !!");
   }
-  const updatedUser = await User.findByIdAndUpdate(userId, userData, {
-    new: true,
-    runValidators: true,
-  }).select("-password -refreshToken");
-  if (!updatedUser) {
-    throw new ApiError(404, "User not found");
-  }
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
   return res
     .status(200)
-    .json(new ApiResponse(200, updatedUser, "Profile updated successfully"));
+    .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+export const updateAccountDetails = async_handler(async (req, res) => {
+  const { userName, email } = req.body;
+
+  if (!userName || !email) {
+    throw new ApiError(400, "All fields are required");
+  }
+  const user = await User.findByIdAndUpdate(
+    req.userId,
+    {
+      $set: {
+        userName,
+        email: email,
+      },
+    },
+    { new: true },
+  ).select("-password -refreshToken");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Account details updated successfully"));
 });
