@@ -46,6 +46,15 @@ const FlowerDetails = () => {
       alert("Delete failed.");
     }
   };
+  const handleAddToCart = async (flowerId) => {
+    if (!user) return navigate("/login");
+    try {
+      await api.post("/cart/add", { flowerId, quantity: 1 });
+      alert("Added to cart 🌸");
+    } catch (err) {
+      alert("Failed to add to cart");
+    }
+  };
 
   if (loading)
     return (
@@ -201,9 +210,7 @@ const FlowerDetails = () => {
             ) : (
               <button
                 disabled={isOutOfStock}
-                onClick={() => {
-                  /* add logic */
-                }}
+                onClick={() => handleAddToCart(flower._id)}
                 className={`w-full flex items-center justify-center gap-3 py-5 rounded-2xl font-bold text-lg shadow-xl transition-all ${
                   isOutOfStock
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed shadow-none"
