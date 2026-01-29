@@ -6,7 +6,8 @@ import {
   refreshAccessToken,
   logoutUser,
   getCurrentUser,
-  updateProfile,
+  updateAccountDetails,
+  changeCurrentPassword,
 } from "../controllers/auth.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 const router = express.Router();
@@ -17,5 +18,6 @@ router.post("/refresh", refreshAccessToken); // this route having no auth middle
 router.post("/logout", verifyJWT, logoutUser);
 
 router.get("/current-user", verifyJWT, getCurrentUser);
-router.put("/update-profile", verifyJWT, updateProfile);
+router.put("/update-profile", verifyJWT, updateAccountDetails);
+router.put("/update-password", verifyJWT, changeCurrentPassword);
 export default router;
