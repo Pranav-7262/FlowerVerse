@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoutes";
+import { Toaster } from "react-hot-toast";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -12,11 +13,43 @@ import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import MyFlowers from "./pages/MyFlowers";
 import Checkout from "./pages/Checkout";
+import CreateFlower from "./pages/CreateFlower";
 
 const App = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-rose-50 via-white to-emerald-50 text-gray-800 flex flex-col">
       {/* Navbar stays full-width */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#333",
+            color: "#fff",
+            border: "1px solid #713200",
+            padding: "19px",
+
+            borderRadius: "10px",
+            fontSize: "14px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+          },
+          success: {
+            iconTheme: {
+              primary: "#22c55e",
+              secondary: "#ecfdf5",
+            },
+          },
+          iconTheme: {
+            primary: "#713200",
+            secondary: "#FFFAEE",
+          },
+          error: {
+            iconTheme: {
+              primary: "#ef4444",
+              secondary: "#fee2e2",
+            },
+          },
+        }}
+      />
       <Navbar />
 
       {/* Page container - grows to fill space */}
@@ -45,6 +78,15 @@ const App = () => {
           <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
 
           {/* Protected */}
+          <Route
+            path="/flowers/create-flower"
+            element={
+              <ProtectedRoute>
+                <CreateFlower />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/cart"
             element={

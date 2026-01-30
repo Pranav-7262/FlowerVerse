@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
@@ -6,8 +7,9 @@ import {
   ShoppingBag,
   User,
   LogOut,
-  Menu,
+  Tag,
   X,
+  Menu,
   Package,
   PlusCircle,
   LayoutDashboard,
@@ -33,6 +35,7 @@ const Navbar = () => {
       return;
     }
     await logout();
+    toast.success("Logged Out Successful !");
     navigate("/login");
   };
 
@@ -72,6 +75,9 @@ const Navbar = () => {
                     {/* Potential Badge: <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span> */}
                   </div>
                   Cart
+                </NavLink>
+                <NavLink to="/flowers/create-flower" className={navLinkClass}>
+                  <Tag size={20} /> Sell
                 </NavLink>
 
                 <div className="h-6 w-px bg-gray-200 mx-2" />
@@ -147,6 +153,9 @@ const Navbar = () => {
               </NavLink>
               <NavLink to="/cart" className={navLinkClass}>
                 Cart
+              </NavLink>
+              <NavLink to="/flowers/create-flower" className={navLinkClass}>
+                Sell
               </NavLink>
               <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
                 <span className="font-semibold text-gray-700">

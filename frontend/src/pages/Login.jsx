@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
@@ -15,9 +16,10 @@ const Login = () => {
     setLoading(true);
     try {
       await login(form.email, form.password);
+      toast.success("Login Successful !");
       navigate("/");
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      toast.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }

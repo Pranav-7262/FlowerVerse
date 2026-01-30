@@ -1,4 +1,6 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { User, Mail, Lock, UserPlus, Loader2, ArrowRight } from "lucide-react";
@@ -22,6 +24,7 @@ const Register = () => {
       };
 
       await register(payload);
+      toast.success("Registration successful ! Please login");
 
       // Redirect to login instead of home
       navigate("/login", {
@@ -29,7 +32,7 @@ const Register = () => {
       });
     } catch (err) {
       const message = err.response?.data?.message || "Registration failed";
-      alert(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

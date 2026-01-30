@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion"; // Install via: npm install framer-motion
 import api from "../api/axios.js";
@@ -57,9 +58,9 @@ const Home = () => {
     if (!user) return navigate("/login");
     try {
       await api.post("/cart/add", { flowerId, quantity: 1 });
-      alert("Added to cart 🌸");
+      toast.success("Added to cart 🌸");
     } catch (err) {
-      alert("Failed to add to cart");
+      toast.error("Failed to add to cart");
     }
   };
 
