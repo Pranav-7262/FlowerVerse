@@ -6,13 +6,20 @@ import Flower from "../models/flower.model.js";
 
 export const getCart = async_handler(async (req, res) => {
   const userId = req.userId;
-  const cart = await Cart.findOne({ user: userId }).populate("items.flower"); // log in users cart and flowers details
+  const cart = await Cart.findOne({ user: userId }).populate(
+    "items.flower",
+    "name price image stock category",
+  ); // log in users cart and flowers details
 
   if (!cart) {
     return res
       .status(200)
       .json(new ApiResponse(200, { items: [] }, "Cart is empty"));
   }
+  cart.items = cart.items.filter((item) => item.flower);
+
+  // save only if something was removed
+  await cart.save();
   return res
     .status(200)
     .json(new ApiResponse(200, cart, "Cart fetched successfully"));
