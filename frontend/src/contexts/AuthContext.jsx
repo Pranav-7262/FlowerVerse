@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
       const res = await api.post("/auth/register", payload);
       return res.data;
     } catch (error) {
-      console.log("error in register context :", err?.message);
+      console.log("error in register context :", error?.message);
     }
   };
 
@@ -54,6 +54,13 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     }
   };
+  const updatePassword = async (oldPassword, newPassword) => {
+    try {
+      await api.put("/auth/update-password", { oldPassword, newPassword });
+    } catch (error) {
+      console.error("updatePassword failed:", error?.message);
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -64,6 +71,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        updatePassword,
       }}
     >
       {!loading && children}
