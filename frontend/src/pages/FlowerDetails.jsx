@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import {
   ShoppingBag,
   Pencil,
@@ -41,18 +42,19 @@ const FlowerDetails = () => {
     if (!window.confirm("Are you sure you want to remove this flower?")) return;
     try {
       await api.delete(`/flowers/delete-flower/${flowerId}`);
+      toast.success("Flower Deleted !");
       navigate("/");
     } catch (err) {
-      alert("Delete failed.");
+      toast.error("Delete failed.");
     }
   };
   const handleAddToCart = async (flowerId) => {
     if (!user) return navigate("/login");
     try {
       await api.post("/cart/add", { flowerId, quantity: 1 });
-      alert("Added to cart 🌸");
+      toast.success("Added to cart 🌸");
     } catch (err) {
-      alert("Failed to add to cart");
+      toast.error("Failed to add to cart");
     }
   };
 
