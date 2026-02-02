@@ -192,7 +192,6 @@ const Cart = () => {
         <div className="lg:w-96">
           <div className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-xl sticky top-28">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Summary</h2>
-
             <div className="space-y-4 mb-8">
               <div className="flex justify-between text-gray-500">
                 <span>Subtotal</span>
@@ -217,12 +216,18 @@ const Cart = () => {
             </div>
 
             <button
-              onClick={() => navigate("/checkout")}
-              className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-emerald-100 hover:bg-emerald-700 hover:-translate-y-1 transition-all"
+              onClick={() =>
+                navigate("/checkout", {
+                  state: {
+                    items: cart.items, // This must contain the updated quantities
+                    totalAmount: subtotal, // Your calculated subtotal + shipping
+                  },
+                })
+              }
+              className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold ..."
             >
-              Checkout <ArrowRight size={20} />
+              Proceed to Checkout
             </button>
-
             <div className="mt-6 space-y-3">
               <div className="flex items-center gap-3 text-xs text-gray-400 font-medium">
                 <CreditCard size={14} /> Secure Payment Guaranteed

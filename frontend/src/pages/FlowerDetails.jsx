@@ -193,6 +193,7 @@ const FlowerDetails = () => {
           </div>
 
           {/* Actions */}
+          {/* Actions */}
           <div className="mt-10 pt-8 border-t border-gray-100">
             {isOwner ? (
               <div className="grid grid-cols-2 gap-4">
@@ -210,20 +211,64 @@ const FlowerDetails = () => {
                 </button>
               </div>
             ) : (
-              <button
-                disabled={isOutOfStock}
-                onClick={() => handleAddToCart(flower._id)}
-                className={`w-full flex items-center justify-center gap-3 py-5 rounded-2xl font-bold text-lg shadow-xl transition-all ${
-                  isOutOfStock
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed shadow-none"
-                    : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-100"
-                }`}
-              >
-                <ShoppingBag size={20} />
-                {isOutOfStock
-                  ? "Out of Stock"
-                  : `Add to Cart — ₹${flower.price}`}
-              </button>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Add to Cart Button */}
+                  <button
+                    disabled={isOutOfStock}
+                    onClick={() => handleAddToCart(flower._id)}
+                    className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-2xl font-bold text-lg transition-all border-2 ${
+                      isOutOfStock
+                        ? "bg-gray-50 border-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-white border-emerald-600 text-emerald-600 hover:bg-emerald-50 shadow-sm"
+                    }`}
+                  >
+                    <ShoppingBag size={20} />
+                    Cart
+                  </button>
+
+                  {/* Buy Now Button */}
+                  <button
+                    disabled={isOutOfStock}
+                    onClick={() =>
+                      navigate("/checkout", {
+                        state: {
+                          items: [
+                            {
+                              flowerId: flower,
+                              quantity: 1,
+                              price: flower.price,
+                              name: flower.name,
+                              image: flower.image,
+                            },
+                          ],
+                          totalAmount: flower.price,
+                        },
+                      })
+                    }
+                    className={`flex-2 flex items-center justify-center gap-3 py-5 rounded-2xl font-bold text-lg shadow-xl transition-all ${
+                      isOutOfStock
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-200/50 hover:-translate-y-1"
+                    }`}
+                  >
+                    {isOutOfStock ? "Sold Out" : "Buy it Now"}
+                  </button>
+                </div>
+
+                {/* Trust Badge */}
+                <div className="flex items-center justify-center gap-6 py-2">
+                  <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                    <ShieldCheck size={14} className="text-emerald-500" />{" "}
+                    Secure Checkout
+                  </div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+                  <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                    <AlertCircle size={14} className="text-emerald-500" />{" "}
+                    Freshness Guaranteed
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </div>
