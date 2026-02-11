@@ -14,6 +14,7 @@ import Orders from "./pages/Orders";
 import MyFlowers from "./pages/MyFlowers";
 import Checkout from "./pages/Checkout";
 import CreateFlower from "./pages/CreateFlower";
+import EditFlower from "./pages/EditFlower";
 
 const App = () => {
   return (
@@ -119,6 +120,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <MyFlowers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/flowers/edit/:flowerId"
+            element={
+              <ProtectedRoute>
+                <EditFlower />
               </ProtectedRoute>
             }
           />

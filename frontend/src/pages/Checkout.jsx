@@ -34,7 +34,7 @@ const Checkout = () => {
 
     try {
       for (const item of state.items) {
-        const targetFlowerId = item.flowerId?._id;
+        const targetFlowerId = item.flower?._id;
         console.log("Sending ID to backend:", targetFlowerId);
         await api.post("/orders/checkout", {
           flowerId: targetFlowerId, // SENDING THE STRING ID

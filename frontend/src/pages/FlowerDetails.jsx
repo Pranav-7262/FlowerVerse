@@ -130,7 +130,6 @@ const FlowerDetails = () => {
               </div>
             </div>
 
-            {/* Dynamic Stock Indicator */}
             <div
               className={`flex items-center gap-3 p-4 rounded-2xl border ${
                 isOutOfStock
