@@ -49,7 +49,7 @@ export const buyNow = async_handler(async (req, res) => {
 export const getMyOrders = async_handler(async (req, res) => {
   const userId = req.userId;
   const orders = await Order.find({ buyer: userId })
-    .populate("items.flower")
+    .populate("items.flower", "name image price")
     .populate("items.seller", "userName")
     .sort({ createdAt: -1 });
 

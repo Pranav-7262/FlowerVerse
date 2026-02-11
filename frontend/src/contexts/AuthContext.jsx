@@ -56,9 +56,21 @@ export const AuthProvider = ({ children }) => {
   };
   const updatePassword = async (oldPassword, newPassword) => {
     try {
-      await api.put("/auth/update-password", { oldPassword, newPassword });
+      const res = await api.put("/auth/update-password", {
+        oldPassword,
+        newPassword,
+      });
+      return res.data;
     } catch (error) {
       console.error("updatePassword failed:", error?.message);
+    }
+  };
+  const resetAccount = async () => {
+    try {
+      const res = await api.delete("/auth/reset-account");
+      return res.data;
+    } catch (error) {
+      console.error("resetAccount failed:", error?.message);
     }
   };
 
@@ -72,6 +84,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         updatePassword,
+        resetAccount,
       }}
     >
       {!loading && children}

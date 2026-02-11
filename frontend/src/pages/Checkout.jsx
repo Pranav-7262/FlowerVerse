@@ -28,14 +28,13 @@ const Checkout = () => {
       </div>
     );
   }
-
   const handlePlaceOrder = async () => {
     setLoading(true);
     const toastId = toast.loading("Processing your order...");
 
     try {
       for (const item of state.items) {
-        const targetFlowerId = item.flower?._id;
+        const targetFlowerId = item.flowerId?._id;
         console.log("Sending ID to backend:", targetFlowerId);
         await api.post("/orders/checkout", {
           flowerId: targetFlowerId, // SENDING THE STRING ID
