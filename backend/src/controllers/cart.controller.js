@@ -22,7 +22,7 @@ export const getCart = async_handler(async (req, res) => {
   await cart.save();
   return res
     .status(200)
-    .json(new ApiResponse(200, cart, "Cart fetched successfully"));
+    .json(new ApiResponse(200, { Mycart: cart }, "Cart fetched successfully"));
 });
 export const addToCart = async_handler(async (req, res) => {
   const userId = req.userId;

@@ -53,6 +53,7 @@ const Home = () => {
     try {
       await api.post("/cart/add", { flowerId, quantity: 1 });
       toast.success("Added to cart 🌸");
+      window.dispatchEvent(new Event("cartUpdated"));
     } catch (err) {
       toast.error("Failed to add to cart");
     }

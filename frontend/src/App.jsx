@@ -15,6 +15,7 @@ import MyFlowers from "./pages/MyFlowers";
 import Checkout from "./pages/Checkout";
 import CreateFlower from "./pages/CreateFlower";
 import EditFlower from "./pages/EditFlower";
+import Account from "./pages/Account";
 
 const App = () => {
   return (
@@ -79,6 +80,14 @@ const App = () => {
           <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
 
           {/* Protected */}
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/flowers/create-flower"
             element={

@@ -1,187 +1,239 @@
-import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Flower,
   ShoppingBag,
-  User,
   LogOut,
-  Tag,
-  X,
-  Menu,
   Package,
-  PlusCircle,
+  User,
+  ChevronDown,
   LayoutDashboard,
+  PlusCircle,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
+import api from "../api/axios";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [CartItemCount, setCartItemCount] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
+  const dropdownRef = useRef(null);
 
-  // Close mobile menu on route change
-  useEffect(() => setIsOpen(false), [location]);
-
-  const navLinkClass = ({ isActive }) =>
-    `flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-      isActive
-        ? "bg-emerald-50 text-emerald-700"
-        : "text-gray-600 hover:bg-gray-50 hover:text-emerald-600"
-    }`;
-  const handleLogout = async () => {
-    if (!window.confirm("Are you Sure to Logging Out ?")) {
-      return;
+  const fetchCartItemCount = async () => {
+    if (!user) return;
+    try {
+      const res = await api.get("/cart");
+      const totalQuantity =
+        res?.data?.data?.Mycart?.items?.reduce(
+          (total, item) => total + item.quantity,
+          0,
+        ) || 0;
+      setCartItemCount(totalQuantity);
+    } catch (err) {
+      console.error("Cart fetch error", err);
     }
+  };
+
+  // 1. Initial fetch & fetch on route change
+  useEffect(() => {
+    fetchCartItemCount();
+  }, [location.pathname, user]);
+
+  // 2. Listen for 'cartUpdated' custom event for instant updates
+  useEffect(() => {
+    window.addEventListener("cartUpdated", fetchCartItemCount);
+    return () => window.removeEventListener("cartUpdated", fetchCartItemCount);
+  }, []);
+
+  // Close dropdowns on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    if (!window.confirm("Log out of FlowerMart?")) return;
     await logout();
-    toast.success("Logged Out Successful !");
+    toast.success("Logged out! 🌸");
     navigate("/login");
   };
 
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: 10, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: 10, scale: 0.95 },
+  };
+
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
-          {/* Brand Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="bg-emerald-600 p-2 rounded-lg group-hover:rotate-12 transition-transform">
-                <Flower className="text-white" size={24} />
-              </div>
-              <span className="text-xl font-serif font-bold bg-linear-to-r from-emerald-800 to-emerald-600 bg-clip-text text-transparent">
-                FlowerMart
-              </span>
-            </Link>
-          </div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-2">
-            <NavLink to="/" className={navLinkClass}>
-              Home
-            </NavLink>
-
-            {user ? (
-              <>
-                <NavLink to="/orders" className={navLinkClass}>
-                  <Package size={18} /> Orders
-                </NavLink>
-                <NavLink to="/my-flowers" className={navLinkClass}>
-                  <LayoutDashboard size={18} /> My Flowers
-                </NavLink>
-                <NavLink to="/cart" className={navLinkClass}>
-                  <div className="relative">
-                    <ShoppingBag size={18} />
-                    {/* Potential Badge: <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span> */}
-                  </div>
-                  Cart
-                </NavLink>
-                <NavLink to="/flowers/create-flower" className={navLinkClass}>
-                  <Tag size={20} /> Sell
-                </NavLink>
-
-                <div className="h-6 w-px bg-gray-200 mx-2" />
-
-                <div className="flex items-center gap-3 pl-2">
-                  <div className="text-right hidden lg:block">
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
-                      Welcome
-                    </p>
-                    <p className="text-sm font-semibold text-gray-700">
-                      {user?.userName}
-                    </p>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="p-2.5 rounded-xl bg-gray-50 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
-                    title="Logout"
-                  >
-                    <LogOut size={20} />
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center gap-3 ml-4">
-                <Link
-                  to="/login"
-                  className="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:text-emerald-700 transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-6 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-emerald-100 hover:bg-emerald-700 hover:-translate-y-0.5 transition-all"
-                >
-                  Get Started
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-xl bg-gray-50 text-gray-600"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Sidebar Menu */}
+    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 h-20 flex items-center">
       <div
-        className={`md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-100 transition-all duration-300 ease-in-out ${
-          isOpen
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-4 pointer-events-none"
-        }`}
+        className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between"
+        ref={dropdownRef}
       >
-        <div className="px-4 py-6 space-y-4 shadow-xl">
-          <NavLink to="/" className={navLinkClass}>
-            Home
-          </NavLink>
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2">
+          <div className="bg-emerald-600 p-2 rounded-xl">
+            <Flower className="text-white" size={22} />
+          </div>
+          <span className="text-2xl font-serif font-black text-emerald-950">
+            FlowerMart
+          </span>
+        </Link>
 
+        <div className="flex items-center gap-2">
           {user ? (
             <>
-              <NavLink to="/orders" className={navLinkClass}>
-                Orders
-              </NavLink>
-              <NavLink to="/my-flowers" className={navLinkClass}>
-                My Flowers
-              </NavLink>
-              <NavLink to="/cart" className={navLinkClass}>
-                Cart
-              </NavLink>
-              <NavLink to="/flowers/create-flower" className={navLinkClass}>
-                Sell
-              </NavLink>
-              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                <span className="font-semibold text-gray-700">
-                  {user?.userName}
-                </span>
+              {/* 1. Account Dropdown */}
+              <div className="relative">
                 <button
-                  onClick={logout}
-                  className="flex items-center gap-2 text-red-600 font-bold"
+                  onClick={() =>
+                    setActiveDropdown(
+                      activeDropdown === "account" ? null : "account",
+                    )
+                  }
+                  className={`flex flex-col items-start px-4 py-1.5 rounded-xl transition-all ${activeDropdown === "account" ? "bg-gray-50" : "hover:bg-gray-50"}`}
                 >
-                  <LogOut size={18} /> Logout
+                  <span className="text-[10px] text-emerald-600 font-black uppercase tracking-widest leading-none mb-1">
+                    {user?.userName}
+                  </span>
+
+                  <span className="text-sm font-bold text-gray-900 flex items-center gap-1">
+                    Your Account{" "}
+                    <ChevronDown
+                      size={14}
+                      className={
+                        activeDropdown === "account" ? "rotate-180" : ""
+                      }
+                    />
+                  </span>
                 </button>
+
+                <AnimatePresence>
+                  {activeDropdown === "account" && (
+                    <motion.div
+                      variants={dropdownVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      className="absolute right-0 mt-3 w-56 bg-white border border-gray-100 shadow-2xl rounded-2xl py-3 z-50"
+                    >
+                      <Link
+                        to="/account"
+                        className="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                      >
+                        <User size={18} /> Profile Details
+                      </Link>
+                      <Link
+                        to="/orders"
+                        className="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                      >
+                        <Package size={18} /> Your Orders
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 mt-2 border-t border-gray-50 pt-3"
+                      >
+                        <LogOut size={18} /> Sign Out
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+
+              {/* 2. Seller Central Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() =>
+                    setActiveDropdown(
+                      activeDropdown === "seller" ? null : "seller",
+                    )
+                  }
+                  className={`flex flex-col items-start px-4 py-1.5 rounded-xl transition-all ${activeDropdown === "seller" ? "bg-emerald-50" : "hover:bg-emerald-50"}`}
+                >
+                  <span className="text-[10px] text-emerald-600 font-black uppercase tracking-widest leading-none mb-1">
+                    Business
+                  </span>
+                  <span className="text-sm font-bold text-emerald-900 flex items-center gap-1">
+                    Seller Central{" "}
+                    <ChevronDown
+                      size={14}
+                      className={
+                        activeDropdown === "seller" ? "rotate-180" : ""
+                      }
+                    />
+                  </span>
+                </button>
+
+                <AnimatePresence>
+                  {activeDropdown === "seller" && (
+                    <motion.div
+                      variants={dropdownVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      className="absolute right-0 mt-3 w-56 bg-white border border-emerald-100 shadow-2xl rounded-2xl py-3 z-50"
+                    >
+                      <Link
+                        to="/my-flowers"
+                        className="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                      >
+                        <LayoutDashboard size={18} /> Seller Studio
+                      </Link>
+                      <Link
+                        to="/flowers/create-flower"
+                        className="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                      >
+                        <PlusCircle size={18} /> List New Flower
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* 3. Separate Orders Item (Amazon style) */}
+              <Link
+                to="/orders"
+                className="hidden md:flex flex-col items-start px-4 py-1.5 hover:bg-gray-50 rounded-xl transition-all"
+              >
+                <span className="text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none mb-1">
+                  Sales
+                </span>
+                <span className="text-sm font-bold text-gray-900">
+                  & Orders
+                </span>
+              </Link>
+
+              {/* Cart */}
+              <Link
+                to="/cart"
+                className="flex items-center gap-2 ml-2 p-3 bg-gray-900 text-white rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-gray-200"
+              >
+                <ShoppingBag size={20} />
+                <span className="font-bold text-sm hidden lg:block">Cart</span>
+                <span className="bg-emerald-500 text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border border-gray-900">
+                  {CartItemCount}
+                </span>
+              </Link>
             </>
           ) : (
-            <div className="grid grid-cols-2 gap-4 pt-2">
-              <Link
-                to="/login"
-                className="flex items-center justify-center py-3 border border-gray-200 rounded-xl font-bold text-gray-600"
-              >
-                Login
+            <div className="flex items-center gap-4">
+              <Link to="/login" className="text-sm font-bold text-gray-600">
+                Sign In
               </Link>
               <Link
                 to="/register"
-                className="flex items-center justify-center py-3 bg-emerald-600 rounded-xl font-bold text-white"
+                className="bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold"
               >
-                Register
+                Get Started
               </Link>
             </div>
           )}

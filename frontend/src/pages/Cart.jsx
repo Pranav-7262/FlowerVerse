@@ -23,7 +23,8 @@ const Cart = () => {
     try {
       const res = await api.get("/cart");
       // Assuming res.data.data contains the cart object with items array
-      setCart(res.data.data);
+
+      setCart(res.data.data.Mycart);
     } catch (err) {
       console.error("Cart fetch error", err);
     } finally {
@@ -39,6 +40,7 @@ const Cart = () => {
     if (newQuantity < 1) return;
     try {
       await api.patch("/cart/update", { flowerId, quantity: newQuantity });
+      window.dispatchEvent(new Event("cartUpdated"));
       fetchCart(); // Refresh data
     } catch (err) {
       toast.error("Stock limit reached");
