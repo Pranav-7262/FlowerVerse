@@ -221,42 +221,72 @@ export const getCurrentUser = async_handler(async (req, res) => {
       new ApiResponse(200, { user: findUser }, "User fetched successfully"),
     );
 });
+
 export const changeCurrentPassword = async_handler(async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(400, "New password and confirm password must match");
+  }
 
   const user = await User.findById(req.userId);
   if (!user) {
-    throw new ApiError(400, "User Does not Existed !!");
+    throw new ApiError(404, "User does not exist");
   }
-  const isPasswordMatches = await user.comparePassword(oldPassword);
-  if (!isPasswordMatches) {
-    throw new ApiError(400, "Password does not matches original password !!");
+
+  const isOldPasswordCorrect = await user.comparePassword(oldPassword);
+  if (!isOldPasswordCorrect) {
+    throw new ApiError(400, "Old password is incorrect");
   }
+
+  // 🔐 Prevent reusing old password
+  const isSameAsOldPassword = await user.comparePassword(newPassword);
+  if (isSameAsOldPassword) {
+    throw new ApiError(400, "New password cannot be same as old password");
+  }
+
   user.password = newPassword;
-  await user.save({ validateBeforeSave: false });
+  await user.save();
+
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Password changed successfully"));
 });
-export const updateAccountDetails = async_handler(async (req, res) => {
-  const { userName, email } = req.body;
 
-  if (!userName || !email) {
-    throw new ApiError(400, "All fields are required");
+export const updateUsername = async_handler(async (req, res) => {
+  const { userName } = req.body;
+  if (!userName) throw new ApiError(400, "Username is required");
+
+  const user = await User.findByIdAndUpdate(
+    req.userId,
+    { $set: { userName } },
+    { new: true },
+  ).select("-password -refreshToken");
+
+  return res.status(200).json(new ApiResponse(200, user, "Username updated !"));
+});
+export const updateEmail = async_handler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ApiError(400, "Email is required");
   }
+  const existingUser = await User.findOne({ email });
+  if (existingUser) throw new ApiError(409, "Email already in use");
   const user = await User.findByIdAndUpdate(
     req.userId,
     {
       $set: {
-        userName,
-        email: email,
+        email,
       },
     },
     { new: true },
   ).select("-password -refreshToken");
-  return res
-    .status(200)
-    .json(new ApiResponse(200, user, "Account details updated successfully"));
+  return res.status(200).json(new ApiResponse(200, user, "Email updated !"));
 });
 export const resetAccount = async_handler(async (req, res) => {
   const userId = req.userId;

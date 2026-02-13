@@ -16,6 +16,7 @@ import Checkout from "./pages/Checkout";
 import CreateFlower from "./pages/CreateFlower";
 import EditFlower from "./pages/EditFlower";
 import Account from "./pages/Account";
+import Security from "./pages/Security";
 
 const App = () => {
   return (
@@ -85,6 +86,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Account />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account/security"
+            element={
+              <ProtectedRoute>
+                <Security />
               </ProtectedRoute>
             }
           />

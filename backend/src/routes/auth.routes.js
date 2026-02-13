@@ -6,7 +6,8 @@ import {
   refreshAccessToken,
   logoutUser,
   getCurrentUser,
-  updateAccountDetails,
+  updateEmail,
+  updateUsername,
   changeCurrentPassword,
   resetAccount,
 } from "../controllers/auth.controller.js";
@@ -19,7 +20,8 @@ router.post("/refresh", refreshAccessToken); // this route having no auth middle
 router.post("/logout", verifyJWT, logoutUser);
 
 router.get("/current-user", verifyJWT, getCurrentUser);
-router.put("/update-profile", verifyJWT, updateAccountDetails);
+router.put("/update-username", verifyJWT, updateUsername);
+router.put("/update-email", verifyJWT, updateEmail);
 router.put("/update-password", verifyJWT, changeCurrentPassword);
 router.delete("/reset-account", verifyJWT, resetAccount);
 export default router;

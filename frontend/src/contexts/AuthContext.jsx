@@ -54,15 +54,36 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     }
   };
-  const updatePassword = async (oldPassword, newPassword) => {
+  const updatePassword = async (oldPassword, newPassword, confirmPassword) => {
     try {
       const res = await api.put("/auth/update-password", {
         oldPassword,
         newPassword,
+        confirmPassword,
       });
       return res.data;
     } catch (error) {
-      console.error("updatePassword failed:", error?.message);
+      console.error("updatePassword failed:", error?.response?.data?.message);
+      throw error;
+    }
+  };
+  const updateUsername = async (userName) => {
+    try {
+      const res = await api.put("/auth/update-username", { userName });
+      if (res.data?.data) setUser(res.data.data);
+      return res.data;
+    } catch (error) {
+      console.error("updateUsername failed:", error?.message);
+    }
+  };
+
+  const updateEmail = async (email) => {
+    try {
+      const res = await api.put("/auth/update-email", { email });
+      if (res.data?.data) setUser(res.data.data);
+      return res.data;
+    } catch (error) {
+      onsole.error("updateEmail failed:", error?.message);
     }
   };
   const resetAccount = async () => {
@@ -85,6 +106,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         updatePassword,
         resetAccount,
+        updateUsername,
+        updateEmail,
       }}
     >
       {!loading && children}
