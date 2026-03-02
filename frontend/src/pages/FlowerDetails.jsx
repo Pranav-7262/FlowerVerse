@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
 import {
   ShoppingBag,
   Pencil,
@@ -10,52 +9,41 @@ import {
   User,
   Tag,
   ShieldCheck,
-  Layers, // Icon for Stock
+  Layers,
   AlertCircle,
 } from "lucide-react";
-import api from "../api/axios.js";
 import { useAuth } from "../contexts/AuthContext";
+import { useFlower } from "../contexts/FlowerContext";
+import { useCart } from "../contexts/CartContext";
 
 const FlowerDetails = () => {
   const { flowerId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
-
-  const [flower, setFlower] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { selectedFlower, loading, fetchFlowerById, deleteFlower } =
+    useFlower();
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    const fetchFlower = async () => {
-      try {
-        const res = await api.get(`/flowers/${flowerId}`);
-        setFlower(res.data.data);
-      } catch (err) {
-        console.error("Error fetching flower:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFlower();
+    fetchFlowerById(flowerId);
   }, [flowerId]);
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to remove this flower?")) return;
     try {
-      await api.delete(`/flowers/delete-flower/${flowerId}`);
-      toast.success("Flower Deleted !");
+      await deleteFlower(flowerId);
       navigate("/");
     } catch (err) {
-      toast.error("Delete failed.");
+      // Error toast already shown by context
     }
   };
+
   const handleAddToCart = async (flowerId) => {
     if (!user) return navigate("/login");
     try {
-      await api.post("/cart/add", { flowerId, quantity: 1 });
-      toast.success("Added to cart 🌸");
-      window.dispatchEvent(new Event("cartUpdated"));
+      await addToCart(flowerId, 1);
     } catch (err) {
-      toast.error("Failed to add to cart");
+      // Error toast already shown by context
     }
   };
 
@@ -66,14 +54,14 @@ const FlowerDetails = () => {
       </div>
     );
 
-  if (!flower)
+  if (!selectedFlower)
     return <div className="text-center py-20">Flower not found.</div>;
 
-  const isOwner = user && user._id === flower.owner?._id;
+  const isOwner = user && user._id === selectedFlower.owner?._id;
 
   // Stock Logic
-  const isOutOfStock = flower.stock <= 0;
-  const isLowStock = flower.stock > 0 && flower.stock <= 5;
+  const isOutOfStock = selectedFlower.stock <= 0;
+  const isLowStock = selectedFlower.stock > 0 && selectedFlower.stock <= 5;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
@@ -93,8 +81,8 @@ const FlowerDetails = () => {
             className="relative aspect-4/5 rounded-4xl overflow-hidden shadow-inner bg-gray-50"
           >
             <img
-              src={flower.image}
-              alt={flower.name}
+              src={selectedFlower.image}
+              alt={selectedFlower.name}
               className="w-full h-full object-cover"
             />
 
@@ -115,15 +103,15 @@ const FlowerDetails = () => {
             <div className="flex justify-between items-start">
               <div>
                 <span className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-bold uppercase tracking-tighter mb-3">
-                  <Tag size={14} /> {flower?.category}
+                  <Tag size={14} /> {selectedFlower?.category}
                 </span>
                 <h1 className="text-4xl lg:text-5xl font-serif font-bold text-gray-900">
-                  {flower?.name}
+                  {selectedFlower?.name}
                 </h1>
               </div>
               <div className="text-right">
                 <p className="text-3xl font-bold text-emerald-600">
-                  ₹{flower.price}
+                  ₹{selectedFlower.price}
                 </p>
                 <p className="text-xs text-gray-400 font-medium">
                   Inc. all taxes
@@ -168,13 +156,13 @@ const FlowerDetails = () => {
                 <p className="text-xs text-gray-500">
                   {isOutOfStock
                     ? "Check back later"
-                    : `${flower.stock} items currently in the nursery`}
+                    : `${selectedFlower.stock} items currently in the nursery`}
                 </p>
               </div>
             </div>
 
             <p className="text-gray-600 text-lg leading-relaxed">
-              {flower.description}
+              {selectedFlower.description}
             </p>
 
             <div className="flex items-center gap-4 py-4">
@@ -186,14 +174,11 @@ const FlowerDetails = () => {
               <p className="text-sm font-medium text-gray-700">
                 Listed by{" "}
                 <span className="text-emerald-600 font-bold">
-                  {flower.owner?.userName}
+                  {selectedFlower.owner?.userName}
                 </span>
               </p>
             </div>
           </div>
-
-          {/* Actions */}
-          {/* Actions */}
           <div className="mt-10 pt-8 border-t border-gray-100">
             {isOwner ? (
               <div className="grid grid-cols-2 gap-4">
@@ -213,10 +198,9 @@ const FlowerDetails = () => {
             ) : (
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4">
-                  {/* Add to Cart Button */}
                   <button
                     disabled={isOutOfStock}
-                    onClick={() => handleAddToCart(flower._id)}
+                    onClick={() => handleAddToCart(selectedFlower._id)}
                     className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-2xl font-bold text-lg transition-all border-2 ${
                       isOutOfStock
                         ? "bg-gray-50 border-gray-100 text-gray-400 cursor-not-allowed"
@@ -235,14 +219,15 @@ const FlowerDetails = () => {
                         state: {
                           items: [
                             {
-                              flowerId: flower,
+                              // keep same shape as cart items: `flower` object
+                              flower: selectedFlower,
                               quantity: 1,
-                              price: flower.price,
-                              name: flower.name,
-                              image: flower.image,
+                              price: selectedFlower.price,
+                              name: selectedFlower.name,
+                              image: selectedFlower.image,
                             },
                           ],
-                          totalAmount: flower.price,
+                          totalAmount: selectedFlower.price,
                         },
                       })
                     }

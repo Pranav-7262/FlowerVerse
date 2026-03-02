@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ShoppingBag, Eye, Flower2 } from "lucide-react"; // Better icons
-import api from "../api/axios.js";
+import { Search, ShoppingBag, Eye, Flower2 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { useFlower } from "../contexts/FlowerContext";
+import { useCart } from "../contexts/CartContext";
 
 const CATEGORIES = [
   "All",
@@ -21,41 +21,27 @@ const CATEGORIES = [
 const Home = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [flowers, setFlowers] = useState([]);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [loading, setLoading] = useState(true);
+  const {
+    filteredFlowers,
+    search,
+    selectedCategory,
+    loading,
+    fetchFlowers,
+    searchFlowers,
+    filterByCategory,
+  } = useFlower();
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    const fetchFlowers = async () => {
-      setLoading(true);
-      try {
-        const endpoint =
-          selectedCategory === "All"
-            ? "/flowers"
-            : `/flowers?category=${selectedCategory}`;
-        const res = await api.get(endpoint);
-        setFlowers(res.data.data.flowers || []);
-      } catch (err) {
-        setFlowers([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFlowers();
+    fetchFlowers(selectedCategory);
   }, [selectedCategory]);
 
-  const filteredFlowers = flowers.filter((flower) =>
-    flower.name.toLowerCase().includes(search.toLowerCase()),
-  );
   const handleAddToCart = async (flowerId) => {
     if (!user) return navigate("/login");
     try {
-      await api.post("/cart/add", { flowerId, quantity: 1 });
-      toast.success("Added to cart 🌸");
-      window.dispatchEvent(new Event("cartUpdated"));
+      await addToCart(flowerId, 1);
     } catch (err) {
-      toast.error("Failed to add to cart");
+      // Error toast already shown by context
     }
   };
 
@@ -103,7 +89,7 @@ const Home = () => {
                 type="text"
                 placeholder="Search blooms..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => searchFlowers(e.target.value)}
                 className="w-full pl-12 pr-4 py-3.5 rounded-2xl border-none bg-gray-50 focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
               />
               <Search
@@ -117,7 +103,7 @@ const Home = () => {
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => filterByCategory(cat)}
                   className={`px-6 py-3 rounded-2xl whitespace-nowrap text-sm font-bold transition-all duration-300 ${
                     selectedCategory === cat
                       ? "bg-emerald-600 text-white shadow-lg shadow-emerald-200"

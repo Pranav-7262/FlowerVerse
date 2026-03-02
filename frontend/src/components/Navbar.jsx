@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
 import {
   Flower,
   ShoppingBag,
@@ -13,41 +14,14 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
-import api from "../api/axios";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { cartCount, fetchCart } = useCart();
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [CartItemCount, setCartItemCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
-
-  const fetchCartItemCount = async () => {
-    if (!user) return;
-    try {
-      const res = await api.get("/cart");
-      const totalQuantity =
-        res?.data?.data?.Mycart?.items?.reduce(
-          (total, item) => total + item.quantity,
-          0,
-        ) || 0;
-      setCartItemCount(totalQuantity);
-    } catch (err) {
-      console.error("Cart fetch error", err);
-    }
-  };
-
-  // 1. Initial fetch & fetch on route change
-  useEffect(() => {
-    fetchCartItemCount();
-  }, [location.pathname, user]);
-
-  // 2. Listen for 'cartUpdated' custom event for instant updates
-  useEffect(() => {
-    window.addEventListener("cartUpdated", fetchCartItemCount);
-    return () => window.removeEventListener("cartUpdated", fetchCartItemCount);
-  }, []);
 
   // Close dropdowns on click outside
   useEffect(() => {
@@ -72,6 +46,18 @@ const Navbar = () => {
     visible: { opacity: 1, y: 0, scale: 1 },
     exit: { opacity: 0, y: 10, scale: 0.95 },
   };
+
+  // fetch cart whenever user or location changes
+  useEffect(() => {
+    fetchCart();
+  }, [location.pathname, user]);
+
+  // update cart count on custom event (backup)
+  useEffect(() => {
+    const handler = () => fetchCart();
+    window.addEventListener("cartUpdated", handler);
+    return () => window.removeEventListener("cartUpdated", handler);
+  }, [fetchCart]);
 
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 h-20 flex items-center">
@@ -220,7 +206,7 @@ const Navbar = () => {
                 <ShoppingBag size={20} />
                 <span className="font-bold text-sm hidden lg:block">Cart</span>
                 <span className="bg-emerald-500 text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border border-gray-900">
-                  {CartItemCount}
+                  {cartCount}
                 </span>
               </Link>
             </>

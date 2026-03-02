@@ -12,10 +12,14 @@ import {
 } from "lucide-react";
 import api from "../api/axios.js";
 import toast from "react-hot-toast";
+import { useOrder } from "../contexts/OrderContext";
+import { useCart } from "../contexts/CartContext";
 
 const Checkout = () => {
   const { state } = useLocation(); // Receives { items, totalAmount } from Cart
   const navigate = useNavigate();
+  const { createOrder } = useOrder();
+  const { clearCart } = useCart();
   const [loading, setLoading] = useState(false);
 
   if (!state || !state.items || state.items.length === 0) {
@@ -34,23 +38,30 @@ const Checkout = () => {
 
     try {
       for (const item of state.items) {
-        const targetFlowerId = item.flower?._id;
-        console.log("Sending ID to backend:", targetFlowerId);
-        await api.post("/orders/checkout", {
-          flowerId: targetFlowerId, // SENDING THE STRING ID
+        const targetFlowerId =
+          item?.flower?._id ||
+          item?.flowerId?._id ||
+          item?.flowerId ||
+          item?._id;
+
+        if (!targetFlowerId) {
+          throw new Error("Invalid item data: missing flower id");
+        }
+
+        await createOrder({
+          flowerId: targetFlowerId,
           quantity: item.quantity,
         });
       }
-      await api.delete("/cart/clear-cart");
+      await clearCart();
 
       toast.success("Order Placed Successfully! 🌸", { id: toastId });
       navigate("/orders");
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Order failed", {
+      toast.error("Order failed", {
         id: toastId,
       });
-    } finally {
       setLoading(false);
     }
   };

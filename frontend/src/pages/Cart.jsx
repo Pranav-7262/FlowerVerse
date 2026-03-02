@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -11,26 +11,18 @@ import {
   Truck,
   CreditCard,
 } from "lucide-react";
-import api from "../api/axios.js";
-import toast from "react-hot-toast";
+import { useCart } from "../contexts/CartContext";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchCart = async () => {
-    try {
-      const res = await api.get("/cart");
-      // Assuming res.data.data contains the cart object with items array
-
-      setCart(res.data.data.Mycart);
-    } catch (err) {
-      console.error("Cart fetch error", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    cart,
+    loading,
+    fetchCart,
+    updateQuantity,
+    removeFromCart,
+    getCartSummary,
+  } = useCart();
 
   useEffect(() => {
     fetchCart();
@@ -39,21 +31,17 @@ const Cart = () => {
   const handleUpdateQuantity = async (flowerId, newQuantity) => {
     if (newQuantity < 1) return;
     try {
-      await api.patch("/cart/update", { flowerId, quantity: newQuantity });
-      window.dispatchEvent(new Event("cartUpdated"));
-      fetchCart(); // Refresh data
+      await updateQuantity(flowerId, newQuantity);
     } catch (err) {
-      toast.error("Stock limit reached");
+      // Error toast already shown by context
     }
   };
 
   const handleRemove = async (flowerId) => {
     try {
-      await api.delete(`/cart/remove/${flowerId}`);
-      toast.success("Removed from bag");
-      fetchCart();
+      await removeFromCart(flowerId);
     } catch (err) {
-      toast.error("Failed to remove");
+      // Error toast already shown by context
     }
   };
 
@@ -64,15 +52,7 @@ const Cart = () => {
       </div>
     );
 
-  const items = cart?.items || [];
-
-  const subtotal = items.reduce(
-    (acc, item) =>
-      item.flower ? acc + item.flower.price * item.quantity : acc,
-    0,
-  );
-
-  const shipping = subtotal > 500 ? 0 : 50;
+  const { items, subtotal, shipping, tax, total } = getCartSummary();
 
   if (items.length === 0) {
     return (

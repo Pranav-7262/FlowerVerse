@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Package,
@@ -12,51 +12,25 @@ import {
   DollarSign,
   BarChart3,
 } from "lucide-react";
-import api from "../api/axios.js";
-import toast from "react-hot-toast";
+import { useOrder } from "../contexts/OrderContext";
 
 const Orders = () => {
-  const [view, setView] = useState("buying");
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Stats State
-  const [stats, setStats] = useState({ revenue: 0, ordersCount: 0 });
-
-  const fetchOrders = async () => {
-    setLoading(true);
-    try {
-      const endpoint = view === "buying" ? "/orders/my" : "/orders/seller";
-      const res = await api.get(endpoint);
-      const fetchedOrders = res.data.data || [];
-      setOrders(fetchedOrders);
-
-      // Calculate Stats if in selling view
-      if (view === "selling") {
-        const totalRev = fetchedOrders
-          .filter((o) => o.status === "PLACED")
-          .reduce((acc, curr) => acc + curr.totalAmount, 0);
-        setStats({ revenue: totalRev, ordersCount: fetchedOrders.length });
-      }
-    } catch (err) {
-      toast.error("Failed to load orders");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { orders, loading, view, stats, fetchOrders, cancelOrder } = useOrder();
 
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(view);
   }, [view]);
 
   const handleCancel = async (orderId) => {
     try {
-      await api.patch(`/orders/cancel-order/${orderId}`);
-      toast.success("Order cancelled and restocked");
-      fetchOrders();
+      await cancelOrder(orderId);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Cancellation failed");
+      // Error toast already shown by context
     }
+  };
+
+  const handleViewChange = (newView) => {
+    fetchOrders(newView);
   };
 
   return (
@@ -74,13 +48,13 @@ const Orders = () => {
 
         <div className="flex bg-white shadow-sm border border-gray-100 p-1 rounded-2xl">
           <button
-            onClick={() => setView("buying")}
+            onClick={() => handleViewChange("buying")}
             className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === "buying" ? "bg-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-emerald-600"}`}
           >
             My Purchases
           </button>
           <button
-            onClick={() => setView("selling")}
+            onClick={() => handleViewChange("selling")}
             className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === "selling" ? "bg-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-emerald-600"}`}
           >
             My Sales

@@ -10,8 +10,7 @@ import {
   Layers,
   Tag,
 } from "lucide-react";
-import api from "../api/axios.js";
-import toast from "react-hot-toast";
+import { useFlower } from "../contexts/FlowerContext";
 
 const CATEGORIES = [
   "Roses",
@@ -27,7 +26,8 @@ const CATEGORIES = [
 const EditFlower = () => {
   const { flowerId } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const { selectedFlower, loading, fetchFlowerById, updateFlower } =
+    useFlower();
   const [updating, setUpdating] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -41,39 +41,31 @@ const EditFlower = () => {
 
   // 1. Fetch current flower details to pre-fill the form
   useEffect(() => {
-    const fetchFlower = async () => {
-      try {
-        const res = await api.get(`/flowers/${flowerId}`);
-        const data = res.data.data;
-        setFormData({
-          name: data.name,
-          price: data.price,
-          stock: data.stock,
-          category: data.category,
-          description: data.description,
-          image: data.image,
-        });
-      } catch (err) {
-        toast.error("Could not load flower details");
-        navigate("/orders");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFlower();
-  }, [flowerId, navigate]);
+    fetchFlowerById(flowerId);
+  }, [flowerId]);
+
+  // 2. Pre-fill form once selectedFlower is loaded
+  useEffect(() => {
+    if (selectedFlower) {
+      setFormData({
+        name: selectedFlower.name,
+        price: selectedFlower.price,
+        stock: selectedFlower.stock,
+        category: selectedFlower.category,
+        description: selectedFlower.description,
+        image: selectedFlower.image,
+      });
+    }
+  }, [selectedFlower]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdating(true);
     try {
-      // Using your PATCH route
-      await api.patch(`/flowers/update-flower/${flowerId}`, formData);
-      toast.success("Bloom updated successfully! 🌸");
+      await updateFlower(flowerId, formData);
       navigate(`/flowers/${flowerId}`);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Update failed");
-    } finally {
+      // Error toast already shown by context
       setUpdating(false);
     }
   };

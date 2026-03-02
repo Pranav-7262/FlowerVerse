@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
 import {
   PlusCircle,
   Image as ImageIcon,
@@ -13,7 +12,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import api from "../api/axios.js";
+import { useFlower } from "../contexts/FlowerContext";
 
 const CATEGORIES = [
   "Roses",
@@ -28,6 +27,7 @@ const CATEGORIES = [
 
 const CreateFlower = () => {
   const navigate = useNavigate();
+  const { createFlower } = useFlower();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -47,11 +47,10 @@ const CreateFlower = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post("/flowers/create-flower", formData);
-      toast.success("Flower created Successfully !!");
+      await createFlower(formData);
+      navigate("/my-flowers");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to create flower");
-    } finally {
+      // Error toast already shown by context
       setLoading(false);
     }
   };

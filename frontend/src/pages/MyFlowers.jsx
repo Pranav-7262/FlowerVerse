@@ -13,9 +13,11 @@ import {
   Layers,
 } from "lucide-react";
 import api from "../api/axios.js";
+import { useFlower } from "../contexts/FlowerContext";
 
 const MyFlowers = () => {
   const navigate = useNavigate();
+  const { deleteFlower } = useFlower();
   const [flowers, setFlowers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,10 +41,10 @@ const MyFlowers = () => {
     if (!window.confirm("Are you sure you want to delete this listing?"))
       return;
     try {
-      await api.delete(`/flowers/delete-flower/${id}`);
+      await deleteFlower(id);
       setFlowers(flowers.filter((f) => f._id !== id));
     } catch (err) {
-      alert("Delete failed");
+      // Error toast already shown by context
     }
   };
 
