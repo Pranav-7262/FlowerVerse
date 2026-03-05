@@ -25,7 +25,22 @@ api.interceptors.response.use(
         await api.post("/auth/refresh"); // cookies auto sent
         return api(originalRequest);
       } catch (err) {
-        if (window.location.pathname !== "/login") {
+        // Don't force-redirect to login when user is on public pages
+        const currentPath = window.location.pathname;
+        const publicPaths = [
+          "/login",
+          "/register",
+          "/forgot-password",
+          "/reset-password",
+          "/flowers",
+        ];
+
+        // Check if current path starts with any public path
+        const isPublicPath = publicPaths.some((path) =>
+          currentPath.startsWith(path),
+        );
+
+        if (!isPublicPath) {
           window.location.replace("/login");
         }
         return Promise.reject(err);

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../api/axios.js";
 import toast from "react-hot-toast";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext();
 
@@ -8,6 +9,7 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cartCount, setCartCount] = useState(0);
+  const { user, loading: authLoading } = useAuth();
 
   const fetchCart = async () => {
     try {
@@ -32,20 +34,34 @@ export const CartProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchCart();
+    // Only fetch cart when user is authenticated and auth is not loading
+    if (!authLoading && user) {
+      fetchCart();
+    } else if (!authLoading && !user) {
+      // Clear cart when user is not authenticated
+      setCart(null);
+      setCartCount(0);
+      setLoading(false);
+    }
 
     // Listen for cart updates from other operations
     const handleCartUpdate = () => {
-      fetchCart();
+      if (user) {
+        fetchCart();
+      }
     };
 
     window.addEventListener("cartUpdated", handleCartUpdate);
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
-  }, []);
+  }, [user, authLoading]);
 
   const addToCart = async (flowerId, quantity = 1) => {
+    if (!user) {
+      toast.error("Please login to add items to cart");
+      return;
+    }
     try {
       const res = await api.post("/cart/add", { flowerId, quantity });
       toast.success("Added to cart 🌸");
@@ -60,6 +76,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = async (flowerId, newQuantity) => {
+    if (!user) {
+      toast.error("Please login to update cart");
+      return;
+    }
     if (newQuantity < 1) return;
     try {
       const res = await api.patch("/cart/update", {
@@ -77,6 +97,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = async (flowerId) => {
+    if (!user) {
+      toast.error("Please login to remove items from cart");
+      return;
+    }
     try {
       const res = await api.delete(`/cart/remove/${flowerId}`);
       toast.success("Removed from bag");

@@ -25,6 +25,13 @@ const userSchema = new mongoose.Schema(
       // for JWT refresh tokens , used in authentication
       type: String,
     },
+    forgetPasswordToken: {
+      // for password reset functionality
+      type: String,
+    },
+    forgetPasswordExpiry: {
+      type: Date,
+    },
   },
   { timestamps: true },
 );

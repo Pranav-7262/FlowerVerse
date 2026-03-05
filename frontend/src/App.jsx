@@ -17,6 +17,8 @@ import CreateFlower from "./pages/CreateFlower";
 import EditFlower from "./pages/EditFlower";
 import Account from "./pages/Account";
 import Security from "./pages/Security";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
   return (
@@ -77,6 +79,8 @@ const App = () => {
               </PublicRoute>
             }
           />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
 

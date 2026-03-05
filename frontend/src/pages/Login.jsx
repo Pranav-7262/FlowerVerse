@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -63,6 +64,15 @@ const Login = () => {
               className="w-full bg-gray-50 border border-gray-300 p-3 pl-10 rounded-xl text-gray-900 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 transition-all"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
+          </div>
+          <div className="flex justify-end mt-1">
+            <Link
+              to="/forgot-password"
+              size="sm"
+              className="text-sm text-emerald-600 font-bold hover:underline"
+            >
+              Forgot Password?
+            </Link>
           </div>
         </div>
 
