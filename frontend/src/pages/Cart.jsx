@@ -14,6 +14,7 @@ import {
 import { useCart } from "../contexts/CartContext";
 
 const Cart = () => {
+  const { clearCart } = useCart();
   const navigate = useNavigate();
   const {
     cart,
@@ -42,6 +43,13 @@ const Cart = () => {
       await removeFromCart(flowerId);
     } catch (err) {
       // Error toast already shown by context
+    }
+  };
+  const handleClearCart = async () => {
+    try {
+      await clearCart();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -114,7 +122,6 @@ const Cart = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-
                   {/* Details */}
                   <div className="flex-1 text-center sm:text-left">
                     <h3 className="text-xl font-bold text-gray-900">
@@ -127,7 +134,6 @@ const Cart = () => {
                       ₹{item.flower.price}
                     </p>
                   </div>
-
                   {/* Quantity Controls */}
                   <div className="flex items-center gap-4 bg-gray-50 p-2 rounded-xl">
                     <button
@@ -150,7 +156,6 @@ const Cart = () => {
                       <Plus size={20} />
                     </button>
                   </div>
-
                   {/* Remove */}
                   <button
                     onClick={() => handleRemove(item.flower._id)}
@@ -161,6 +166,14 @@ const Cart = () => {
                 </motion.div>
               ))}
           </AnimatePresence>
+          <div className="text-right">
+            <button
+              onClick={handleClearCart}
+              className="inline-flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-xl transition-colors"
+            >
+              <Trash2 size={16} /> Clear Bag
+            </button>
+          </div>
 
           <button
             onClick={() => navigate("/")}
