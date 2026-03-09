@@ -23,7 +23,6 @@ import ResetPassword from "./pages/ResetPassword";
 const App = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-rose-50 via-white to-emerald-50 text-gray-800 flex flex-col">
-      {/* Navbar stays full-width */}
       <Toaster
         position="top-right"
         toastOptions={{
@@ -57,7 +56,6 @@ const App = () => {
       />
       <Navbar />
 
-      {/* Page container - grows to fill space */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <Routes>
           {/* Public */}

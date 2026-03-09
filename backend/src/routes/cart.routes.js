@@ -12,10 +12,10 @@ const router = express.Router();
 
 router.use(verifyJWT); // Protect all cart routes with JWT verification
 
-router.get("/", getCart); // Get current user's cart
+router.get("/", getCart);
 router.post("/add", addToCart);
 router.patch("/update", updateCartItem);
-router.delete("/remove/:flowerId", removeFromCart); // Remove item from cart
+router.delete("/remove/:flowerId", removeFromCart);
 router.delete("/clear-cart", clearCart);
 
 export default router;

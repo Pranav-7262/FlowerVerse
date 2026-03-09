@@ -8,13 +8,13 @@ export const getAllFlowers = async_handler(async (req, res) => {
   const { category, page = 1, limit = 10 } = req.query; // pagination and category filter
 
   const filter = { stock: { $gt: 0 } }; // only get flowers that are in stock or available flowers
-  if (category) filter.category = category; //
+  if (category) filter.category = category;
 
   const flowers = await Flower.find(filter)
     .populate("owner", "userName")
-    .sort({ createdAt: -1 }) //
-    .skip((page - 1) * limit) // for pagination
-    .limit(Number(limit)); // for pagination
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(Number(limit));
 
   return res
     .status(200)
@@ -22,8 +22,8 @@ export const getAllFlowers = async_handler(async (req, res) => {
 });
 
 export const getFlowerById = async_handler(async (req, res) => {
-  const flowerId = req.params.flowerId; //
-  const flower = await Flower.findById(flowerId).populate("owner", "userName"); // get flower by id with owner's username
+  const flowerId = req.params.flowerId;
+  const flower = await Flower.findById(flowerId).populate("owner", "userName");
   if (!flower) {
     throw new ApiError(404, "Flower not found");
   }
@@ -32,7 +32,7 @@ export const getFlowerById = async_handler(async (req, res) => {
 
 export const getMyFlowers = async_handler(async (req, res) => {
   const userId = req.userId;
-  const myFlowers = await Flower.find({ owner: userId }); // get flowers added by logged in user
+  const myFlowers = await Flower.find({ owner: userId });
   if (!myFlowers) {
     //should retuern empty array if no flowers found
     return res

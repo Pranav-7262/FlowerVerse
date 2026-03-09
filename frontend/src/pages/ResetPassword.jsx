@@ -5,7 +5,7 @@ import api from "../api/axios";
 import { useAuth } from "../contexts/AuthContext";
 
 const ResetPassword = () => {
-  const { token } = useParams(); // like /reset-password/:token
+  const { token } = useParams();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [password, setPassword] = useState("");

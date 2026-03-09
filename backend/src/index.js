@@ -12,7 +12,6 @@ import flowerRoutes from "./routes/flower.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 
-// console.log(process.env.PORT);
 const app = express();
 const corsOptions = {
   origin: ["http://localhost:5173", "http://localhost:5174"],

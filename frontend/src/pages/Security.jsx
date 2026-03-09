@@ -8,7 +8,6 @@ const Security = () => {
   const { user, updateUsername, updateEmail, updatePassword } = useAuth();
   const [editMode, setEditMode] = useState(null); // 'name', 'email', 'password'
 
-  // Local form state
   const [formData, setFormData] = useState({
     userName: user?.userName || "",
     email: user?.email || "",

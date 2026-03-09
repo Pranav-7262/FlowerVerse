@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
 
   // ⛔ DO NOT redirect while loading
   if (loading) {
-    return <div>Loading...</div>; // or spinner
+    return <div>Loading...</div>;
   }
 
   if (!isAuthenticated) {

@@ -9,7 +9,7 @@ export const getCart = async_handler(async (req, res) => {
   const cart = await Cart.findOne({ user: userId }).populate(
     "items.flower",
     "name price image stock category",
-  ); // log in users cart and flowers details
+  );
 
   if (!cart) {
     return res

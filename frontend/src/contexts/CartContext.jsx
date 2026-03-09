@@ -150,7 +150,6 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = async () => {
     try {
-      // Assuming there's a clear cart endpoint
       await api.delete("/cart/clear-cart");
       toast.success("Cart cleared");
       await fetchCart();

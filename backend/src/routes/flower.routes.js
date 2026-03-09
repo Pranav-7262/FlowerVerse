@@ -11,12 +11,12 @@ import {
 
 const router = express.Router();
 
-router.get("/", getAllFlowers); //public route to get all flowers
-router.get("/my", verifyJWT, getMyFlowers); // get flowers added by logged in user
-router.get("/:flowerId", getFlowerById); // get flower by id
+router.get("/", getAllFlowers);
+router.get("/my", verifyJWT, getMyFlowers);
+router.get("/:flowerId", getFlowerById);
 
 router.post("/create-flower", verifyJWT, createFlower);
-router.patch("/update-flower/:flowerId", verifyJWT, updateFlower); // update flower by id
-router.delete("/delete-flower/:flowerId", verifyJWT, deleteFlower); //   delete flower by id
+router.patch("/update-flower/:flowerId", verifyJWT, updateFlower);
+router.delete("/delete-flower/:flowerId", verifyJWT, deleteFlower);
 
 export default router;

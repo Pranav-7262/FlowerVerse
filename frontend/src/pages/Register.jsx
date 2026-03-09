@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { User, Mail, Lock, UserPlus, Loader2, ArrowRight } from "lucide-react";
 
 const Register = () => {
-  const { register } = useAuth(); // Assuming your auth context has a register method
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ userName: "", email: "", password: "" });

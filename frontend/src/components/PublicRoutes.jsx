@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return null; // or spinner
+  if (loading) return null;
 
   // If already logged in → block login/register
   if (user) {
