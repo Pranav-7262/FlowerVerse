@@ -62,7 +62,11 @@ export const FlowerProvider = ({ children }) => {
 
   const createFlower = async (flowerData) => {
     try {
-      const res = await api.post("/flowers/create-flower", flowerData);
+      const res = await api.post("/flowers/create-flower", flowerData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Crucial for file uploads
+        },
+      });
       toast.success("Flower created successfully!");
       setFlowers([...flowers, res.data.data]);
       return res.data.data;

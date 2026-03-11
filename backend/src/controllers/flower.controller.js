@@ -1,6 +1,7 @@
 import async_handler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import Flower from "../models/flower.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
 import { ApiError } from "../lib/ApiError.js";
 
@@ -53,16 +54,21 @@ export const createFlower = async_handler(async (req, res) => {
   const userId = req.userId;
   const { name, price, image, description, category, stock } = req.body;
   if (
-    [name, price, image, category].some(
-      (field) => field?.toString().trim() === "",
-    )
+    [name, price, category].some((field) => field?.toString().trim() === "")
   ) {
     throw new ApiError(400, "Name, price ,category and image are required");
   }
+  const imageLocalPath = req.file?.path;
+  if (!imageLocalPath) throw new ApiError(400, "Flower image is required");
+
+  const imageCloud = await uploadOnCloudinary(imageLocalPath);
+  console.log("Cloudinary upload result:", imageCloud);
+  if (!imageCloud) throw new ApiError(400, "Error while uploading image");
+
   const flower = await Flower.create({
     name,
     price,
-    image,
+    image: imageCloud.url, // Cloudinary URL,
     description,
     category,
     stock,

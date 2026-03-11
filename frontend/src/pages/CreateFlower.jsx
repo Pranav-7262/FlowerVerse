@@ -32,22 +32,39 @@ const CreateFlower = () => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
-    image: "",
     description: "",
     category: "Roses",
     stock: 1,
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // Get the first selected file
+    if (file) {
+      setImageFile(file);
+      setPreviewUrl(URL.createObjectURL(file)); // Creates temporary local URL for preview
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!imageFile) return toast.error("Please upload an image");
     setLoading(true);
     try {
-      await createFlower(formData);
+      const data = new FormData(); // for multipart/form-data requests means we can send files
+      data.append("name", formData.name);
+      data.append("price", formData.price);
+      data.append("description", formData.description);
+      data.append("category", formData.category);
+      data.append("stock", formData.stock);
+      data.append("image", imageFile);
+
+      await createFlower(data);
+
       navigate("/my-flowers");
     } catch (err) {
       // Error toast already shown by context
@@ -152,16 +169,25 @@ const CreateFlower = () => {
             {/* Image URL */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                <ImageIcon size={16} className="text-emerald-500" /> Image URL
+                <ImageIcon size={16} className="text-emerald-500" /> Upload
+                Flower Photo
               </label>
-              <input
-                required
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full px-4 py-3 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-              />
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  required
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="flower-image"
+                />
+                <label
+                  htmlFor="flower-image"
+                  className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-dashed border-gray-200 hover:border-emerald-400 cursor-pointer transition-all"
+                >
+                  {imageFile ? imageFile.name : "Click to select a photo"}
+                </label>
+              </div>
             </div>
 
             {/* Description */}
@@ -194,58 +220,17 @@ const CreateFlower = () => {
           animate={{ opacity: 1, x: 0 }}
           className="lg:w-80 flex flex-col gap-6"
         >
-          <div className="sticky top-28">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 ml-2">
-              Live Preview
-            </p>
-            <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100 group">
-              <div className="h-64 bg-gray-100 relative overflow-hidden">
-                {formData.image ? (
-                  <img
-                    src={formData.image}
-                    className="w-full h-full object-cover"
-                    alt="preview"
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
-                    <ImageIcon size={48} />
-                    <span className="text-xs mt-2 italic">
-                      Image will appear here
-                    </span>
-                  </div>
-                )}
-                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-emerald-700">
-                  ₹{formData.price || "0"}
-                </div>
-              </div>
-              <div className="p-5 space-y-3">
-                <h3 className="font-bold text-gray-800 truncate text-lg">
-                  {formData.name || "Flower Name"}
-                </h3>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-emerald-600 font-bold">
-                    {formData.category}
-                  </span>
-                  <span className="text-gray-400">Stock: {formData.stock}</span>
-                </div>
-                <div className="flex gap-2 pt-2 opacity-50">
-                  <div className="h-8 flex-1 bg-gray-100 rounded-lg" />
-                  <div className="h-8 w-10 bg-gray-100 rounded-lg" />
-                </div>
-              </div>
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              className="w-full h-full object-cover"
+              alt="preview"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+              <ImageIcon size={48} />
             </div>
-
-            {/* Tips Card */}
-            <div className="mt-8 bg-emerald-900 rounded-3xl p-6 text-white">
-              <h4 className="font-bold flex items-center gap-2 mb-2 text-emerald-300">
-                <CheckCircle2 size={18} /> Pro Tip
-              </h4>
-              <p className="text-xs text-emerald-100 leading-relaxed opacity-80">
-                High-quality images of fresh flowers increase sales by up to
-                40%. Ensure your price is competitive for your region.
-              </p>
-            </div>
-          </div>
+          )}
         </motion.div>
       </div>
     </div>

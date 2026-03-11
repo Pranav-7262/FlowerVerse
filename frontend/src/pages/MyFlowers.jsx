@@ -147,7 +147,7 @@ const MyFlowers = () => {
                         <div className="flex items-center gap-4">
                           <img
                             src={flower.image}
-                            alt=""
+                            alt={flower.image}
                             className="w-12 h-12 rounded-xl object-cover shadow-sm"
                           />
                           <span className="font-bold text-gray-900">
