@@ -63,7 +63,7 @@ const EditFlower = () => {
     setUpdating(true);
     try {
       await updateFlower(flowerId, formData);
-      navigate(`/flowers/${flowerId}`);
+      navigate("/admin/dashboard");
     } catch (err) {
       // Error toast already shown by context
       setUpdating(false);

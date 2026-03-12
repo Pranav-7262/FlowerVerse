@@ -14,6 +14,7 @@ import {
   resetPassword,
 } from "../controllers/auth.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
+
 const router = express.Router();
 
 router.post("/register", registerUser);
@@ -28,4 +29,5 @@ router.put("/update-password", verifyJWT, changeCurrentPassword);
 router.delete("/reset-account", verifyJWT, resetAccount);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
+
 export default router;

@@ -1,5 +1,6 @@
 import express from "express";
 import { verifyJWT } from "../middleware/auth.middleware.js";
+import { verifyAdmin } from "../middleware/admin.middleware.js";
 import {
   getAllFlowers,
   getFlowerById,
@@ -13,11 +14,17 @@ import { upload } from "../middleware/multer.middleware.js";
 const router = express.Router();
 
 router.get("/", getAllFlowers);
-router.get("/my", verifyJWT, getMyFlowers);
+router.get("/my", verifyJWT, verifyAdmin, getMyFlowers);
 router.get("/:flowerId", getFlowerById);
 
-router.post("/create-flower", verifyJWT, upload.single("image"), createFlower);
-router.patch("/update-flower/:flowerId", verifyJWT, updateFlower);
-router.delete("/delete-flower/:flowerId", verifyJWT, deleteFlower);
+router.post(
+  "/create-flower",
+  verifyJWT,
+  verifyAdmin,
+  upload.single("image"),
+  createFlower,
+);
+router.patch("/update-flower/:flowerId", verifyJWT, verifyAdmin, updateFlower);
+router.delete("/delete-flower/:flowerId", verifyJWT, verifyAdmin, deleteFlower);
 
 export default router;

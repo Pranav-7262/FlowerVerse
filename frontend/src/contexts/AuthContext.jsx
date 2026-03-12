@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const loadUser = async () => {
     try {
       const res = await api.get("/auth/current-user"); // cookies sent auto
-      console.log("data : ", res.data.data.user);
+      console.log("user : ", res.data.data.user);
       setUser(res.data.data.user);
     } catch {
       setUser(null);
@@ -101,6 +101,7 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         isAuthenticated: !!user,
+        isAdmin: user?.role === "admin",
         login,
         register,
         logout,

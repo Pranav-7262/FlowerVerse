@@ -81,10 +81,14 @@ export const createFlower = async_handler(async (req, res) => {
 export const updateFlower = async_handler(async (req, res) => {
   const userId = req.userId;
   const flowerId = req.params.flowerId;
-  const flower = await Flower.findOne({
-    _id: flowerId,
-    owner: userId,
-  });
+  const userRole = req.user?.role; // Get user role from auth middleware
+
+  const query = { _id: flowerId };
+  if (userRole !== "admin") {
+    query.owner = userId;
+  }
+
+  const flower = await Flower.findOne(query);
 
   if (!flower) {
     throw new ApiError(404, "Flower not found");
@@ -98,10 +102,15 @@ export const updateFlower = async_handler(async (req, res) => {
 export const deleteFlower = async_handler(async (req, res) => {
   const userId = req.userId;
   const flowerId = req.params.flowerId;
-  const flower = await Flower.findOneAndDelete({
-    _id: flowerId,
-    owner: userId,
-  });
+  const userRole = req.user?.role;
+
+  const query = { _id: flowerId };
+  if (userRole !== "admin") {
+    query.owner = userId;
+  }
+
+  const flower = await Flower.findOneAndDelete(query);
+
   if (!flower) {
     throw new ApiError(404, "Flower not found");
   }

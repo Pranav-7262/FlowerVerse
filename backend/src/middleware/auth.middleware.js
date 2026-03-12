@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import { ApiError } from "../lib/ApiError.js";
 
 export const verifyJWT = async (req, res, next) => {
   try {
@@ -22,6 +23,7 @@ export const verifyJWT = async (req, res, next) => {
       throw new ApiError(401, "Invalid Access Token");
     }
     req.userId = user._id;
+    req.user = user; // Set full user object for admin middleware
     next();
   } catch (error) {
     return res.status(401).json({

@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      default: "customer",
+    },
     refreshToken: {
       // for JWT refresh tokens , used in authentication
       type: String,
@@ -31,6 +36,11 @@ const userSchema = new mongoose.Schema(
     },
     forgetPasswordExpiry: {
       type: Date,
+    },
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      default: "customer",
     },
   },
   { timestamps: true },
@@ -51,6 +61,7 @@ userSchema.methods.generateAccessToken = function () {
       _id: this._id,
       userName: this.userName,
       email: this.email,
+      role: this.role,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {

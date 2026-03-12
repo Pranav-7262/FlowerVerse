@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import PublicRoute from "./components/PublicRoutes";
 import { Toaster } from "react-hot-toast";
 
@@ -19,6 +20,7 @@ import Account from "./pages/Account";
 import Security from "./pages/Security";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const App = () => {
   return (
@@ -102,9 +104,9 @@ const App = () => {
           <Route
             path="/flowers/create-flower"
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <CreateFlower />
-              </ProtectedRoute>
+              </AdminRoute>
             }
           />
 
@@ -138,17 +140,27 @@ const App = () => {
           <Route
             path="/my-flowers"
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <MyFlowers />
-              </ProtectedRoute>
+              </AdminRoute>
             }
           />
           <Route
             path="/flowers/edit/:flowerId"
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <EditFlower />
-              </ProtectedRoute>
+              </AdminRoute>
+            }
+          />
+
+          {/* Admin Routes */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
             }
           />
         </Routes>
