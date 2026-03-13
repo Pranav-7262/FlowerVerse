@@ -81,7 +81,6 @@ const Navbar = () => {
         <div className="flex items-center gap-1 md:gap-3">
           {user ? (
             <>
-              {/* 1. SEPARATE ORDERS ITEM (Amazon Style) */}
               <Link
                 to="/orders"
                 className={`hidden sm:flex flex-col items-start px-4 py-2 rounded-2xl transition-all border border-transparent ${

@@ -4,7 +4,7 @@ import { ApiResponse } from "../lib/ApiResponse.js";
 import User from "../models/user.model.js";
 
 export const getAllUsers = async_handler(async (req, res) => {
-  const { page = 1, limit = 10, role, search } = req.query; // pagination and filtering params
+  const { page = 1, limit = 10, role, search } = req.query; // eg like ?page=1&limit=10&role=admin&search=john
 
   let filter = {};
 
