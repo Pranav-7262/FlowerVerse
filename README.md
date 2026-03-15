@@ -1,4 +1,4 @@
-# 🌸 BloomCart - Flower E-Commerce Platform
+# 🌸 FlowerVerse - Flower E-Commerce Platform
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18+-blue.svg)](https://reactjs.org/)
@@ -7,7 +7,7 @@
 [![Cloudinary](https://img.shields.io/badge/Cloudinary-API-orange.svg)](https://cloudinary.com/)
 [![Vite](https://img.shields.io/badge/Vite-5.x-purple.svg)](https://vitejs.dev/)
 
-Welcome to **BloomCart**! 🌼 A full-stack e-commerce platform for buying and selling beautiful flowers. This project allows users to browse, add to cart, purchase flowers, and manage their accounts seamlessly. Sellers can create, edit, and manage their flower listings with image uploads powered by Cloudinary.
+Welcome to **FlowerVerse**! 🌼 A full-stack e-commerce platform for buying and selling beautiful flowers. This project allows users to browse, add to cart, purchase flowers, and manage their accounts seamlessly. Sellers can create, edit, and manage their flower listings with image uploads powered by Cloudinary.
 
 ## 📋 Table of Contents
 
