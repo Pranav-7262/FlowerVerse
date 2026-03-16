@@ -19,7 +19,6 @@ export const OrderProvider = ({ children }) => {
       setOrders(fetchedOrders);
       setView(orderView);
 
-      // Calculate Stats if in selling view
       if (orderView === "selling") {
         const totalRev = fetchedOrders
           .filter((o) => o.status === "PLACED")
@@ -80,7 +79,6 @@ export const OrderProvider = ({ children }) => {
       const res = await api.post("/orders/checkout", orderData);
       toast.success("Order placed successfully!");
 
-      // clear cart on server and update context
       try {
         await api.delete("/cart/clear-cart");
       } catch (clearErr) {

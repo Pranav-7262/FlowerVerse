@@ -45,6 +45,23 @@ const flowerSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    reviews: [
+      // array of review IDs for quick access to reviews of this flower
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+    averageRating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

@@ -24,7 +24,12 @@ export const getAllFlowers = async_handler(async (req, res) => {
 
 export const getFlowerById = async_handler(async (req, res) => {
   const flowerId = req.params.flowerId;
-  const flower = await Flower.findById(flowerId).populate("owner", "userName");
+  const flower = await Flower.findById(flowerId)
+    .populate("owner", "userName")
+    .populate({
+      path: "reviews",
+      populate: { path: "reviewer", select: "userName" },
+    });
   if (!flower) {
     throw new ApiError(404, "Flower not found");
   }

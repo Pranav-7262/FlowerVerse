@@ -12,6 +12,7 @@ import flowerRoutes from "./routes/flower.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import adminRoutes from "./routes/admin.route.js";
+import reviewRoutes from "./routes/review.routes.js";
 
 const app = express();
 const corsOptions = {
@@ -32,6 +33,7 @@ app.use("/api/flowers", flowerRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 connectDB()
   .then(
