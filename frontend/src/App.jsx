@@ -21,6 +21,7 @@ import Security from "./pages/Security";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
+import RemoveAccount from "./pages/RemoveAccount";
 
 const App = () => {
   return (
@@ -136,6 +137,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/remove-acc"
+            element={
+              <ProtectedRoute>
+                <RemoveAccount />
+              </ProtectedRoute>
+            }
+          ></Route>
 
           <Route
             path="/my-flowers"

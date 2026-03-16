@@ -7,6 +7,7 @@ import {
   CreditCard,
   Flower2,
   MessageSquare,
+  Trash,
 } from "lucide-react";
 
 const Account = () => {
@@ -52,6 +53,13 @@ const Account = () => {
       icon: MessageSquare,
       link: "/support",
       color: "bg-teal-50 text-teal-600",
+    },
+    {
+      title: "Remove Account",
+      desc: "Remoce youe account permenently",
+      icon: Trash,
+      link: "/remove-acc",
+      color: "bg-red-100 text-teal-600",
     },
   ];
 
