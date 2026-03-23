@@ -79,13 +79,6 @@ export const OrderProvider = ({ children }) => {
       const res = await api.post("/orders/checkout", orderData);
       toast.success("Order placed successfully!");
 
-      try {
-        await api.delete("/cart/clear-cart");
-      } catch (clearErr) {
-        console.warn("Cart clear failed after order", clearErr);
-      }
-
-      // refresh orders and notify cart context listeners
       await fetchOrders("buying");
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("cartUpdated"));

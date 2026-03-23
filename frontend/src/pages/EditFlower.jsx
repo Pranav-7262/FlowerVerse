@@ -13,12 +13,17 @@ import {
 import { useFlower } from "../contexts/FlowerContext";
 
 const CATEGORIES = [
+  "All",
   "Roses",
   "Tulips",
   "Daisies",
   "Lilies",
   "Orchids",
   "Sunflowers",
+  "Lotus",
+  "Hibiscus",
+  "Jasmines",
+  "Marigolds",
   "Carnations",
   "Mixed Bouquets",
 ];

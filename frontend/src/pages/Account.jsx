@@ -26,13 +26,7 @@ const Account = () => {
       link: "/account/security",
       color: "bg-emerald-50 text-emerald-600",
     },
-    {
-      title: "Seller Studio",
-      desc: "Manage your listings and sales revenue",
-      icon: Flower2,
-      link: "/my-flowers",
-      color: "bg-purple-50 text-purple-600",
-    },
+
     {
       title: "Your Addresses",
       desc: "Edit addresses for orders and gifts",
@@ -40,13 +34,7 @@ const Account = () => {
       link: "/account/addresses",
       color: "bg-orange-50 text-orange-600",
     },
-    {
-      title: "Payment Options",
-      desc: "Edit or add payment methods",
-      icon: CreditCard,
-      link: "/account/payments",
-      color: "bg-rose-50 text-rose-600",
-    },
+
     {
       title: "Customer Service",
       desc: "Contact our flower care team",

@@ -1,37 +1,44 @@
 import React from "react";
 import StatsCard from "./StatsCard";
-import { Users, UserCheck, TrendingUp, Flower } from "lucide-react";
+import { Users, ShoppingBag, CreditCard, Flower } from "lucide-react";
 
 const StatsSection = ({ stats }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       <StatsCard
         icon={Users}
         label="Total Users"
         value={stats.totalUsers}
-        description="All registered members"
+        description={`${stats.adminUsers} Admins / ${stats.customerUsers} Buyers`}
         color="blue"
       />
+
       <StatsCard
-        icon={UserCheck}
-        label="Admin Users"
-        value={stats.adminUsers}
-        description="System administrators"
+        icon={ShoppingBag}
+        label="Total Orders"
+        value={stats.totalOrders || 0}
+        description="Global checkout volume"
         color="purple"
       />
-      <StatsCard
-        icon={TrendingUp}
-        label="Customers"
-        value={stats.customerUsers}
-        description="Active buyers"
-        color="emerald"
-      />
+
       <StatsCard
         icon={Flower}
-        label="Listed Flowers"
+        label="Catalog Size"
         value={stats.totalFlowers}
-        description="In catalog"
+        description="Active floral listings"
         color="pink"
+      />
+
+      <StatsCard
+        icon={CreditCard}
+        label="Total Revenue"
+        value={new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(stats.totalRevenue || 0)}
+        description="Gross marketplace sales"
+        color="emerald"
       />
     </div>
   );

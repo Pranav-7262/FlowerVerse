@@ -9,6 +9,7 @@ const ReviewDisplay = ({
   averageRating,
   totalReviews,
   currentUserId,
+  currentUserRole,
   onReviewDeleted,
   onReviewUpdated,
 }) => {
@@ -251,19 +252,23 @@ const ReviewDisplay = ({
                     </p>
                   </div>
 
-                  {currentUserId === review.reviewer?._id && (
-                    <div className="flex gap-2 ml-4">
-                      <button
-                        onClick={() => handleEditStart(review)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="Edit review"
-                      >
-                        <Edit2 size={18} />
-                      </button>
+                  {(currentUserId === review.reviewer?._id ||
+                    currentUserRole === "admin") && (
+                    <div className="flex items-center gap-2 ml-4">
+                      {currentUserId === review.reviewer?._id && (
+                        <button
+                          onClick={() => handleEditStart(review)}
+                          className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
+                          title="Edit review"
+                        >
+                          <Edit2 size={18} />
+                        </button>
+                      )}
+
                       <button
                         onClick={() => handleDelete(review._id)}
                         disabled={loading}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                        className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Delete review"
                       >
                         <Trash2 size={18} />

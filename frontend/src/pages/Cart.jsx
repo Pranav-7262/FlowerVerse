@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -10,47 +10,65 @@ import {
   ChevronLeft,
   Truck,
   CreditCard,
+  CheckCircle2,
 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 
 const Cart = () => {
-  const { clearCart } = useCart();
-  const navigate = useNavigate();
   const {
     cart,
     loading,
     fetchCart,
     updateQuantity,
     removeFromCart,
-    getCartSummary,
+    clearCart,
   } = useCart();
+  const navigate = useNavigate();
+
+  const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     fetchCart();
   }, []);
 
-  const handleUpdateQuantity = async (flowerId, newQuantity) => {
-    if (newQuantity < 1) return;
-    try {
-      await updateQuantity(flowerId, newQuantity);
-    } catch (err) {
-      // Error toast already shown by context
+  useEffect(() => {
+    if (cart?.items?.length > 0 && selectedItems.length === 0) {
+      setSelectedItems(cart.items.map((item) => item.flower._id)); // auto-select all items when cart loads
+    }
+  }, [cart]);
+
+  const toggleSelection = (flowerId) => {
+    setSelectedItems((prev) =>
+      prev.includes(flowerId)
+        ? prev.filter((id) => id !== flowerId)
+        : [...prev, flowerId],
+    );
+  };
+
+  // Select/Deselect All
+  const toggleAll = () => {
+    if (selectedItems.length === cart.items.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(cart.items.map((item) => item.flower._id)); // select all flower ids in the cart
     }
   };
 
-  const handleRemove = async (flowerId) => {
-    try {
-      await removeFromCart(flowerId);
-    } catch (err) {
-      // Error toast already shown by context
-    }
-  };
-  const handleClearCart = async () => {
-    try {
-      await clearCart();
-    } catch (error) {
-      console.error(error);
-    }
+  const selectedCartItems =
+    cart?.items?.filter((item) => selectedItems.includes(item.flower?._id)) ||
+    []; // only the items that are selected for checkout
+
+  const subtotal = selectedCartItems.reduce(
+    (acc, item) => acc + item.flower.price * item.quantity,
+    0,
+  );
+
+  const shipping = subtotal > 0 && subtotal < 500 ? 50 : 0;
+  const total = subtotal + shipping;
+
+  const handleUpdateQuantity = async (flowerId, newQuantity) => {
+    if (newQuantity < 1) return;
+    await updateQuantity(flowerId, newQuantity);
   };
 
   if (loading)
@@ -60,9 +78,7 @@ const Cart = () => {
       </div>
     );
 
-  const { items, subtotal, shipping, tax, total } = getCartSummary();
-
-  if (items.length === 0) {
+  if (!cart?.items || cart.items.length === 0) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -75,12 +91,9 @@ const Cart = () => {
         <h2 className="text-3xl font-serif font-bold text-gray-900">
           Your bag is empty
         </h2>
-        <p className="text-gray-500">
-          Looks like you haven't added any blooms to your collection yet.
-        </p>
         <Link
           to="/"
-          className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
+          className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:bg-emerald-700 transition-all"
         >
           Explore Flowers
         </Link>
@@ -90,97 +103,160 @@ const Cart = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      <div className="flex items-center gap-4 mb-10">
-        <h1 className="text-4xl font-serif font-bold text-gray-900">
-          Shopping Bag
-        </h1>
-        <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm font-bold">
-          {items.length} Items
-        </span>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+        <div>
+          <h1 className="text-4xl font-serif font-bold text-gray-900">
+            Shopping Bag
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Manage your blooms before checkout
+          </p>
+        </div>
+        <button
+          onClick={toggleAll}
+          className="text-sm font-bold text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl hover:bg-emerald-100 transition-colors"
+        >
+          {selectedItems.length === cart.items.length
+            ? "Deselect All"
+            : "Select All Items"}
+        </button>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-12">
         {/* Items List */}
         <div className="flex-1 space-y-6">
-          <AnimatePresence>
-            {items
+          <AnimatePresence mode="popLayout">
+            {cart.items
               .filter((item) => item.flower)
-              .map((item) => (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  key={item.flower._id}
-                  className="flex flex-col sm:flex-row items-center gap-6 bg-white p-6 rounded-4xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  {/* Image */}
-                  <div className="w-32 h-32 rounded-2xl overflow-hidden bg-gray-50 shrink-0">
-                    <img
-                      src={item.flower.image}
-                      alt={item.flower.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {/* Details */}
-                  <div className="flex-1 text-center sm:text-left">
-                    <h3 className="text-xl font-bold text-gray-900">
-                      {item.flower.name}
-                    </h3>
-                    <p className="text-sm text-emerald-600 font-medium">
-                      {item.flower.category}
-                    </p>
-                    <p className="text-lg font-bold text-gray-700 mt-2">
-                      ₹{item.flower.price}
-                    </p>
-                  </div>
-                  {/* Quantity Controls */}
-                  <div className="flex items-center gap-4 bg-gray-50 p-2 rounded-xl">
-                    <button
-                      onClick={() =>
-                        handleUpdateQuantity(item.flower._id, item.quantity - 1)
-                      }
-                      className="p-1 hover:text-emerald-600 transition-colors"
-                    >
-                      <Minus size={20} />
-                    </button>
-                    <span className="font-bold w-8 text-center">
-                      {item.quantity}
-                    </span>
-                    <button
-                      onClick={() =>
-                        handleUpdateQuantity(item.flower._id, item.quantity + 1)
-                      }
-                      className="p-1 hover:text-emerald-600 transition-colors"
-                    >
-                      <Plus size={20} />
-                    </button>
-                  </div>
-                  {/* Remove */}
-                  <button
-                    onClick={() => handleRemove(item.flower._id)}
-                    className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+              .map((item) => {
+                const isSelected = selectedItems.includes(item.flower._id);
+                return (
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    key={item.flower._id}
+                    className={`flex items-center gap-4 sm:gap-6 p-6 rounded-[2rem] border transition-all duration-300 ${
+                      isSelected
+                        ? "bg-white border-emerald-200 shadow-md"
+                        : "bg-gray-50/50 border-gray-100 opacity-80"
+                    }`}
                   >
-                    <Trash2 size={20} />
-                  </button>
-                </motion.div>
-              ))}
+                    <button
+                      onClick={() => toggleSelection(item.flower._id)}
+                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                        isSelected
+                          ? "bg-emerald-600 border-emerald-600 text-white"
+                          : "bg-white border-gray-300"
+                      }`}
+                    >
+                      {isSelected && <CheckCircle2 size={16} />}
+                    </button>
+
+                    {/* Image */}
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shrink-0 shadow-sm">
+                      <img
+                        src={item.flower.image}
+                        alt={item.flower.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* Details */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                        {item.flower.name}
+                      </h3>
+                      <p className="text-sm text-emerald-600 font-medium">
+                        {item.flower.category}
+                      </p>
+                      <p className="text-md font-bold text-gray-700 mt-1">
+                        ₹{item.flower.price}
+                      </p>
+
+                      {/* Mobile Quantity (Hidden on desktop) */}
+                      <div className="flex sm:hidden items-center gap-3 mt-3">
+                        <button
+                          onClick={() =>
+                            handleUpdateQuantity(
+                              item.flower._id,
+                              item.quantity - 1,
+                            )
+                          }
+                          className="p-1"
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <span className="font-bold">{item.quantity}</span>
+                        <button
+                          onClick={() =>
+                            handleUpdateQuantity(
+                              item.flower._id,
+                              item.quantity + 1,
+                            )
+                          }
+                          className="p-1"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Desktop Quantity Controls */}
+                    <div className="hidden sm:flex items-center gap-4 bg-gray-100/50 p-2 rounded-xl">
+                      <button
+                        onClick={() =>
+                          handleUpdateQuantity(
+                            item.flower._id,
+                            item.quantity - 1,
+                          )
+                        }
+                        className="p-1 hover:text-emerald-600"
+                      >
+                        <Minus size={18} />
+                      </button>
+                      <span className="font-bold w-6 text-center">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() =>
+                          handleUpdateQuantity(
+                            item.flower._id,
+                            item.quantity + 1,
+                          )
+                        }
+                        className="p-1 hover:text-emerald-600"
+                      >
+                        <Plus size={18} />
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => removeFromCart(item.flower._id)}
+                      className="p-2 text-gray-300 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </motion.div>
+                );
+              })}
           </AnimatePresence>
-          <div className="text-right">
+
+          <div className="flex justify-between items-center px-4">
             <button
-              onClick={handleClearCart}
-              className="inline-flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-xl transition-colors"
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 text-sm font-bold text-emerald-700 hover:underline"
+            >
+              <ChevronLeft size={16} /> Continue Shopping
+            </button>
+            <button
+              onClick={clearCart}
+              className="text-sm font-bold text-red-400 hover:text-red-600 flex items-center gap-2"
             >
               <Trash2 size={16} /> Clear Bag
             </button>
           </div>
-
-          <button
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2 text-sm font-bold text-emerald-700 hover:underline px-4"
-          >
-            <ChevronLeft size={16} /> Continue Shopping
-          </button>
         </div>
 
         {/* Order Summary */}
@@ -188,45 +264,57 @@ const Cart = () => {
           <div className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-xl sticky top-28">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Summary</h2>
             <div className="space-y-4 mb-8">
-              <div className="flex justify-between text-gray-500">
-                <span>Subtotal</span>
-                <span className="font-semibold text-gray-900">₹{subtotal}</span>
+              <div className="flex justify-between text-gray-500 font-medium">
+                <span>Selected Items ({selectedItems.length})</span>
+                <span className="text-gray-900">₹{subtotal}</span>
               </div>
-              <div className="flex justify-between text-gray-500">
-                <span>Estimated Shipping</span>
-                <span className="font-semibold text-gray-900">
+              <div className="flex justify-between text-gray-500 font-medium">
+                <span>Shipping</span>
+                <span
+                  className={
+                    shipping === 0 ? "text-emerald-600" : "text-gray-900"
+                  }
+                >
                   {shipping === 0 ? "FREE" : `₹${shipping}`}
                 </span>
               </div>
-              {shipping > 0 && (
-                <p className="text-[10px] text-emerald-600 bg-emerald-50 p-2 rounded-lg flex items-center gap-2 font-bold">
-                  <Truck size={14} /> Add ₹{500 - subtotal} more for FREE
-                  shipping!
-                </p>
+
+              {subtotal > 0 && subtotal < 500 && (
+                <div className="bg-emerald-50 p-3 rounded-xl flex items-center gap-3">
+                  <Truck size={18} className="text-emerald-600" />
+                  <p className="text-[11px] text-emerald-700 leading-tight">
+                    Add <b>₹{500 - subtotal}</b> more for <b>FREE shipping</b>
+                  </p>
+                </div>
               )}
-              <div className="pt-4 border-t border-gray-100 flex justify-between text-xl font-bold text-gray-900">
+
+              <div className="pt-4 border-t border-gray-100 flex justify-between text-2xl font-black text-gray-900">
                 <span>Total</span>
-                <span>₹{subtotal + shipping}</span>
+                <span>₹{total}</span>
               </div>
             </div>
 
             <button
+              disabled={selectedItems.length === 0}
               onClick={() =>
                 navigate("/checkout", {
                   state: {
-                    items: cart.items, // This must contain the updated quantities
-                    totalAmount: subtotal, // Your calculated subtotal + shipping
+                    items: selectedCartItems, // Passing ONLY selected items to checkout
+                    totalAmount: total,
                   },
                 })
               }
-              className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold ..."
+              className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all ${
+                selectedItems.length === 0
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-emerald-600 text-white shadow-lg shadow-emerald-100 hover:bg-emerald-700 hover:-translate-y-1"
+              }`}
             >
-              Proceed to Checkout
+              Checkout Selected <ArrowRight size={18} />
             </button>
-            <div className="mt-6 space-y-3">
-              <div className="flex items-center gap-3 text-xs text-gray-400 font-medium">
-                <CreditCard size={14} /> Secure Payment Guaranteed
-              </div>
+
+            <div className="mt-6 flex items-center justify-center gap-3 text-[10px] text-gray-400 font-black uppercase tracking-widest">
+              <CreditCard size={14} /> Encrypted Payment
             </div>
           </div>
         </div>

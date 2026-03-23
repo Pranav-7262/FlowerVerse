@@ -12,7 +12,7 @@ import Register from "./pages/Register";
 import FlowerDetails from "./pages/FlowerDetails";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
-import MyFlowers from "./pages/MyFlowers";
+
 import Checkout from "./pages/Checkout";
 import CreateFlower from "./pages/CreateFlower";
 import EditFlower from "./pages/EditFlower";
@@ -22,6 +22,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import RemoveAccount from "./pages/RemoveAccount";
+import Address from "./pages/Address";
+import OrderManagement from "./components/OrderManagement";
+import Support from "./pages/Support";
 
 const App = () => {
   return (
@@ -128,6 +131,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/account/addresses"
+            element={
+              <ProtectedRoute>
+                <Address />
+              </ProtectedRoute>
+            }
+          ></Route>
 
           <Route
             path="/orders"
@@ -144,16 +155,16 @@ const App = () => {
                 <RemoveAccount />
               </ProtectedRoute>
             }
-          ></Route>
-
+          />
           <Route
-            path="/my-flowers"
+            path="/support"
             element={
-              <AdminRoute>
-                <MyFlowers />
-              </AdminRoute>
+              <ProtectedRoute>
+                <Support />
+              </ProtectedRoute>
             }
           />
+
           <Route
             path="/flowers/edit/:flowerId"
             element={

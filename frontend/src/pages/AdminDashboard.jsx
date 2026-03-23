@@ -7,6 +7,7 @@ import TabNavigation from "../components/AdminDashboard/TabNavigation";
 import UserManagement from "../components/AdminDashboard/UserManagement";
 import FlowerManagement from "../components/AdminDashboard/FlowerManagement";
 import PaginationControls from "../components/AdminDashboard/PaginationControls";
+import OrderManagement from "../components/OrderManagement";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("users");
@@ -18,6 +19,7 @@ const AdminDashboard = () => {
     adminUsers: 0,
     customerUsers: 0,
     totalFlowers: 0,
+    totalOrders: 0,
   });
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
@@ -51,14 +53,16 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const [usersRes, flowersRes] = await Promise.all([
+      const [usersRes, flowersRes, ordersRes] = await Promise.all([
         api.get("/admin/stats/users"),
         api.get("/flowers"),
+        api.get("/admin/orders"),
       ]); // fetch user stats and total flowers in parallel
       console.log("flower :", flowersRes.data.data.flowers.length);
       setStats({
         ...usersRes.data.data,
         totalFlowers: flowersRes.data.data.flowers.length,
+        totalOrders: ordersRes.data.data.length,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -71,6 +75,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      setCurrentPage(1);
       fetchUsers(1, filter, search);
     }, 500);
 
@@ -120,12 +125,6 @@ const AdminDashboard = () => {
     }
   };
 
-  useEffect(() => {
-    if (activeTab === "flowers") {
-      fetchFlowers();
-    }
-  }, [activeTab]);
-
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -133,7 +132,35 @@ const AdminDashboard = () => {
       day: "numeric",
     });
   };
+  const [orders, setOrders] = useState([]);
 
+  const fetchAllOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get("/admin/orders");
+      setOrders(res.data.data);
+    } catch (error) {
+      toast.error("Failed to load global orders");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      await api.patch(`/admin/orders/${orderId}/status`, { status: newStatus });
+      toast.success(`Order marked as ${newStatus}`);
+      fetchAllOrders(); // Refresh the list
+    } catch (error) {
+      toast.error("Status update failed");
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "users") fetchUsers(currentPage, filter, search);
+    if (activeTab === "flowers") fetchFlowers();
+    if (activeTab === "orders") fetchAllOrders();
+  }, [activeTab]);
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50/30">
       {/* Header */}
@@ -192,6 +219,14 @@ const AdminDashboard = () => {
               loading={loading}
               formatDate={formatDate}
               handleDeleteFlower={handleDeleteFlower}
+            />
+          )}
+          {activeTab === "orders" && (
+            <OrderManagement
+              orders={orders}
+              loading={loading}
+              onUpdateStatus={handleUpdateStatus}
+              formatDate={formatDate}
             />
           )}
         </div>
