@@ -40,7 +40,6 @@ export const getMyFlowers = async_handler(async (req, res) => {
   const userId = req.userId;
   const myFlowers = await Flower.find({ owner: userId });
   if (!myFlowers) {
-    //should retuern empty array if no flowers found
     return res
       .status(200)
       .json(new ApiResponse(200, [], "No flowers found for this user"));
@@ -55,7 +54,6 @@ export const getMyFlowers = async_handler(async (req, res) => {
 });
 
 export const createFlower = async_handler(async (req, res) => {
-  //it means i am selling the flower
   const userId = req.userId;
   const { name, price, image, description, category, stock } = req.body;
   if (

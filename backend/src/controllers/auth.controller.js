@@ -396,3 +396,55 @@ export const resetPassword = async_handler(async (req, res) => {
       ),
     );
 });
+
+export const GetAdress = async_handler(async (req, res) => {
+  const userId = req.user?._id || req.userId;
+  const user = await User.findById(userId).select("address");
+  if (!user) {
+    throw new ApiError(400, "User not found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user.address, "Address fetched !"));
+});
+export const UpdateAdress = async_handler(async (req, res) => {
+  const { street, city, state, mobile } = req.body;
+
+  if (!street || !city || !state || !mobile) {
+    throw new ApiError(
+      400,
+      "All address fields (street, city, state, mobile) are required",
+    );
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id || req.userId,
+    {
+      $set: {
+        address: [{ street, city, state, mobile }],
+      },
+    },
+    { new: true, runValidators: true },
+  ).select("-password -refreshToken");
+  if (!user) throw new ApiError(404, "User not found");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user.address, "Address Updated successfully !"));
+});
+export const DeleteAdress = async_handler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.user?._id || req.userId,
+    {
+      $set: { address: [] },
+    },
+    { new: true },
+  ).select("-password -refreshToken");
+
+  if (!user) throw new ApiError(404, "User session expired or not found");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, [], "Shipping address removed successfully. 🗑️"),
+    );
+});

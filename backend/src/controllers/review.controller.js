@@ -146,6 +146,7 @@ export const deleteReview = async_handler(async (req, res) => {
   const { reviewId } = req.params; //from url
 
   const review = await Review.findById(reviewId);
+  const userRole = req.user?.role || "user";
 
   if (!review) {
     throw new ApiError(404, "Review not found");
@@ -153,7 +154,7 @@ export const deleteReview = async_handler(async (req, res) => {
 
   // Check if user is the review author or admin
 
-  if (review.reviewer.toString() !== userId.toString()) {
+  if (!userRole && review.reviewer.toString() !== userId.toString()) {
     throw new ApiError(403, "You can only delete your own review");
   }
 
