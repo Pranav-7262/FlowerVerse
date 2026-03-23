@@ -57,7 +57,6 @@ export const getMyOrders = async_handler(async (req, res) => {
 });
 
 export const getSellerOrders = async_handler(async (req, res) => {
-  // orders for logged in seller || my sold flowers to buyers
   const userId = req.userId;
   const orders = await Order.find({
     "items.seller": userId,
@@ -81,10 +80,10 @@ export const cancelOrder = async_handler(async (req, res) => {
     throw new ApiError(404, "Order not found");
   }
 
-  if (order.status !== "PLACED") {
+  if (order.status === "SHIPPED" || order.status === "DELIVERED") {
     throw new ApiError(
       400,
-      "Only orders with status 'PLACED' can be cancelled",
+      "Cannot cancel an order that has already been shipped.",
     );
   }
 

@@ -1,173 +1,255 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import {
-  ShieldCheck,
+  MapPin,
+  Phone,
   Truck,
   CreditCard,
   ArrowRight,
   ChevronLeft,
   Lock,
-  MapPin,
+  AlertCircle,
 } from "lucide-react";
-import api from "../api/axios.js";
 import toast from "react-hot-toast";
 import { useOrder } from "../contexts/OrderContext";
-import { useCart } from "../contexts/CartContext";
+import { useAdress } from "../contexts/AddressContext";
 
 const Checkout = () => {
-  const { state } = useLocation(); // Receives { items, totalAmount } from Cart
+  const { state } = useLocation();
   const navigate = useNavigate();
   const { createOrder } = useOrder();
-  const { clearCart } = useCart();
-  const [loading, setLoading] = useState(false);
 
-  if (!state || !state.items || state.items.length === 0) {
+  const { address, fetchAddress, loading: addressLoading } = useAdress();
+  const [orderLoading, setOrderLoading] = useState(false);
+
+  useEffect(() => {
+    fetchAddress();
+  }, []);
+
+  const currentAddress = address && address.length > 0 ? address[0] : null;
+
+  if (!state || !state.items) {
     return (
       <div className="text-center py-20">
-        <h2 className="text-2xl font-bold">Your bag is empty</h2>
-        <Link to="/" className="text-emerald-600 font-bold underline">
-          Go shopping
+        <h2 className="text-2xl font-serif font-bold text-gray-400">
+          Your bag is empty
+        </h2>
+        <Link
+          to="/cart"
+          className="text-emerald-600 font-black underline mt-4 inline-block uppercase text-xs tracking-widest"
+        >
+          Return to Cart
         </Link>
       </div>
     );
   }
+
   const handlePlaceOrder = async () => {
-    setLoading(true);
-    const toastId = toast.loading("Processing your order...");
+    if (!currentAddress || !currentAddress.street) {
+      return toast.error(
+        "Please set a shipping address in your profile first.",
+      );
+    }
+
+    setOrderLoading(true);
+    const toastId = toast.loading("Processing your request...");
 
     try {
       for (const item of state.items) {
-        const targetFlowerId =
-          item?.flower?._id ||
-          item?.flowerId?._id ||
-          item?.flowerId ||
-          item?._id;
-
-        if (!targetFlowerId) {
-          throw new Error("Invalid item data: missing flower id");
-        }
+        const targetFlowerId = item?.flower?._id || item?._id;
 
         await createOrder({
           flowerId: targetFlowerId,
           quantity: item.quantity,
         });
       }
-      await clearCart();
 
       toast.success("Order Placed Successfully! 🌸", { id: toastId });
       navigate("/orders");
     } catch (err) {
-      console.error(err);
-      toast.error("Order failed", {
-        id: toastId,
-      });
-      setLoading(false);
+      toast.error("Transaction failed.", { id: toastId });
+      setOrderLoading(false);
     }
   };
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-emerald-700 mb-8 transition-colors"
-      >
-        <ChevronLeft size={18} /> Review Bag
-      </button>
+    <div className="max-w-6xl mx-auto px-4 py-10 min-h-screen">
+      <header className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-[10px] font-black text-gray-400 hover:text-emerald-700 uppercase tracking-[0.2em] mb-4 transition-all"
+          >
+            <ChevronLeft size={14} /> Back to Bag
+          </button>
+          <h1 className="text-5xl font-serif font-black text-gray-900 tracking-tighter">
+            Checkout
+          </h1>
+        </div>
+
+        {/* Verification Badge */}
+        <div className="flex items-center gap-3 px-6 py-3 bg-emerald-50 rounded-2xl border border-emerald-100">
+          <Lock size={16} className="text-emerald-600" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800">
+            Secure Database Transaction
+          </span>
+        </div>
+      </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* LEFT: Shipping & Summary */}
         <div className="lg:col-span-2 space-y-8">
-          <section className="bg-white rounded-4xl p-8 border border-gray-100 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <MapPin className="text-emerald-600" /> Delivery Details
-            </h2>
-            <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-100">
-              <p className="font-bold text-emerald-900">Standard Delivery</p>
-              <p className="text-sm text-emerald-700 opacity-80">
-                Estimated arrival: 2-3 Business Days
-              </p>
+          {/* Address Display (Read-Only from DB) */}
+          <section className="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+              <MapPin size={120} />
             </div>
+
+            <div className="flex justify-between items-start mb-10">
+              <div>
+                <h2 className="text-2xl font-serif font-bold text-gray-900">
+                  Your Shipping Address
+                </h2>
+                <p className="text-xs text-gray-400 mt-1">
+                  Details synced from your verified profile
+                </p>
+              </div>
+              <Link
+                to="/account/addresses"
+                className="text-[10px] font-black uppercase text-emerald-600 hover:underline"
+              >
+                Edit in Profile
+              </Link>
+            </div>
+
+            {addressLoading ? (
+              <div className="animate-pulse flex gap-6">
+                <div className="h-24 w-full bg-gray-50 rounded-3xl" />
+              </div>
+            ) : currentAddress ? (
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">
+                    Destination
+                  </span>
+                  <div className="p-1">
+                    <p className="text-xl font-bold text-gray-800 leading-tight mb-1">
+                      {currentAddress.street}
+                    </p>
+                    <p className="text-gray-500 font-medium">
+                      {currentAddress.city}, {currentAddress.state}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">
+                    Contact
+                  </span>
+                  <div className="flex items-center gap-3 text-xl font-bold text-gray-900">
+                    <Phone size={18} className="text-emerald-500" />
+                    {currentAddress.mobile}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-10 rounded-[2.5rem] bg-red-50 border border-red-100 text-center">
+                <AlertCircle className="mx-auto text-red-400 mb-4" size={40} />
+                <h3 className="text-red-900 font-bold mb-2">
+                  No Address Found
+                </h3>
+                <p className="text-red-600 text-sm mb-6">
+                  We need a destination to deliver your flowers.
+                </p>
+                <Link
+                  to="/address"
+                  className="px-8 py-3 bg-red-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg shadow-red-200"
+                >
+                  Configure Now
+                </Link>
+              </div>
+            )}
           </section>
 
-          <section className="bg-white rounded-4xl p-8 border border-gray-100 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Truck className="text-emerald-600" /> Order Review
+          <section className="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm">
+            <h2 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+              <Truck size={20} className="text-emerald-500" /> Shipment Manifest
             </h2>
             <div className="divide-y divide-gray-50">
               {state.items.map((item, idx) => (
                 <div
                   key={idx}
-                  className="py-4 flex items-center justify-between"
+                  className="py-6 flex items-center justify-between first:pt-0 last:pb-0"
                 >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={item.flower?.image || item.image}
-                      className="w-12 h-12 rounded-lg object-cover"
-                      alt=""
-                    />
+                  <div className="flex items-center gap-6">
+                    <div className="relative">
+                      <img
+                        src={item.flower?.image}
+                        className="w-16 h-16 rounded-[1.25rem] object-cover shadow-sm"
+                        alt=""
+                      />
+                      <div className="absolute -top-2 -right-2 bg-gray-900 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white">
+                        {item.quantity}
+                      </div>
+                    </div>
                     <div>
-                      <p className="font-bold text-gray-800">
-                        {item.flower?.name || item.name}
+                      <p className="text-lg font-bold text-gray-800 font-serif">
+                        {item.flower?.name}
                       </p>
-                      <p className="text-xs text-gray-400">
-                        Qty: {item.quantity}
+                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                        Premium Selection
                       </p>
                     </div>
                   </div>
-                  <p className="font-bold text-gray-700">
-                    ₹{(item.flower?.price || item.price) * item.quantity}
-                  </p>
+                  <span className="text-xl font-black text-gray-900">
+                    ₹{item.flower?.price * item.quantity}
+                  </span>
                 </div>
               ))}
             </div>
           </section>
         </div>
 
-        {/* RIGHT: Payment & Total */}
+        {/* Payment Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white sticky top-28 shadow-2xl shadow-emerald-900/20">
-            <h3 className="text-xl font-bold mb-8">Payment</h3>
-
-            <div className="space-y-4 mb-8">
-              <div className="flex justify-between text-gray-400 text-sm">
-                <span>Subtotal</span>
-                <span>₹{state.totalAmount}</span>
-              </div>
-              <div className="flex justify-between text-gray-400 text-sm">
-                <span>Shipping</span>
-                <span className="text-emerald-400 font-bold">FREE</span>
-              </div>
-              <div className="h-px bg-white/10 my-4" />
-              <div className="flex justify-between text-2xl font-black">
-                <span>Total</span>
-                <span>₹{state.totalAmount}</span>
+          <div className="bg-gray-900 rounded-[3.5rem] p-10 text-white sticky top-28 shadow-2xl">
+            <div className="text-center mb-10">
+              <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-4">
+                Total Investment
+              </p>
+              <div className="text-7xl font-black tracking-tighter italic">
+                ₹{state.totalAmount}
               </div>
             </div>
 
-            <div className="space-y-3 mb-8">
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 border border-white/10">
-                <CreditCard className="text-emerald-400" size={20} />
-                <span className="text-sm font-bold">Cash on Delivery</span>
+            <div className="space-y-6 mb-10 bg-white/5 p-6 rounded-[2rem] border border-white/5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black text-gray-500 uppercase">
+                  Method
+                </span>
+                <span className="text-sm font-bold flex items-center gap-2 text-emerald-400">
+                  <CreditCard size={14} /> Cash on Delivery
+                </span>
               </div>
+              <div className="h-px bg-white/10" />
+              <p className="text-[9px] text-gray-500 leading-relaxed text-center italic">
+                The address shown on the left will be automatically pulled from
+                the database for fulfillment.
+              </p>
             </div>
 
             <button
               onClick={handlePlaceOrder}
-              disabled={loading}
-              className="w-full bg-emerald-500 hover:bg-emerald-400 text-gray-900 py-4 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              disabled={orderLoading || addressLoading || !currentAddress}
+              className="group w-full bg-emerald-500 hover:bg-emerald-400 text-gray-900 py-6 rounded-[2rem] font-black text-xl transition-all flex items-center justify-center gap-3 disabled:opacity-20 disabled:grayscale shadow-xl shadow-emerald-500/20 active:scale-95"
             >
-              {loading ? "Processing..." : "Pay & Place Order"}
-              {!loading && <ArrowRight size={20} />}
+              {orderLoading ? "Processing..." : "Finalize Order"}
+              {!orderLoading && (
+                <ArrowRight
+                  size={22}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              )}
             </button>
-
-            <div className="mt-6 flex flex-col items-center gap-2 opacity-50">
-              <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest">
-                <Lock size={12} /> Secure Checkout
-              </div>
-              <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest">
-                <ShieldCheck size={12} /> Buyer Protection Active
-              </div>
-            </div>
           </div>
         </div>
       </div>
