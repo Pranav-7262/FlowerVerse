@@ -15,12 +15,17 @@ import {
 import { useFlower } from "../contexts/FlowerContext";
 
 const CATEGORIES = [
+  "All",
   "Roses",
   "Tulips",
   "Daisies",
   "Lilies",
   "Orchids",
   "Sunflowers",
+  "Lotus",
+  "Hibiscus",
+  "Jasmines",
+  "Marigolds",
   "Carnations",
   "Mixed Bouquets",
 ];
@@ -65,7 +70,7 @@ const CreateFlower = () => {
 
       await createFlower(data);
 
-      navigate("/my-flowers");
+      navigate("/admin/dashboard");
     } catch (err) {
       // Error toast already shown by context
       setLoading(false);

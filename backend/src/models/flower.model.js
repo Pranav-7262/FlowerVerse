@@ -23,13 +23,16 @@ const flowerSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: [
-        // predefined categories, useful for filtering
         "Roses",
         "Tulips",
         "Daisies",
         "Lilies",
         "Orchids",
         "Sunflowers",
+        "Lotus",
+        "Hibiscus",
+        "Jasmines",
+        "Marigolds",
         "Carnations",
         "Mixed Bouquets",
       ],
@@ -46,7 +49,6 @@ const flowerSchema = new mongoose.Schema(
       required: true,
     },
     reviews: [
-      // array of review IDs for quick access to reviews of this flower
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Review",

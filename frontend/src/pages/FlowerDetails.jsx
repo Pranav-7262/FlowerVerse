@@ -23,7 +23,7 @@ import api from "../api/axios";
 
 const FlowerDetails = () => {
   const { flowerId } = useParams();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { selectedFlower, loading, fetchFlowerById, deleteFlower } =
     useFlower();
@@ -43,7 +43,7 @@ const FlowerDetails = () => {
     try {
       setReviewsLoading(true);
       const response = await api.get(`/reviews/${flowerId}`);
-      console.log("resp :", response.data.data);
+      console.log("resp :", response.data.data.reviews);
 
       setReviews(response.data.data.reviews);
       setAverageRating(response.data.data.averageRating);
@@ -382,6 +382,7 @@ const FlowerDetails = () => {
                   averageRating={averageRating}
                   totalReviews={totalReviews}
                   currentUserId={user?._id}
+                  currentUserRole={isAdmin ? "admin" : "user"}
                   onReviewDeleted={handleReviewDeleted}
                   onReviewUpdated={handleReviewUpdated}
                 />
