@@ -23,7 +23,7 @@ import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import RemoveAccount from "./pages/RemoveAccount";
 import Address from "./pages/Address";
-import OrderManagement from "./components/OrderManagement";
+
 import Support from "./pages/Support";
 
 const App = () => {

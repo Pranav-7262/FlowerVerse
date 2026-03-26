@@ -20,6 +20,7 @@ import { useCart } from "../contexts/CartContext";
 import ReviewForm from "../components/ReviewForm";
 import ReviewDisplay from "../components/ReviewDisplay";
 import api from "../api/axios";
+import Recommendations from "../components/Recommendations";
 
 const FlowerDetails = () => {
   const { flowerId } = useParams();
@@ -390,6 +391,10 @@ const FlowerDetails = () => {
             </motion.div>
           </div>
         </div>
+        <Recommendations
+          currentFlowerId={selectedFlower._id}
+          category={selectedFlower?.category}
+        />
       </div>
     </div>
   );
