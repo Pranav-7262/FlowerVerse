@@ -24,7 +24,7 @@ const Orders = () => {
       PLACED: {
         color: "amber",
         icon: <Clock size={16} />,
-        label: "Order Received",
+        label: "Order Placed",
         bg: "bg-amber-50/50",
         text: "text-amber-700",
         border: "border-amber-100",
@@ -32,7 +32,7 @@ const Orders = () => {
       CONFIRMED: {
         color: "blue",
         icon: <Package size={16} />,
-        label: "Preparing Blooms",
+        label: "Confirmed",
         bg: "bg-blue-50/50",
         text: "text-blue-700",
         border: "border-blue-100",
@@ -40,7 +40,7 @@ const Orders = () => {
       SHIPPED: {
         color: "purple",
         icon: <Truck size={16} />,
-        label: "In Transit",
+        label: "Shipped",
         bg: "bg-purple-50/50",
         text: "text-purple-700",
         border: "border-purple-100",
@@ -48,7 +48,7 @@ const Orders = () => {
       DELIVERED: {
         color: "emerald",
         icon: <CheckCircle2 size={16} />,
-        label: "Hand Delivered",
+        label: "Delivered",
         bg: "bg-emerald-50/50",
         text: "text-emerald-700",
         border: "border-emerald-100",
@@ -56,7 +56,7 @@ const Orders = () => {
       CANCELLED: {
         color: "red",
         icon: <XCircle size={16} />,
-        label: "Voided",
+        label: "Cancelled",
         bg: "bg-red-50/50",
         text: "text-red-700",
         border: "border-red-100",
