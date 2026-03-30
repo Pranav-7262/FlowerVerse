@@ -73,24 +73,24 @@ const Checkout = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 min-h-screen">
+    <div className="max-w-6xl mx-auto px-4 py-10 min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900">
       <header className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-[10px] font-black text-gray-400 hover:text-emerald-700 uppercase tracking-[0.2em] mb-4 transition-all"
+            className="flex items-center gap-2 text-[10px] font-black text-gray-400 hover:text-emerald-300 uppercase tracking-[0.2em] mb-4 transition-all"
           >
             <ChevronLeft size={14} /> Back to Bag
           </button>
-          <h1 className="text-5xl font-serif font-black text-gray-900 tracking-tighter">
+          <h1 className="text-5xl font-serif font-black text-gray-100 tracking-tighter">
             Checkout
           </h1>
         </div>
 
         {/* Verification Badge */}
-        <div className="flex items-center gap-3 px-6 py-3 bg-emerald-50 rounded-2xl border border-emerald-100">
-          <Lock size={16} className="text-emerald-600" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800">
+        <div className="flex items-center gap-3 px-6 py-3 bg-emerald-600/20 border border-emerald-600/40 rounded-2xl">
+          <Lock size={16} className="text-emerald-400" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-300">
             Secure Database Transaction
           </span>
         </div>
@@ -99,14 +99,14 @@ const Checkout = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
           {/* Address Display (Read-Only from DB) */}
-          <section className="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm relative overflow-hidden">
+          <section className="bg-slate-800/50 rounded-[3rem] p-10 border border-slate-700 shadow-lg shadow-black/40 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
               <MapPin size={120} />
             </div>
 
             <div className="flex justify-between items-start mb-10">
               <div>
-                <h2 className="text-2xl font-serif font-bold text-gray-900">
+                <h2 className="text-2xl font-serif font-bold text-gray-100">
                   Your Shipping Address
                 </h2>
                 <p className="text-xs text-gray-400 mt-1">
@@ -145,7 +145,7 @@ const Checkout = () => {
                   <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">
                     Contact
                   </span>
-                  <div className="flex items-center gap-3 text-xl font-bold text-gray-900">
+                  <div className="flex items-center gap-3 text-xl font-bold text-gray-100">
                     <Phone size={18} className="text-emerald-500" />
                     {currentAddress.mobile}
                   </div>
@@ -170,8 +170,8 @@ const Checkout = () => {
             )}
           </section>
 
-          <section className="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+          <section className="bg-slate-800/50 rounded-[3rem] p-10 border border-slate-700 shadow-lg shadow-black/40">
+            <h2 className="text-xl font-bold text-gray-100 mb-8 flex items-center gap-3">
               <Truck size={20} className="text-emerald-500" /> Shipment Manifest
             </h2>
             <div className="divide-y divide-gray-50">
@@ -200,7 +200,7 @@ const Checkout = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-xl font-black text-gray-900">
+                  <span className="text-xl font-black text-gray-100">
                     ₹{item.flower?.price * item.quantity}
                   </span>
                 </div>
@@ -221,7 +221,7 @@ const Checkout = () => {
               </div>
             </div>
 
-            <div className="space-y-6 mb-10 bg-white/5 p-6 rounded-[2rem] border border-white/5">
+            <div className="space-y-6 mb-10 bg-slate-700/20 p-6 rounded-[2rem] border border-slate-600/30">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black text-gray-500 uppercase">
                   Method
@@ -230,7 +230,7 @@ const Checkout = () => {
                   <CreditCard size={14} /> Cash on Delivery
                 </span>
               </div>
-              <div className="h-px bg-white/10" />
+              <div className="h-px bg-slate-700" />
               <p className="text-[9px] text-gray-500 leading-relaxed text-center italic">
                 The address shown on the left will be automatically pulled from
                 the database for fulfillment.
@@ -240,7 +240,7 @@ const Checkout = () => {
             <button
               onClick={handlePlaceOrder}
               disabled={orderLoading || addressLoading || !currentAddress}
-              className="group w-full bg-emerald-500 hover:bg-emerald-400 text-gray-900 py-6 rounded-[2rem] font-black text-xl transition-all flex items-center justify-center gap-3 disabled:opacity-20 disabled:grayscale shadow-xl shadow-emerald-500/20 active:scale-95"
+              className="group w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-6 rounded-[2rem] font-black text-xl transition-all flex items-center justify-center gap-3 disabled:opacity-20 disabled:grayscale shadow-xl shadow-emerald-600/30 active:scale-95"
             >
               {orderLoading ? "Processing..." : "Finalize Order"}
               {!orderLoading && (

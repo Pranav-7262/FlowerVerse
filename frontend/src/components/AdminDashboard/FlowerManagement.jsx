@@ -12,11 +12,11 @@ const FlowerManagement = ({
 
   return (
     <div className="p-6">
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-x-auto rounded-xl border border-slate-700 bg-slate-800/50">
         <table className="w-full">
-          <thead className="bg-linear-to-r from-slate-50 to-slate-100 border-b border-slate-200">
+          <thead className="bg-gradient-to-r from-slate-700/50 to-slate-700/30 border-b border-slate-700">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-300">
                 Flower Name
               </th>
               <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-700">
@@ -58,13 +58,13 @@ const FlowerManagement = ({
               flowers.map((flower) => (
                 <tr
                   key={flower._id}
-                  className="border-b border-slate-100 hover:bg-linear-to-r hover:from-pink-50/50 to-transparent transition-colors duration-150"
+                  className="border-b border-slate-700 hover:bg-slate-700/50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 text-sm font-semibold text-gray-900">
+                  <td className="px-6 py-4 text-sm font-semibold text-gray-100">
                     {flower.name}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-indigo-600/20 text-indigo-300 px-3 py-1 rounded-full text-xs font-medium border border-indigo-600/40">
                       {flower.category}
                     </span>
                   </td>
@@ -88,14 +88,14 @@ const FlowerManagement = ({
                   <td className="px-6 py-4 text-sm flex gap-2">
                     <button
                       onClick={() => navigate(`/flowers/edit/${flower._id}`)}
-                      className="p-2.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-all font-medium hover:scale-110 hover:shadow-md"
+                      className="p-2.5 text-blue-400 hover:bg-blue-600/20 rounded-lg transition-all font-medium hover:scale-110 hover:shadow-md border border-blue-600/30\"
                       title="Edit flower"
                     >
                       <Edit2 size={18} />
                     </button>
                     <button
                       onClick={() => handleDeleteFlower(flower._id)}
-                      className="p-2.5 text-red-600 hover:bg-red-100 rounded-lg transition-all font-medium hover:scale-110 hover:shadow-md"
+                      className="p-2.5 text-red-400 hover:bg-red-600/20 rounded-lg transition-all font-medium hover:scale-110 hover:shadow-md border border-red-600/30\"
                       title="Delete flower"
                     >
                       <Trash2 size={18} />

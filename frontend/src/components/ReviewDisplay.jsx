@@ -82,9 +82,9 @@ const ReviewDisplay = ({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl p-8 border border-gray-200 text-center"
+        className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 text-center"
       >
-        <p className="text-gray-500 text-lg">
+        <p className="text-gray-400 text-lg">
           No reviews yet. Be the first to review!
         </p>
       </motion.div>
@@ -98,16 +98,16 @@ const ReviewDisplay = ({
       className="space-y-6"
     >
       {/* Rating Summary */}
-      <div className="bg-linear-to-br from-amber-50 to-orange-50 rounded-2xl p-8 border border-amber-200">
+      <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/20 rounded-2xl p-8 border border-amber-600/30">
         <div className="flex items-center gap-6">
           <div className="text-center">
-            <div className="text-5xl font-bold text-amber-600 mb-2">
+            <div className="text-5xl font-bold text-amber-400 mb-2">
               {averageRating?.toFixed(1)}
             </div>
             <div className="flex justify-center mb-2">
               {renderStars(Math.round(averageRating || 0))}
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-400">
               Based on {totalReviews} review{totalReviews !== 1 ? "s" : ""}
             </p>
           </div>
@@ -120,10 +120,10 @@ const ReviewDisplay = ({
                 totalReviews > 0 ? (count / totalReviews) * 100 : 0;
               return (
                 <div key={stars} className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-600 w-12">
+                  <span className="text-sm font-medium text-gray-300 w-12">
                     {stars} {stars === 1 ? "star" : "stars"}
                   </span>
-                  <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="w-32 h-2 bg-slate-700 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${percentage}%` }}
@@ -131,7 +131,7 @@ const ReviewDisplay = ({
                       className="h-full bg-amber-400 rounded-full"
                     />
                   </div>
-                  <span className="text-sm text-gray-500 w-8">
+                  <span className="text-sm text-gray-400 w-8">
                     {Math.round(percentage)}%
                   </span>
                 </div>
@@ -146,7 +146,7 @@ const ReviewDisplay = ({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
+          className="bg-red-600/20 border border-red-600/40 text-red-300 px-4 py-3 rounded-lg text-sm"
         >
           {error}
         </motion.div>
@@ -160,13 +160,13 @@ const ReviewDisplay = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow"
+            className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:shadow-lg hover:shadow-black/40 transition-shadow"
           >
             {editingReviewId === review._id ? (
               // Edit Mode
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-100 mb-2">
                     Rating
                   </label>
                   <div className="flex gap-2">
@@ -198,7 +198,7 @@ const ReviewDisplay = ({
                   onChange={(e) =>
                     setEditingData({ ...editingData, title: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 border border-slate-600 rounded-lg bg-slate-700/50 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   maxLength="100"
                 />
 
@@ -207,7 +207,7 @@ const ReviewDisplay = ({
                   onChange={(e) =>
                     setEditingData({ ...editingData, comment: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                  className="w-full px-3 py-2 border border-slate-600 rounded-lg bg-slate-700/50 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
                   rows="3"
                   maxLength="1000"
                 />
@@ -215,7 +215,7 @@ const ReviewDisplay = ({
                 <div className="flex gap-2 justify-end">
                   <button
                     onClick={() => setEditingReviewId(null)}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="px-4 py-2 text-gray-400 hover:text-gray-300 hover:bg-slate-700/50 rounded-lg transition-colors"
                   >
                     Cancel
                   </button>
@@ -235,19 +235,19 @@ const ReviewDisplay = ({
                   <div className="flex-1">
                     <div className="flex items-center gap-4 mb-2">
                       <div className="flex-1">
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-gray-100">
                           {review.reviewer?.userName}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-400">
                           {new Date(review.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                       <div className="flex">{renderStars(review.rating)}</div>
                     </div>
-                    <h4 className="text-lg font-bold text-gray-900 mb-2">
+                    <h4 className="text-lg font-bold text-gray-100 mb-2">
                       {review.title}
                     </h4>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-300 leading-relaxed">
                       {review.comment}
                     </p>
                   </div>
@@ -268,7 +268,7 @@ const ReviewDisplay = ({
                       <button
                         onClick={() => handleDelete(review._id)}
                         disabled={loading}
-                        className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2 rounded-lg text-red-400 hover:bg-red-600/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Delete review"
                       >
                         <Trash2 size={18} />

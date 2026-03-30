@@ -149,27 +149,24 @@ export const refreshAccessToken = async_handler(async (req, res) => {
       throw new ApiError(401, "Refresh token expired or reused");
     }
 
-    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
-      user._id,
-    );
-
+    // now we need to generate new access token only
+    const accessToken = user.generateAccessToken();
+    const accessTokenOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000, // 15 min
+    };
     return res
       .status(200)
-      .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 15 * 60 * 1000,
-      })
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/api/auth/refresh",
-        maxAge: 10 * 24 * 60 * 60 * 1000,
-      })
-      .json(new ApiResponse(200, null, "Access token refreshed successfully"));
+      .cookie("accessToken", accessToken, accessTokenOptions)
+      .json(
+        new ApiResponse(
+          200,
+          { accessToken },
+          "Access token refreshed successfully",
+        ),
+      );
   } catch (err) {
     throw new ApiError(401, err?.message || "Invalid refresh token");
   }

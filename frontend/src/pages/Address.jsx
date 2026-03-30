@@ -73,12 +73,12 @@ const Address = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFDFC] pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 pb-20">
       <div className="max-w-4xl mx-auto px-6 pt-12">
         {/* Header Navigation */}
         <button
           onClick={() => navigate(-1)}
-          className="group flex items-center gap-2 text-gray-400 hover:text-emerald-600 transition-colors mb-8"
+          className="group flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors mb-8"
         >
           <ChevronLeft
             size={18}
@@ -93,11 +93,11 @@ const Address = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 text-emerald-600 font-bold text-sm mb-3 tracking-widest uppercase"
+            className="flex items-center gap-3 text-emerald-400 font-bold text-sm mb-3 tracking-widest uppercase"
           >
             <MapPin size={16} /> Logistics & Delivery
           </motion.div>
-          <h1 className="text-5xl font-serif font-black text-gray-900 tracking-tight">
+          <h1 className="text-5xl font-serif font-black text-gray-100 tracking-tight">
             Shipping <span className="text-emerald-500 italic">Address</span>
           </h1>
         </header>
@@ -110,7 +110,7 @@ const Address = () => {
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                className="group bg-white rounded-[2.5rem] border border-gray-100 p-10 shadow-xl shadow-gray-200/30 flex flex-col md:flex-row items-start justify-between gap-8"
+                className="group bg-slate-800/50 rounded-[2.5rem] border border-slate-700 p-10 shadow-xl shadow-black/40 flex flex-col md:flex-row items-start justify-between gap-8"
               >
                 <div className="flex gap-6">
                   <div className="w-16 h-16 bg-emerald-50 rounded-[1.5rem] flex items-center justify-center text-emerald-600 shrink-0">
@@ -137,13 +137,13 @@ const Address = () => {
                 <div className="flex gap-3 shrink-0">
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="p-4 bg-gray-50 text-gray-600 rounded-2xl hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                    className="p-4 bg-slate-700/50 text-gray-300 rounded-2xl hover:bg-emerald-600 hover:text-white transition-all shadow-sm border border-slate-600"
                   >
                     <Edit3 size={20} />
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                    className="p-4 bg-slate-700/50 text-red-400 rounded-2xl hover:bg-red-600 hover:text-white transition-all shadow-sm border border-slate-600"
                   >
                     <Trash2 size={20} />
                   </button>
@@ -155,7 +155,7 @@ const Address = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-white rounded-[2.5rem] border-2 border-emerald-100 p-10 shadow-2xl shadow-emerald-900/5"
+                className="bg-slate-800/50 rounded-[2.5rem] border-2 border-emerald-600/30 p-10 shadow-2xl shadow-emerald-900/10"
               >
                 <form
                   onSubmit={handleUpdate}
@@ -177,7 +177,7 @@ const Address = () => {
                         value={formData.street}
                         onChange={handleChange}
                         required
-                        className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-6 py-4 text-lg font-bold text-gray-800 focus:ring-2 focus:ring-emerald-500"
+                        className="w-full bg-slate-700/50 border border-slate-600 rounded-2xl pl-12 pr-6 py-4 text-lg font-bold text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-emerald-500"
                       />
                     </div>
                   </div>
@@ -278,7 +278,7 @@ const Address = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               onClick={() => setIsEditing(true)}
-              className="group border-2 border-dashed border-gray-200 rounded-[2.5rem] p-12 flex flex-col items-center justify-center gap-4 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all"
+              className="group border-2 border-dashed border-slate-600 rounded-[2.5rem] p-12 flex flex-col items-center justify-center gap-4 hover:border-emerald-400 hover:bg-emerald-600/10 transition-all"
             >
               <div className="p-4 bg-gray-50 text-gray-400 rounded-full group-hover:bg-emerald-100 group-hover:text-emerald-600 transition-colors">
                 <Plus size={32} />

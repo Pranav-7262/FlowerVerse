@@ -85,15 +85,15 @@ const Cart = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md mx-auto text-center py-20 space-y-6"
       >
-        <div className="bg-emerald-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto text-emerald-600">
+        <div className="bg-emerald-600/20 w-24 h-24 rounded-full flex items-center justify-center mx-auto text-emerald-400">
           <ShoppingBag size={40} />
         </div>
-        <h2 className="text-3xl font-serif font-bold text-gray-900">
+        <h2 className="text-3xl font-serif font-bold text-gray-100">
           Your bag is empty
         </h2>
         <Link
           to="/"
-          className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:bg-emerald-700 transition-all"
+          className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-emerald-600/40 hover:shadow-xl transition-all"
         >
           Explore Flowers
         </Link>
@@ -102,19 +102,19 @@ const Cart = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="max-w-7xl mx-auto px-4 py-10 min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
         <div>
-          <h1 className="text-4xl font-serif font-bold text-gray-900">
+          <h1 className="text-4xl font-serif font-bold text-gray-100">
             Shopping Bag
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-400 text-sm mt-1">
             Manage your blooms before checkout
           </p>
         </div>
         <button
           onClick={toggleAll}
-          className="text-sm font-bold text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl hover:bg-emerald-100 transition-colors"
+          className="text-sm font-bold text-emerald-300 bg-emerald-600/20 border border-emerald-500/50 px-4 py-2 rounded-xl hover:bg-emerald-600/30 transition-colors"
         >
           {selectedItems.length === cart.items.length
             ? "Deselect All"
@@ -139,8 +139,8 @@ const Cart = () => {
                     key={item.flower._id}
                     className={`flex items-center gap-4 sm:gap-6 p-6 rounded-[2rem] border transition-all duration-300 ${
                       isSelected
-                        ? "bg-white border-emerald-200 shadow-md"
-                        : "bg-gray-50/50 border-gray-100 opacity-80"
+                        ? "bg-slate-800 border-emerald-500/50 shadow-lg shadow-emerald-600/30"
+                        : "bg-slate-800/50 border-slate-700 opacity-70"
                     }`}
                   >
                     <button
@@ -148,7 +148,7 @@ const Cart = () => {
                       className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                         isSelected
                           ? "bg-emerald-600 border-emerald-600 text-white"
-                          : "bg-white border-gray-300"
+                          : "bg-slate-700 border-slate-600"
                       }`}
                     >
                       {isSelected && <CheckCircle2 size={16} />}
@@ -165,13 +165,13 @@ const Cart = () => {
 
                     {/* Details */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-100 truncate">
                         {item.flower.name}
                       </h3>
-                      <p className="text-sm text-emerald-600 font-medium">
+                      <p className="text-sm text-emerald-400 font-medium">
                         {item.flower.category}
                       </p>
-                      <p className="text-md font-bold text-gray-700 mt-1">
+                      <p className="text-md font-bold text-emerald-300 mt-1">
                         ₹{item.flower.price}
                       </p>
 
@@ -204,7 +204,7 @@ const Cart = () => {
                     </div>
 
                     {/* Desktop Quantity Controls */}
-                    <div className="hidden sm:flex items-center gap-4 bg-gray-100/50 p-2 rounded-xl">
+                    <div className="hidden sm:flex items-center gap-4 bg-slate-700/50 p-2 rounded-xl">
                       <button
                         onClick={() =>
                           handleUpdateQuantity(
@@ -261,18 +261,18 @@ const Cart = () => {
 
         {/* Order Summary */}
         <div className="lg:w-96">
-          <div className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-xl sticky top-28">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Summary</h2>
+          <div className="bg-slate-800/50 rounded-[2.5rem] p-8 border border-slate-700 shadow-xl shadow-black/40 sticky top-28\">
+            <h2 className="text-2xl font-bold text-gray-100 mb-6\">Summary</h2>
             <div className="space-y-4 mb-8">
               <div className="flex justify-between text-gray-500 font-medium">
                 <span>Selected Items ({selectedItems.length})</span>
-                <span className="text-gray-900">₹{subtotal}</span>
+                <span className="text-gray-100">₹{subtotal}</span>
               </div>
               <div className="flex justify-between text-gray-500 font-medium">
                 <span>Shipping</span>
                 <span
                   className={
-                    shipping === 0 ? "text-emerald-600" : "text-gray-900"
+                    shipping === 0 ? "text-emerald-400" : "text-gray-100"
                   }
                 >
                   {shipping === 0 ? "FREE" : `₹${shipping}`}
@@ -288,7 +288,7 @@ const Cart = () => {
                 </div>
               )}
 
-              <div className="pt-4 border-t border-gray-100 flex justify-between text-2xl font-black text-gray-900">
+              <div className="pt-4 border-t border-slate-700 flex justify-between text-2xl font-black text-gray-100">
                 <span>Total</span>
                 <span>₹{total}</span>
               </div>

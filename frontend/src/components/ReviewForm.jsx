@@ -56,12 +56,12 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
 
   if (!user) {
     return (
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
-        <p className="text-gray-600">
+      <div className="bg-amber-600/20 border border-amber-600/40 rounded-xl p-6 text-center">
+        <p className="text-gray-300">
           Please{" "}
           <a
             href="/login"
-            className="text-amber-600 font-semibold hover:underline"
+            className="text-amber-400 font-semibold hover:text-amber-300 transition-colors"
           >
             log in
           </a>{" "}
@@ -75,17 +75,17 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-2xl p-8 border border-gray-200 shadow-lg"
+      className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 shadow-lg shadow-black/40"
     >
-      <h3 className="text-2xl font-bold text-gray-900 mb-1">Write a Review</h3>
-      <p className="text-gray-500 text-sm mb-6">
+      <h3 className="text-2xl font-bold text-gray-100 mb-1">Write a Review</h3>
+      <p className="text-gray-400 text-sm mb-6">
         Share your experience with this flower
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Star Rating */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-100 mb-2">
             Rating *
           </label>
           <div className="flex gap-2">
@@ -103,14 +103,14 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
                   className={`${
                     star <= (hoverRating || rating)
                       ? "fill-amber-400 text-amber-400"
-                      : "text-gray-300"
+                      : "text-gray-400"
                   } transition-colors`}
                 />
               </button>
             ))}
           </div>
           {rating > 0 && (
-            <p className="text-sm text-amber-600 font-medium mt-2">
+            <p className="text-sm text-amber-300 font-medium mt-2">
               {["", "Poor", "Fair", "Good", "Very Good", "Excellent"][rating]}
             </p>
           )}
@@ -118,7 +118,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
 
         {/* Title */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-100 mb-2">
             Review Title *
           </label>
           <input
@@ -126,29 +126,29 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Summarize your experience in a few words"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+            className="w-full px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
             maxLength="100"
           />
-          <p className="text-xs text-gray-500 mt-1">{title.length}/100</p>
+          <p className="text-xs text-gray-400 mt-1">{title.length}/100</p>
         </div>
 
         {/* Comment */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-100 mb-2">
             Your Review *
           </label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share details about your experience (minimum 10 characters)"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition resize-none"
+            className="w-full px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition resize-none"
             rows="4"
             maxLength="1000"
           />
           <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-gray-500">{comment.length}/1000</p>
+            <p className="text-xs text-gray-400">{comment.length}/1000</p>
             {comment.length < 10 && comment.length > 0 && (
-              <p className="text-xs text-red-500">
+              <p className="text-xs text-red-400">
                 Minimum 10 characters required
               </p>
             )}
@@ -160,7 +160,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
+            className="bg-red-600/20 border border-red-600/40 text-red-300 px-4 py-3 rounded-lg text-sm"
           >
             {error}
           </motion.div>
@@ -171,7 +171,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm"
+            className="bg-emerald-600/20 border border-emerald-600/40 text-emerald-300 px-4 py-3 rounded-lg text-sm"
           >
             {success}
           </motion.div>
@@ -181,7 +181,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

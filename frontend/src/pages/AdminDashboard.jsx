@@ -172,7 +172,7 @@ const AdminDashboard = () => {
         <StatsSection stats={stats} />
 
         {/* Management Tabs */}
-        <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-100">
+        <div className="bg-slate-800/50 rounded-2xl shadow-lg shadow-black/40 overflow-hidden border border-slate-700">
           {/* Tab Navigation */}
           <TabNavigation
             activeTab={activeTab}

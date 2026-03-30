@@ -27,16 +27,16 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-6">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-6 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900">
       <form
         onSubmit={submit}
-        className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-200 p-8 space-y-6"
+        className="w-full max-w-md bg-slate-800/50 rounded-2xl shadow-lg shadow-black/40 border border-slate-700 p-8 space-y-6 backdrop-blur-xl"
       >
         <div className="text-center space-y-2">
-          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          <h2 className="text-3xl font-extrabold text-gray-100 tracking-tight">
             Welcome Back
           </h2>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-400 text-sm">
             Please enter your details to sign in
           </p>
         </div>
@@ -49,7 +49,7 @@ const Login = () => {
               type="email"
               required
               placeholder="Email address"
-              className="w-full bg-gray-50 border border-gray-300 p-3 pl-10 rounded-xl text-gray-900 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 transition-all"
+              className="w-full bg-slate-700/50 border border-slate-600 p-3 pl-10 rounded-xl text-gray-100 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-emerald-600/50 focus:border-emerald-600 transition-all"
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
           </div>
@@ -61,7 +61,7 @@ const Login = () => {
               type="password"
               required
               placeholder="Password"
-              className="w-full bg-gray-50 border border-gray-300 p-3 pl-10 rounded-xl text-gray-900 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 transition-all"
+              className="w-full bg-slate-700/50 border border-slate-600 p-3 pl-10 rounded-xl text-gray-100 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-emerald-600/50 focus:border-emerald-600 transition-all"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
           </div>
@@ -78,7 +78,7 @@ const Login = () => {
 
         <button
           disabled={loading}
-          className="w-full bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-green-600/20 transform transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70"
+          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-emerald-600/40 transform transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -90,10 +90,10 @@ const Login = () => {
           )}
         </button>
 
-        <p className="text-center text-gray-600 text-sm">
+        <p className="text-center text-gray-400 text-sm">
           Don't have an account?{" "}
           <span
-            className="text-green-600 cursor-pointer hover:underline font-medium"
+            className="text-emerald-400 cursor-pointer hover:text-emerald-300 font-medium"
             onClick={() => navigate("/register")}
           >
             Create one

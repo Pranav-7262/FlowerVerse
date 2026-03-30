@@ -77,7 +77,7 @@ export default function Home() {
     priceRange[1] < PRICE_MAX;
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 pb-20">
       <div className="max-w-7xl mx-auto px-6 pt-10">
         {/* Unified Search & Action Bar */}
         <div className="flex flex-wrap items-center gap-3 mb-8">
@@ -92,7 +92,7 @@ export default function Home() {
               placeholder="Search our garden..."
               value={search}
               onChange={(e) => searchFlowers(e.target.value)}
-              className="w-full h-12 pl-12 pr-4 rounded-2xl bg-white border-none shadow-sm text-sm focus:ring-2 focus:ring-emerald-900/10 transition-all"
+              className="w-full h-12 pl-12 pr-4 rounded-2xl bg-slate-800 border border-slate-700 text-gray-100 placeholder-gray-400 shadow-lg shadow-black/30 text-sm focus:ring-2 focus:ring-pink-500/50 transition-all"
             />
           </div>
 
@@ -113,8 +113,8 @@ export default function Home() {
               }}
               className={`h-12 px-6 rounded-2xl flex items-center gap-2 text-sm font-bold transition-all ${
                 panelOpen || activeFilters
-                  ? "bg-emerald-900 text-white shadow-xl shadow-emerald-900/20"
-                  : "bg-white text-gray-700 shadow-sm border border-gray-100 hover:border-emerald-200"
+                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xl shadow-emerald-600/30"
+                  : "bg-slate-800 text-gray-200 shadow-lg shadow-black/40 border border-slate-700 hover:border-emerald-500/50"
               }`}
             >
               <SlidersHorizontal size={14} /> Filters
@@ -126,7 +126,7 @@ export default function Home() {
                   filterByCategory("All");
                   setPriceRange([0, PRICE_MAX]);
                 }}
-                className="h-12 px-4 rounded-2xl bg-red-50 text-red-600 text-xs font-bold uppercase tracking-wider hover:bg-red-100 transition-colors"
+                className="h-12 px-4 rounded-2xl bg-red-600/20 text-red-400 text-xs font-bold uppercase tracking-wider hover:bg-red-600/30 transition-colors border border-red-600/40"
               >
                 Reset
               </button>
@@ -158,7 +158,7 @@ export default function Home() {
         {/* Product Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           <AnimatePresence mode="popLayout">
             {displayed.map((flower) => (
@@ -176,7 +176,7 @@ export default function Home() {
 
         {/* Empty State */}
         {!loading && displayed.length === 0 && (
-          <div className="text-center py-20">
+          <div className="text-center py-20 col-span-full">
             <p className="text-gray-400 text-sm font-medium">
               No flowers match your selection.
             </p>

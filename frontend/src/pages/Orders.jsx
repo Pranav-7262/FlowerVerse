@@ -9,6 +9,7 @@ import {
   Clock,
   Truck,
   Package,
+  ChevronRight,
 } from "lucide-react";
 import { useOrder } from "../contexts/OrderContext";
 
@@ -22,108 +23,92 @@ const Orders = () => {
   const getStatusConfig = (status) => {
     const configs = {
       PLACED: {
-        color: "amber",
         icon: <Clock size={16} />,
-        label: "Order Placed",
-        bg: "bg-amber-50/50",
-        text: "text-amber-700",
-        border: "border-amber-100",
+        label: "Placed",
+        bg: "bg-amber-500/10",
+        text: "text-amber-400",
+        border: "border-amber-500/20",
       },
       CONFIRMED: {
-        color: "blue",
         icon: <Package size={16} />,
         label: "Confirmed",
-        bg: "bg-blue-50/50",
-        text: "text-blue-700",
-        border: "border-blue-100",
+        bg: "bg-blue-500/10",
+        text: "text-blue-400",
+        border: "border-blue-500/20",
       },
       SHIPPED: {
-        color: "purple",
         icon: <Truck size={16} />,
-        label: "Shipped",
-        bg: "bg-purple-50/50",
-        text: "text-purple-700",
-        border: "border-purple-100",
+        label: "In Transit",
+        bg: "bg-purple-500/10",
+        text: "text-purple-400",
+        border: "border-purple-500/20",
       },
       DELIVERED: {
-        color: "emerald",
         icon: <CheckCircle2 size={16} />,
         label: "Delivered",
-        bg: "bg-emerald-50/50",
-        text: "text-emerald-700",
-        border: "border-emerald-100",
+        bg: "bg-emerald-500/10",
+        text: "text-emerald-400",
+        border: "border-emerald-500/20",
       },
       CANCELLED: {
-        color: "red",
         icon: <XCircle size={16} />,
         label: "Cancelled",
-        bg: "bg-red-50/50",
-        text: "text-red-700",
-        border: "border-red-100",
+        bg: "bg-red-500/10",
+        text: "text-red-400",
+        border: "border-red-500/20",
       },
     };
     return configs[status] || configs.PLACED;
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.15 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-  };
-
   return (
-    <div className="min-h-screen bg-[#FDFDFD] pb-32">
-      <div className="max-w-5xl mx-auto py-16 px-6">
+    <div className="min-h-screen bg-slate-950 pb-32 selection:bg-emerald-500/30">
+      {/* Background Glow */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto py-20 px-6">
         {/* Header Section */}
-        <header className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-gray-100 pb-10">
+        <header className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-slate-800 pb-12">
           <div>
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2 text-emerald-600 font-black text-[10px] mb-3 tracking-[0.3em] uppercase"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-2 text-emerald-500 font-black text-[10px] mb-4 tracking-[0.4em] uppercase"
             >
-              <ShoppingBag size={14} /> My Private Collection
+              <ShoppingBag size={14} strokeWidth={3} /> My Collection
             </motion.div>
-            <h1 className="text-6xl font-serif font-black text-gray-900 tracking-tighter">
+            <h1 className="text-7xl font-serif font-black text-white tracking-tighter">
               Orders
             </h1>
           </div>
-          <p className="text-gray-400 max-w-60 md:text-right text-xs leading-relaxed font-medium">
-            Review your floral acquisitions and track the journey of your blooms
-            from our garden to your doorstep.
+          <p className="text-slate-400 max-w-xs md:text-right text-xs leading-loose font-medium opacity-80">
+            Track your floral acquisitions from our garden to your doorstep.
           </p>
         </header>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40 space-y-6">
-            <div className="w-10 h-10 border-2 border-emerald-100 border-t-emerald-600 rounded-full animate-spin" />
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 animate-pulse">
-              Syncing Ledger...
+            <div className="w-12 h-12 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500/50">
+              Synchronizing Ledger
             </p>
           </div>
         ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="space-y-12"
-          >
+          <div className="space-y-10">
             <AnimatePresence mode="popLayout">
               {orders.length === 0 ? (
-                <motion.div className="text-center py-32 bg-white rounded-[3.5rem] border border-gray-100 shadow-sm flex flex-col items-center">
-                  <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 text-gray-200">
-                    <ShoppingBag size={32} />
-                  </div>
-                  <h3 className="text-2xl font-serif font-bold text-gray-800 tracking-tight">
-                    Your vault is empty
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-32 bg-slate-900/50 rounded-[3rem] border border-slate-800 backdrop-blur-xl flex flex-col items-center"
+                >
+                  <ShoppingBag size={40} className="text-slate-700 mb-6" />
+                  <h3 className="text-xl font-serif text-slate-300">
+                    Your vault is currently empty
                   </h3>
                   <button
                     onClick={() => (window.location.href = "/flowers")}
-                    className="mt-6 px-8 py-3 bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-emerald-600 transition-all"
+                    className="mt-8 px-10 py-4 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-500 transition-all"
                   >
                     Explore Blooms
                   </button>
@@ -133,134 +118,114 @@ const Orders = () => {
                   const config = getStatusConfig(order.status);
                   return (
                     <motion.div
-                      variants={itemVariants}
+                      layout
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
                       key={order._id}
-                      className="group bg-white rounded-[3rem] border border-gray-100 shadow-2xl shadow-gray-200/30 hover:shadow-emerald-900/5 transition-all duration-700 overflow-hidden"
+                      className="group bg-slate-900/40 rounded-[2.5rem] border border-slate-800/60 backdrop-blur-md hover:border-emerald-500/30 transition-all duration-500 overflow-hidden"
                     >
-                      {/* 4-Stage Progress Header */}
+                      {/* Status Header */}
                       <div
-                        className={`px-10 py-6 flex flex-col md:flex-row justify-between items-center gap-6 ${config.bg} border-b ${config.border}`}
+                        className={`px-8 py-5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/50 ${config.bg}`}
                       >
                         <div className="flex items-center gap-4">
                           <div
-                            className={`p-2 rounded-2xl bg-white shadow-sm ${config.text}`}
+                            className={`p-2.5 rounded-xl bg-slate-950/50 ${config.text} border ${config.border}`}
                           >
                             {config.icon}
                           </div>
                           <div>
-                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
-                              Current Stage
-                            </p>
-                            <h4
-                              className={`text-sm font-black uppercase tracking-widest ${config.text}`}
+                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block">
+                              Status
+                            </span>
+                            <span
+                              className={`text-xs font-black uppercase tracking-widest ${config.text}`}
                             >
                               {config.label}
-                            </h4>
+                            </span>
                           </div>
                         </div>
 
-                        {/* Visual Tracker */}
-                        <div className="flex items-center gap-2 min-w-70">
+                        {/* Tracker Dots */}
+                        <div className="hidden sm:flex items-center gap-3">
                           {["PLACED", "CONFIRMED", "SHIPPED", "DELIVERED"].map(
-                            (step, idx, arr) => {
-                              const isPast = arr.indexOf(order.status) >= idx;
-                              const isCurrent = order.status === step;
-                              return (
-                                <React.Fragment key={step}>
-                                  <div
-                                    className={`flex flex-col items-center gap-1.5 ${isPast ? "opacity-100" : "opacity-20"}`}
-                                  >
-                                    <div
-                                      className={`h-2 w-2 rounded-full transition-all duration-1000 ${isPast ? (isCurrent ? "bg-emerald-500 ring-4 ring-emerald-100" : "bg-gray-900") : "bg-gray-300"}`}
-                                    />
-                                  </div>
-                                  {idx < arr.length - 1 && (
-                                    <div
-                                      className={`h-px w-12 rounded-full ${isPast ? "bg-gray-900" : "bg-gray-100"}`}
-                                    />
-                                  )}
-                                </React.Fragment>
-                              );
-                            },
+                            (s, i) => (
+                              <div
+                                key={s}
+                                className={`h-1.5 w-1.5 rounded-full ${i <= ["PLACED", "CONFIRMED", "SHIPPED", "DELIVERED"].indexOf(order.status) ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" : "bg-slate-700"}`}
+                              />
+                            ),
                           )}
                         </div>
                       </div>
 
-                      <div className="p-10 flex flex-col lg:flex-row gap-12">
-                        <div className="flex-1 space-y-8">
+                      {/* Items List */}
+                      <div className="p-8 lg:p-10 flex flex-col lg:flex-row gap-12">
+                        <div className="flex-1 space-y-6">
                           {order.items.map((item, i) => (
                             <div
                               key={i}
                               className="flex items-center gap-6 group/item"
                             >
-                              <div className="relative h-24 w-24 shrink-0">
+                              <div className="relative h-20 w-20 shrink-0">
                                 <img
                                   src={item.flower?.image}
+                                  className="w-full h-full rounded-3xl object-cover ring-1 ring-slate-700"
                                   alt=""
-                                  className="w-full h-full rounded-4xl object-cover shadow-lg group-hover/item:scale-105 transition-transform duration-700"
                                 />
-                                <div className="absolute -top-2 -right-2 bg-gray-900 text-white text-[10px] font-black w-7 h-7 rounded-full flex items-center justify-center border-4 border-white">
+                                <div className="absolute -top-2 -right-2 bg-emerald-600 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-slate-900">
                                   {item.quantity}
                                 </div>
                               </div>
                               <div>
-                                <h4 className="text-xl font-serif font-black text-gray-900">
+                                <h4 className="text-lg font-serif font-bold text-slate-100">
                                   {item.flower?.name}
                                 </h4>
-                                <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest italic">
-                                  Premium Bloom{" "}
-                                  <span className="mx-2 text-gray-200">|</span>{" "}
-                                  ₹{item.priceAtPurchase}
+                                <p className="text-[10px] font-bold text-emerald-500/60 uppercase tracking-widest">
+                                  Premium Bloom • ₹
+                                  {item.priceAtPurchase.toLocaleString()}
                                 </p>
                               </div>
                             </div>
                           ))}
                         </div>
 
-                        <div className="lg:w-1/3 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-gray-50 pt-10 lg:pt-0 lg:pl-12">
-                          <div className="lg:text-right">
-                            <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-2">
-                              Total Investment
-                            </p>
-                            <div className="text-5xl font-black text-gray-900 tracking-tighter">
-                              <span className="text-xl align-top mr-1 text-emerald-500 italic">
-                                ₹
-                              </span>
-                              {order.totalAmount.toLocaleString()}
-                            </div>
+                        {/* Pricing & Actions */}
+                        <div className="lg:w-1/4 flex flex-col justify-center items-end border-t lg:border-t-0 lg:border-l border-slate-800 pt-8 lg:pt-0 lg:pl-10">
+                          <span className="text-[9px] text-slate-500 font-black uppercase tracking-[0.2em] mb-1">
+                            Grand Total
+                          </span>
+                          <div className="text-4xl font-black text-white tracking-tighter">
+                            <span className="text-emerald-500 text-lg mr-1 font-serif italic">
+                              ₹
+                            </span>
+                            {order.totalAmount.toLocaleString()}
                           </div>
 
-                          <div className="flex flex-col gap-3 mt-10">
-                            {order.status === "PLACED" ? (
-                              <button
-                                onClick={() => cancelOrder(order._id)}
-                                className="w-full py-4 bg-white border border-red-100 text-red-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all shadow-xl shadow-red-100/20"
-                              >
-                                Revoke Order
-                              </button>
-                            ) : (
-                              <div className="w-full py-4 bg-gray-50 text-gray-400 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center border border-gray-100">
-                                Order Processing • Fixed
-                              </div>
-                            )}
-                          </div>
+                          {order.status === "PLACED" && (
+                            <button
+                              onClick={() => cancelOrder(order._id)}
+                              className="mt-6 w-full py-3 px-6 rounded-xl border border-red-500/30 text-red-400 text-[9px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all"
+                            >
+                              Cancel Order
+                            </button>
+                          )}
                         </div>
                       </div>
 
                       {/* Footer Meta */}
-                      <div className="px-10 py-5 bg-gray-50/50 border-t border-gray-50 flex justify-between items-center text-[9px] font-black text-gray-400 uppercase tracking-widest">
-                        <div className="flex gap-8">
-                          <span className="flex items-center gap-2">
-                            <Calendar size={12} className="text-emerald-500" />{" "}
+                      <div className="px-8 py-4 bg-slate-950/40 border-t border-slate-800/50 flex justify-between items-center">
+                        <div className="flex gap-6 text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                          <span className="flex items-center gap-1.5">
+                            <Calendar size={12} />{" "}
                             {new Date(order.createdAt).toLocaleDateString()}
                           </span>
-                          <span className="flex items-center gap-2">
-                            <User size={12} className="text-emerald-500" />{" "}
-                            Artisan Fulfilled
+                          <span className="flex items-center gap-1.5">
+                            <User size={12} /> Fulfilled
                           </span>
                         </div>
-                        <span className="text-gray-300 font-mono">
-                          ID_{order._id.slice(-8).toUpperCase()}
+                        <span className="text-[9px] font-mono text-slate-700 uppercase">
+                          REF_{order._id.slice(-6)}
                         </span>
                       </div>
                     </motion.div>
@@ -268,7 +233,7 @@ const Orders = () => {
                 })
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

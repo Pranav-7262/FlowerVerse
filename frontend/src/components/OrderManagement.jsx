@@ -10,17 +10,17 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
   const getStatusStyle = (status) => {
     switch (status) {
       case "PLACED":
-        return "bg-amber-50 text-amber-700 border-amber-100";
+        return "bg-amber-600/20 text-amber-400 border-amber-600/40";
       case "CONFIRMED":
-        return "bg-blue-50 text-blue-700 border-blue-100";
+        return "bg-blue-600/20 text-blue-400 border-blue-600/40";
       case "SHIPPED":
-        return "bg-purple-50 text-purple-700 border-purple-100";
+        return "bg-purple-600/20 text-purple-400 border-purple-600/40";
       case "DELIVERED":
-        return "bg-emerald-50 text-emerald-700 border-emerald-100";
+        return "bg-emerald-600/20 text-emerald-400 border-emerald-600/40";
       case "CANCELLED":
-        return "bg-red-50 text-red-700 border-red-100";
+        return "bg-red-600/20 text-red-400 border-red-600/40";
       default:
-        return "bg-gray-50 text-gray-700";
+        return "bg-slate-700/50 text-gray-300";
     }
   };
 
@@ -50,17 +50,17 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
               className="hover:bg-slate-50/50 transition-colors"
             >
               <td className="p-6">
-                <div className="font-bold text-gray-900">
+                <div className="font-bold text-gray-100">
                   #{order._id.slice(-6)}
                 </div>
                 <div className="text-xs text-gray-400">
                   {formatDate(order.createdAt)}
                 </div>
               </td>
-              <td className="p-6 text-sm font-medium text-gray-600">
+              <td className="p-6 text-sm font-medium text-gray-300">
                 {order.buyer?.userName || "Unknown User"}
               </td>
-              <td className="p-6 font-bold text-gray-900">
+              <td className="p-6 font-bold text-gray-100">
                 ₹{order.totalAmount}
               </td>
               <td className="p-6">
@@ -73,7 +73,7 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
 
                   <select
                     onChange={(e) => onUpdateStatus(order._id, e.target.value)}
-                    className="text-xs bg-white border border-gray-200 rounded-lg p-1 focus:ring-2 focus:ring-emerald-500 outline-none"
+                    className="text-xs bg-slate-700/50 border border-slate-600 rounded-lg p-1 focus:ring-2 focus:ring-emerald-500 outline-none text-gray-100"
                     value={order.status}
                   >
                     <option value="PLACED">Placed</option>

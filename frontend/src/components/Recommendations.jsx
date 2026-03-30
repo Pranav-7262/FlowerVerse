@@ -42,7 +42,7 @@ const Recommendations = ({ currentFlowerId, category }) => {
     <section className="mt-20 border-t border-gray-100 pt-16 mb-20">
       <div className="flex items-center justify-between mb-10 px-4">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
+          <h2 className="text-3xl font-bold text-gray-100 tracking-tight">
             Top new picks of similar items
           </h2>
         </div>

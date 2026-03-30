@@ -83,10 +83,10 @@ const EditFlower = () => {
     );
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
+    <div className="max-w-3xl mx-auto py-10 px-4 min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-400 hover:text-emerald-700 font-bold mb-8 transition-colors"
+        className="flex items-center gap-2 text-gray-400 hover:text-emerald-400 font-bold mb-8 transition-colors"
       >
         <ArrowLeft size={18} /> Back to Details
       </button>
@@ -94,9 +94,9 @@ const EditFlower = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden"
+        className="bg-slate-800/50 rounded-[2.5rem] shadow-xl border border-slate-700 overflow-hidden"
       >
-        <div className="bg-emerald-900 p-8 text-white">
+        <div className="bg-gradient-to-r from-emerald-900 to-teal-900 p-8 text-white">
           <h1 className="text-3xl font-serif font-bold">Edit Your Bloom</h1>
           <p className="text-emerald-200 text-sm mt-2">
             Adjust pricing, stock, or description for your listing.
@@ -107,12 +107,12 @@ const EditFlower = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">
+              <label className="text-xs font-black uppercase tracking-widest text-gray-300 ml-1">
                 Flower Name
               </label>
               <div className="relative">
                 <Flower2
-                  className="absolute left-4 top-3.5 text-gray-300"
+                  className="absolute left-4 top-3.5 text-gray-500"
                   size={18}
                 />
                 <input

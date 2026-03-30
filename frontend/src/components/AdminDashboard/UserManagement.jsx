@@ -14,18 +14,18 @@ const UserManagement = ({
   formatDate,
 }) => {
   return (
-    <div className="p-6 border-b border-slate-200">
+    <div className="p-6 border-b border-slate-700">
       {/* Filters Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Search Bar */}
         <div className="relative col-span-1 md:col-span-2">
-          <Search className="absolute left-4 top-3 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-4 top-3 w-5 h-5 text-gray-500" />
           <input
             type="text"
             placeholder="Search by username or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50 hover:bg-white transition-colors shadow-sm"
+            className="w-full pl-12 pr-4 py-2.5 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-slate-700/50 hover:bg-slate-700/75 transition-colors shadow-sm text-gray-100 placeholder-gray-500"
           />
         </div>
 
@@ -36,32 +36,38 @@ const UserManagement = ({
             setFilter(e.target.value);
             setCurrentPage(1);
           }}
-          className="px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50 hover:bg-white transition-colors font-medium text-gray-700 shadow-sm"
+          className="px-4 py-2.5 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-slate-700/50 hover:bg-slate-700/75 transition-colors font-medium text-gray-100 shadow-sm"
         >
-          <option value="all">All Roles</option>
-          <option value="admin">Admin Only</option>
-          <option value="customer">Customers Only</option>
+          <option value="all" className="bg-slate-800 text-gray-100">
+            All Roles
+          </option>
+          <option value="admin" className="bg-slate-800 text-gray-100">
+            Admin Only
+          </option>
+          <option value="customer" className="bg-slate-800 text-gray-100">
+            Customers Only
+          </option>
         </select>
       </div>
 
       {/* Users Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-x-auto rounded-xl border border-slate-700 bg-slate-800/50 shadow-lg">
         <table className="w-full">
-          <thead className="bg-linear-to-r from-slate-50 to-slate-100 border-b border-slate-200">
+          <thead className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
                 Username
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
                 Email
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
                 Role
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
                 Joined
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
                 Actions
               </th>
             </tr>
@@ -71,7 +77,7 @@ const UserManagement = ({
               <tr>
                 <td colSpan="5" className="text-center py-8">
                   <div className="inline-block">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
                   </div>
                 </td>
               </tr>
@@ -79,7 +85,7 @@ const UserManagement = ({
               <tr>
                 <td
                   colSpan="5"
-                  className="text-center py-8 text-gray-500 font-medium"
+                  className="text-center py-8 text-gray-400 font-medium"
                 >
                   No users found
                 </td>
@@ -88,26 +94,26 @@ const UserManagement = ({
               users.map((user) => (
                 <tr
                   key={user._id}
-                  className="border-b border-slate-100 hover:bg-linear-to-r hover:from-blue-50/50 to-transparent transition-colors duration-150"
+                  className="border-b border-slate-700 hover:bg-slate-700/50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 text-sm font-semibold text-gray-900">
+                  <td className="px-6 py-4 text-sm font-semibold text-gray-100">
                     {user.userName}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-300">
                     {user.email}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span
                       className={`inline-flex px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
                         user.role === "admin"
-                          ? "bg-purple-100 text-purple-700"
-                          : "bg-emerald-100 text-emerald-700"
+                          ? "bg-purple-600/20 text-purple-400"
+                          : "bg-emerald-600/20 text-emerald-400"
                       }`}
                     >
                       {user.role === "admin" ? "👑 Admin" : "🛍️ Customer"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-300">
                     {formatDate(user.createdAt)}
                   </td>
                   <td className="px-6 py-4 text-sm">
@@ -117,10 +123,20 @@ const UserManagement = ({
                         handleChangeRole(user._id, e.target.value)
                       }
                       disabled={changingRole === user._id}
-                      className="px-3 py-2 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 bg-white hover:bg-slate-50 transition-colors shadow-sm cursor-pointer"
+                      className="px-3 py-2 border border-slate-600 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 bg-slate-700/50 hover:bg-slate-700/75 transition-colors shadow-sm cursor-pointer text-gray-100"
                     >
-                      <option value="customer">Customer</option>
-                      <option value="admin">Admin</option>
+                      <option
+                        value="customer"
+                        className="bg-slate-800 text-gray-100"
+                      >
+                        Customer
+                      </option>
+                      <option
+                        value="admin"
+                        className="bg-slate-800 text-gray-100"
+                      >
+                        Admin
+                      </option>
                     </select>
                   </td>
                 </tr>

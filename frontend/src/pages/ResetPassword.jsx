@@ -61,8 +61,8 @@ const ResetPassword = () => {
     }
   };
   return (
-    <div className="max-w-md mx-auto mt-20 p-8 bg-white border border-gray-100 rounded-2xl shadow-xl">
-      <h2 className="text-2xl font-bold mb-6">
+    <div className="max-w-md mx-auto mt-20 p-8 bg-slate-800/50 border border-slate-700 rounded-2xl shadow-xl backdrop-blur-xl min-h-[calc(100vh-64px)] flex flex-col justify-center">
+      <h2 className="text-2xl font-bold mb-6 text-gray-100">
         {user ? "Change Your Password" : "Create New Password"}
       </h2>
       <form onSubmit={handleReset} className="space-y-4">
@@ -73,7 +73,7 @@ const ResetPassword = () => {
           placeholder="New Password (min. 6 characters)"
           value={password}
           disabled={loading}
-          className="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-100"
+          className="w-full p-3 border border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-emerald-600/50 disabled:bg-slate-700/50 bg-slate-700/50 text-gray-100 placeholder:text-gray-500"
           onChange={(e) => setPassword(e.target.value)}
         />
         <input
@@ -83,7 +83,7 @@ const ResetPassword = () => {
           placeholder="Confirm New Password"
           value={confirmPassword}
           disabled={loading}
-          className="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-100"
+          className="w-full p-3 border border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-emerald-600/50 disabled:bg-slate-700/50 bg-slate-700/50 text-gray-100 placeholder:text-gray-500"
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
         <button
@@ -93,7 +93,7 @@ const ResetPassword = () => {
             !confirmPassword ||
             password !== confirmPassword
           }
-          className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-emerald-600/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {loading
             ? "Updating..."

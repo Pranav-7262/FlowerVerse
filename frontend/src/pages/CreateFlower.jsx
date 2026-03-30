@@ -91,13 +91,13 @@ const CreateFlower = () => {
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex-1 bg-white rounded-[2.5rem] p-8 shadow-xl shadow-gray-200/50 border border-gray-100"
+          className="flex-1 bg-slate-800/50 rounded-[2.5rem] p-8 shadow-xl shadow-black/40 border border-slate-700 min-h-screen backdrop-blur-xl"
         >
           <div className="mb-8">
-            <h1 className="text-3xl font-serif font-bold text-gray-900 flex items-center gap-3">
-              <PlusCircle className="text-emerald-600" /> List a New Bloom
+            <h1 className="text-3xl font-serif font-bold text-gray-100 flex items-center gap-3">
+              <PlusCircle className="text-emerald-400" /> List a New Bloom
             </h1>
-            <p className="text-gray-500 mt-2">
+            <p className="text-gray-400 mt-2">
               Fill in the details to showcase your flower in the market.
             </p>
           </div>
@@ -106,8 +106,8 @@ const CreateFlower = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Name */}
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                  <Sparkles size={16} className="text-emerald-500" /> Flower
+                <label className="text-sm font-bold text-gray-300 flex items-center gap-2">
+                  <Sparkles size={16} className="text-emerald-400" /> Flower
                   Name
                 </label>
                 <input
@@ -116,14 +116,14 @@ const CreateFlower = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="e.g. Midnight Jasmine"
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-700/50 border border-slate-600 focus:ring-2 focus:ring-emerald-600/50 outline-none transition-all text-gray-100 placeholder:text-gray-500"
                 />
               </div>
 
               {/* Price */}
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                  <IndianRupee size={16} className="text-emerald-500" /> Price
+                <label className="text-sm font-bold text-gray-300 flex items-center gap-2">
+                  <IndianRupee size={16} className="text-emerald-400" /> Price
                   (₹)
                 </label>
                 <input
@@ -133,20 +133,20 @@ const CreateFlower = () => {
                   value={formData.price}
                   onChange={handleChange}
                   placeholder="0.00"
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-700/50 border border-slate-600 focus:ring-2 focus:ring-emerald-600/50 outline-none transition-all text-gray-100 placeholder:text-gray-500"
                 />
               </div>
 
               {/* Category */}
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                  <Tag size={16} className="text-emerald-500" /> Category
+                <label className="text-sm font-bold text-gray-300 flex items-center gap-2">
+                  <Tag size={16} className="text-emerald-400" /> Category
                 </label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-700/50 border border-slate-600 focus:ring-2 focus:ring-emerald-600/50 outline-none transition-all text-gray-100"
                 >
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>
@@ -188,7 +188,7 @@ const CreateFlower = () => {
                 />
                 <label
                   htmlFor="flower-image"
-                  className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-dashed border-gray-200 hover:border-emerald-400 cursor-pointer transition-all"
+                  className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-slate-700/50 border-2 border-dashed border-slate-600 hover:border-emerald-400 cursor-pointer transition-all"
                 >
                   {imageFile ? imageFile.name : "Click to select a photo"}
                 </label>
