@@ -132,7 +132,7 @@ const Checkout = () => {
                     Destination
                   </span>
                   <div className="p-1">
-                    <p className="text-xl font-bold text-gray-800 leading-tight mb-1">
+                    <p className="text-xl font-bold text-gray-400 leading-tight mb-1">
                       {currentAddress.street}
                     </p>
                     <p className="text-gray-500 font-medium">

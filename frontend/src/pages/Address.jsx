@@ -121,7 +121,7 @@ const Address = () => {
                       Primary Residence
                     </p>
                     <div className="space-y-1">
-                      <h2 className="text-2xl font-bold text-gray-800 leading-tight">
+                      <h2 className="text-2xl font-bold text-gray-400 leading-tight">
                         {address[0].street}
                       </h2>
                       <p className="text-gray-500 font-medium">
@@ -177,7 +177,7 @@ const Address = () => {
                         value={formData.street}
                         onChange={handleChange}
                         required
-                        className="w-full bg-slate-700/50 border border-slate-600 rounded-2xl pl-12 pr-6 py-4 text-lg font-bold text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-emerald-500"
+                        className="w-full bg-slate-700/50 border border-slate-600 rounded-2xl pl-12 pr-6 py-4 text-lg font-bold text-gray-100 placeholder-gray-500 "
                       />
                     </div>
                   </div>
@@ -198,14 +198,14 @@ const Address = () => {
                         value={formData.city}
                         onChange={handleChange}
                         required
-                        className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-6 py-4 font-bold text-gray-800 focus:ring-2 focus:ring-emerald-500"
+                        className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-6 py-4 font-bold text-gray-300"
                       />
                     </div>
                   </div>
 
                   {/* State */}
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest px-1">
+                    <label className="text-[10px] font-black text-emerald-700 uppercase  px-1">
                       State
                     </label>
                     <div className="relative">
@@ -219,7 +219,7 @@ const Address = () => {
                         value={formData.state}
                         onChange={handleChange}
                         required
-                        className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-6 py-4 font-bold text-gray-800 focus:ring-2 focus:ring-emerald-500"
+                        className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-6 py-4 font-bold text-gray-300"
                       />
                     </div>
                   </div>
@@ -240,7 +240,7 @@ const Address = () => {
                         value={formData.mobile}
                         onChange={handleChange}
                         required
-                        className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-6 py-4 font-bold text-gray-800 focus:ring-2 focus:ring-emerald-500"
+                        className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-6 py-4 font-bold text-gray-300"
                       />
                     </div>
                   </div>

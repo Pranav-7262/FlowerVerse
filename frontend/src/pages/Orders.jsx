@@ -178,10 +178,10 @@ const Orders = () => {
                                 </div>
                               </div>
                               <div>
-                                <h4 className="text-lg font-serif font-bold text-slate-100">
+                                <h4 className="text-2xl font-serif font-bold text-slate-100">
                                   {item.flower?.name}
                                 </h4>
-                                <p className="text-[10px] font-bold text-emerald-500/60 uppercase tracking-widest">
+                                <p className="text-[14px] font-bold text-emerald-500/60 uppercase tracking-widest">
                                   Premium Bloom • ₹
                                   {item.priceAtPurchase.toLocaleString()}
                                 </p>
