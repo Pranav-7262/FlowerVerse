@@ -172,7 +172,7 @@ const Cart = () => {
                         {item.flower.category}
                       </p>
                       <p className="text-md font-bold text-emerald-300 mt-1">
-                        ₹{item.flower.price}
+                        ₹{item.flower.price}/kg
                       </p>
 
                       {/* Mobile Quantity (Hidden on desktop) */}

@@ -156,7 +156,6 @@ export const CartProvider = ({ children }) => {
 
       setCart(null);
       setCartCount(0);
-      toast.success("Cart cleared");
     } catch (err) {
       console.error("Error clearing cart:", err);
       toast.error("Failed to clear cart");

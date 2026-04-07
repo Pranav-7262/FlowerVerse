@@ -174,10 +174,10 @@ const FlowerDetails = () => {
                     <span className="text-emerald-500 text-xl align-top mr-1 font-serif">
                       ₹
                     </span>
-                    {selectedFlower.price.toLocaleString()}
+                    {selectedFlower.price.toLocaleString()}/kg
                   </p>
                   <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1">
-                    Private Reserve
+                    Per Kilogram
                   </p>
                 </div>
               </div>

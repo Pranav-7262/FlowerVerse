@@ -10,6 +10,8 @@ import { useCart } from "../contexts/CartContext";
 import FilterPanel from "../components/FilterPanel";
 import FlowerCard from "../components/FlowerCard";
 import SortDropdown from "../components/SortDropdown";
+import BouquetsSection from "../components/BouquetsSection";
+import Footer from "../components/Footer";
 
 const CATEGORIES = [
   "All",
@@ -77,8 +79,8 @@ export default function Home() {
     priceRange[1] < PRICE_MAX;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 pb-20">
-      <div className="max-w-7xl mx-auto px-6 pt-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 flex flex-col">
+      <div className="flex-1 max-w-7xl mx-auto w-full px-6 pt-10">
         {/* Unified Search & Action Bar */}
         <div className="flex flex-wrap items-center gap-3 mb-8">
           {/* Search Input */}
@@ -182,7 +184,13 @@ export default function Home() {
             </p>
           </div>
         )}
+
+        {/* Featured Bouquets Section */}
+        <BouquetsSection onViewAll={() => filterByCategory("Mixed Bouquets")} />
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

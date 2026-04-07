@@ -10,11 +10,11 @@ const FlowerCard = ({ flower, onNavigate, onAddToCart }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -8 }}
-      className="group relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-[2.5rem] p-5 border border-slate-700 shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:shadow-[0_25px_60px_rgba(236,72,153,0.3)] hover:border-pink-500/50 transition-all duration-500 ease-in-out flex flex-col h-full"
+      className="group relative bg-linear-to-br from-slate-800 to-slate-900 rounded-[2.5rem] p-5 border border-slate-700 shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:shadow-[0_25px_60px_rgba(236,72,153,0.3)] hover:border-pink-500/50 transition-all duration-500 ease-in-out flex flex-col h-full"
     >
       <div
         onClick={onNavigate}
-        className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-slate-700 cursor-pointer ring-2 ring-slate-600"
+        className="relative aspect-4/5 w-full overflow-hidden rounded-4xl bg-slate-700 cursor-pointer ring-2 ring-slate-600"
       >
         <img
           src={flower.image}
@@ -22,12 +22,17 @@ const FlowerCard = ({ flower, onNavigate, onAddToCart }) => {
           className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
         />
 
-        <div className="absolute top-4 left-4 bg-gradient-to-r from-emerald-600/80 to-teal-600/80 backdrop-blur-xl border border-emerald-400/50 px-4 py-2 rounded-2xl shadow-lg shadow-emerald-600/40">
-          <span className="text-xs font-black text-white">₹{flower.price}</span>
+        <div className="absolute top-4 left-4 bg-linear-to-r from-emerald-600/80 to-teal-600/80 backdrop-blur-xl border border-emerald-400/50 px-4 py-2 rounded-2xl shadow-lg shadow-emerald-600/40">
+          <span className="text-xs font-black text-white">
+            ₹
+            {flower.category === "Mixed Bouquets"
+              ? flower.price
+              : `${flower.price}/kg`}
+          </span>
         </div>
 
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-          <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-3 rounded-full shadow-2xl shadow-emerald-600/50 transform scale-75 group-hover:scale-100 transition-all duration-500">
+          <div className="bg-linear-to-r from-emerald-500 to-teal-500 p-3 rounded-full shadow-2xl shadow-emerald-600/50 transform scale-75 group-hover:scale-100 transition-all duration-500">
             <ArrowUpRight size={20} className="text-white" />
           </div>
         </div>
