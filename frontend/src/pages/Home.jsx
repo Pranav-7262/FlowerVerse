@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, ArrowRight } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useFlower } from "../contexts/FlowerContext";
 import { useCart } from "../contexts/CartContext";
@@ -79,27 +79,33 @@ export default function Home() {
     priceRange[1] < PRICE_MAX;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 flex flex-col">
-      <div className="flex-1 max-w-7xl mx-auto w-full px-6 pt-10">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 text-slate-800 flex flex-col selection:bg-rose-200/50">
+      {/* Subtle Background Glows */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-rose-200/5 blur-[120px] rounded-full" />
+        <div className="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-pink-100/5 blur-[100px] rounded-full" />
+      </div>
+
+      <div className="flex-1 max-w-7xl mx-auto w-full px-6 pt-12 relative z-10">
         {/* Unified Search & Action Bar */}
-        <div className="flex flex-wrap items-center gap-3 mb-8">
+        <div className="flex flex-wrap items-center gap-4 mb-12">
           {/* Search Input */}
-          <div className="relative flex-1 min-w-[280px]">
+          <div className="relative flex-1 min-w-[280px] group">
             <Search
-              size={16}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              size={18}
+              className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-rose-600 transition-colors duration-300"
             />
             <input
               type="text"
-              placeholder="Search our garden..."
+              placeholder="Search the private collection..."
               value={search}
               onChange={(e) => searchFlowers(e.target.value)}
-              className="w-full h-12 pl-12 pr-4 rounded-2xl bg-slate-800 border border-slate-700 text-gray-100 placeholder-gray-400 shadow-lg shadow-black/30 text-sm focus:ring-2 focus:ring-pink-500/50 transition-all"
+              className="w-full h-14 pl-14 pr-6 rounded-2xl bg-white/70 border border-rose-200/50 text-slate-800 placeholder-slate-500 shadow-md focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500/50 transition-all backdrop-blur-sm outline-none"
             />
           </div>
 
           {/* Sort & Filter Group */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <SortDropdown
               options={SORT_OPTIONS}
               activeSort={sortBy}
@@ -113,13 +119,14 @@ export default function Home() {
                 setPanelOpen(!panelOpen);
                 setSortOpen(false);
               }}
-              className={`h-12 px-6 rounded-2xl flex items-center gap-2 text-sm font-bold transition-all ${
+              className={`h-14 px-8 rounded-2xl flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all border ${
                 panelOpen || activeFilters
-                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xl shadow-emerald-600/30"
-                  : "bg-slate-800 text-gray-200 shadow-lg shadow-black/40 border border-slate-700 hover:border-emerald-500/50"
+                  ? "bg-rose-600 border-rose-500 text-white shadow-[0_10px_30px_-5px_rgba(225,29,72,0.4)]"
+                  : "bg-white/60 text-slate-600 border-rose-200/50 hover:border-rose-400/50 hover:text-slate-900"
               }`}
             >
-              <SlidersHorizontal size={14} /> Filters
+              <SlidersHorizontal size={14} strokeWidth={3} />
+              {activeFilters ? "Filters Active" : "Filters"}
             </button>
 
             {activeFilters && (
@@ -128,7 +135,7 @@ export default function Home() {
                   filterByCategory("All");
                   setPriceRange([0, PRICE_MAX]);
                 }}
-                className="h-12 px-4 rounded-2xl bg-red-600/20 text-red-400 text-xs font-bold uppercase tracking-wider hover:bg-red-600/30 transition-colors border border-red-600/40"
+                className="h-14 px-6 rounded-2xl bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all border border-red-300/50"
               >
                 Reset
               </button>
@@ -136,14 +143,14 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Expandable Filter Panel */}
+        {/* Filter Panel */}
         <AnimatePresence>
           {panelOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-              animate={{ opacity: 1, height: "auto", marginBottom: 24 }}
-              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-              className="overflow-hidden"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mb-12 p-8 bg-white/60 border border-rose-200/50 rounded-[2.5rem] backdrop-blur-md shadow-lg"
             >
               <FilterPanel
                 categories={CATEGORIES}
@@ -157,10 +164,10 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        {/* Product Grid */}
+        {/* Flowers Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           <AnimatePresence mode="popLayout">
             {displayed.map((flower) => (
@@ -178,18 +185,39 @@ export default function Home() {
 
         {/* Empty State */}
         {!loading && displayed.length === 0 && (
-          <div className="text-center py-20 col-span-full">
-            <p className="text-gray-400 text-sm font-medium">
-              No flowers match your selection.
+          <div className="text-center py-32">
+            <div className="inline-flex p-6 rounded-full bg-rose-100/50 border border-rose-200 mb-4">
+              <Search size={32} className="text-rose-600/60" />
+            </div>
+            <p className="text-slate-600 text-sm font-bold uppercase tracking-widest">
+              No rare specimens match your criteria
             </p>
           </div>
         )}
 
-        {/* Featured Bouquets Section */}
-        <BouquetsSection onViewAll={() => filterByCategory("Mixed Bouquets")} />
+        {/* Featured Section Divider */}
+        <div className="mt-40 pt-20 border-t border-rose-200/30">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="text-4xl font-serif font-black text-rose-900 tracking-tight">
+              Curated Bouquets
+            </h2>
+            <button
+              onClick={() => filterByCategory("Mixed Bouquets")}
+              className="group text-[10px] font-black uppercase tracking-widest text-rose-700 flex items-center gap-2"
+            >
+              View All{" "}
+              <ArrowRight
+                size={12}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </button>
+          </div>
+          <BouquetsSection
+            onViewAll={() => filterByCategory("Mixed Bouquets")}
+          />
+        </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

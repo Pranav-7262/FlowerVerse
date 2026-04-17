@@ -156,6 +156,7 @@ export const refreshAccessToken = async_handler(async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 15 * 60 * 1000, // 15 min
+      path: "/",
     };
     return res
       .status(200)

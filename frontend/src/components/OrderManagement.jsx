@@ -12,15 +12,15 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
       case "PLACED":
         return "bg-amber-600/20 text-amber-400 border-amber-600/40";
       case "CONFIRMED":
-        return "bg-blue-600/20 text-blue-400 border-blue-600/40";
+        return "bg-blue-100/50 text-blue-700 border-blue-200/50";
       case "SHIPPED":
-        return "bg-purple-600/20 text-purple-400 border-purple-600/40";
+        return "bg-purple-100/50 text-purple-700 border-purple-200/50";
       case "DELIVERED":
-        return "bg-emerald-600/20 text-emerald-400 border-emerald-600/40";
+        return "bg-rose-100/50 text-rose-700 border-rose-200/50";
       case "CANCELLED":
-        return "bg-red-600/20 text-red-400 border-red-600/40";
+        return "bg-red-100/50 text-red-700 border-red-200/50";
       default:
-        return "bg-slate-700/50 text-gray-300";
+        return "bg-white/50 text-slate-600";
     }
   };
 
@@ -28,39 +28,36 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
     <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="bg-gray-50/50 border-b border-gray-100">
-            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-gray-400">
+          <tr className="bg-white/50 border-b border-rose-200/20">
+            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-600">
               Order & Date
             </th>
-            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-gray-400">
+            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-600">
               Customer
             </th>
-            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-gray-400">
+            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-600">
               Amount
             </th>
-            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-gray-400">
+            <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-600">
               Stage Control
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-50">
+        <tbody className="divide-y divide-rose-200/20">
           {orders.map((order) => (
-            <tr
-              key={order._id}
-              className="hover:bg-slate-50/50 transition-colors"
-            >
+            <tr key={order._id} className="hover:bg-white/50 transition-colors">
               <td className="p-6">
-                <div className="font-bold text-gray-100">
+                <div className="font-bold text-slate-900">
                   #{order._id.slice(-6)}
                 </div>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-slate-600">
                   {formatDate(order.createdAt)}
                 </div>
               </td>
-              <td className="p-6 text-sm font-medium text-gray-300">
+              <td className="p-6 text-sm font-medium text-slate-700">
                 {order.buyer?.userName || "Unknown User"}
               </td>
-              <td className="p-6 font-bold text-gray-100">
+              <td className="p-6 font-bold text-slate-900">
                 ₹{order.totalAmount}
               </td>
               <td className="p-6">
@@ -73,7 +70,7 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
 
                   <select
                     onChange={(e) => onUpdateStatus(order._id, e.target.value)}
-                    className="text-xs bg-slate-700/50 border border-slate-600 rounded-lg p-1 focus:ring-2 focus:ring-emerald-500 outline-none text-gray-100"
+                    className="text-xs bg-white/50 border border-rose-200/50 rounded-lg p-1 focus:ring-2 focus:ring-rose-600 outline-none text-slate-900"
                     value={order.status}
                   >
                     <option value="PLACED">Placed</option>

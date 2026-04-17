@@ -42,7 +42,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-slate-900 via-slate-950 to-black border-t border-slate-800/50">
+    <footer className="bg-gradient-to-b from-rose-50/80 via-pink-50/50 to-white border-t border-rose-100/50 shadow-inner shadow-rose-200/20">
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Top Section */}
         <motion.div
@@ -60,12 +60,12 @@ const Footer = () => {
             className="space-y-4"
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-lg">
+              <div className="p-2 bg-gradient-to-br from-rose-600 to-pink-600 rounded-lg">
                 <Flower2 size={24} className="text-white" />
               </div>
-              <h2 className="text-2xl font-black text-white">BloomCart</h2>
+              <h2 className="text-2xl font-black text-rose-700">BloomCart</h2>
             </div>
-            <p className="text-sm text-gray-400 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               Bringing nature's beauty to your doorstep. Fresh flowers delivered
               with love and care.
             </p>
@@ -80,7 +80,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    className="p-3 rounded-full bg-slate-800/50 border border-slate-700 text-gray-400 hover:text-emerald-400 hover:border-emerald-500/50 transition-all"
+                    className="p-3 rounded-full bg-rose-100 border border-rose-200 text-rose-600 hover:text-rose-700 hover:bg-rose-200 hover:border-rose-300 transition-all"
                     aria-label={social.label}
                   >
                     <Icon size={18} />
@@ -98,7 +98,7 @@ const Footer = () => {
             transition={{ delay: 0.2 }}
             className="space-y-4"
           >
-            <h3 className="text-sm font-black uppercase tracking-widest text-emerald-400 mb-6">
+            <h3 className="text-sm font-black uppercase tracking-widest text-rose-700 mb-6">
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -106,7 +106,7 @@ const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-gray-400 hover:text-emerald-300 text-sm transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-slate-600 hover:text-rose-700 text-sm transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <span className="w-0 group-hover:w-1.5 transition-all" />
                     {link.label}
@@ -124,7 +124,7 @@ const Footer = () => {
             transition={{ delay: 0.3 }}
             className="space-y-4"
           >
-            <h3 className="text-sm font-black uppercase tracking-widest text-emerald-400 mb-6">
+            <h3 className="text-sm font-black uppercase tracking-widest text-rose-700 mb-6">
               Customer Service
             </h3>
             <ul className="space-y-3">
@@ -132,7 +132,7 @@ const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-gray-400 hover:text-emerald-300 text-sm transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-slate-600 hover:text-rose-700 text-sm transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <span className="w-0 group-hover:w-1.5 transition-all" />
                     {link.label}
@@ -150,7 +150,7 @@ const Footer = () => {
             transition={{ delay: 0.4 }}
             className="space-y-4"
           >
-            <h3 className="text-sm font-black uppercase tracking-widest text-emerald-400 mb-6">
+            <h3 className="text-sm font-black uppercase tracking-widest text-rose-700 mb-6">
               Get in Touch
             </h3>
             <div className="space-y-4">
@@ -160,14 +160,14 @@ const Footer = () => {
                   <motion.div
                     key={item.label}
                     whileHover={{ x: 4 }}
-                    className="flex gap-3 text-sm text-gray-400 hover:text-emerald-300 transition-colors cursor-pointer group"
+                    className="flex gap-3 text-sm text-slate-600 hover:text-rose-700 transition-colors cursor-pointer group"
                   >
                     <Icon
                       size={18}
-                      className="text-emerald-500/60 group-hover:text-emerald-400 transition-colors flex-shrink-0 mt-0.5"
+                      className="text-rose-600/70 group-hover:text-rose-700 transition-colors flex-shrink-0 mt-0.5"
                     />
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">
+                      <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">
                         {item.label}
                       </p>
                       <p className="text-sm font-medium">{item.text}</p>
@@ -184,7 +184,7 @@ const Footer = () => {
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           viewport={{ once: true }}
-          className="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-8"
+          className="h-px bg-gradient-to-r from-transparent via-rose-200 to-transparent mb-8"
         />
 
         {/* Bottom Section */}
@@ -196,50 +196,50 @@ const Footer = () => {
           className="flex flex-col md:flex-row justify-between items-center gap-6"
         >
           {/* Left */}
-          <div className="flex flex-col sm:flex-row gap-4 text-xs text-gray-500">
+          <div className="flex flex-col sm:flex-row gap-4 text-xs text-slate-600">
             <Link
               to="/support"
-              className="hover:text-emerald-400 transition-colors"
+              className="hover:text-rose-700 transition-colors"
             >
               Privacy Policy
             </Link>
             <span className="hidden sm:block">•</span>
             <Link
               to="/support"
-              className="hover:text-emerald-400 transition-colors"
+              className="hover:text-rose-700 transition-colors"
             >
               Terms of Service
             </Link>
             <span className="hidden sm:block">•</span>
             <Link
               to="/support"
-              className="hover:text-emerald-400 transition-colors"
+              className="hover:text-rose-700 transition-colors"
             >
               Cookie Policy
             </Link>
           </div>
 
           {/* Center */}
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
             <span>Made with</span>
             <motion.div
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <Heart size={14} className="text-red-500" fill="currentColor" />
+              <Heart size={14} className="text-rose-500" fill="currentColor" />
             </motion.div>
             <span>by BloomCart</span>
           </div>
 
           {/* Right */}
-          <p className="text-xs text-gray-500 text-center md:text-right">
+          <p className="text-xs text-slate-600 text-center md:text-right">
             © {currentYear} BloomCart. All rights reserved.
           </p>
         </motion.div>
       </div>
 
       {/* Top Gradient */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-rose-300/30 to-transparent" />
     </footer>
   );
 };

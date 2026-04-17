@@ -1,5 +1,50 @@
 @import "tailwindcss";
 
+/* Enhanced Global Background */
+body {
+  background: linear-gradient(
+    135deg,
+    #fafaf8 0%,
+    #f5f1eb 30%,
+    #f0e8e0 60%,
+    #ede5dc 100%
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #2d2520;
+}
+
+/* Elegant Typography */
+body,
+button,
+input,
+textarea,
+select {
+  font-family:
+    "Segoe UI",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.3px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:
+    "Segoe UI",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
+  font-weight: 600;
+}
+
 /* Professional Toast Animations */
 @keyframes slideDown {
   from {
@@ -87,15 +132,30 @@ div[role="status"] {
   }
 }
 
-/* Dark Theme Global Styles */
-body {
-  background: linear-gradient(to bottom right, #0f172a, #0f172a);
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
 }
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ede5dc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #d4a574, #c9956e);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #c9956e, #b8845d);
 }
 
 ::-webkit-scrollbar-track {
@@ -112,20 +172,8 @@ body {
 }
 
 /* Selection Color */
-::selection {
-  background-color: rgba(16, 185, 129, 0.3);
-  color: #ecfdf5;
-}
 
 /* Input Focus Effects */
-input:focus,
-textarea:focus,
-select:focus {
-  background-color: rgba(30, 41, 59, 0.8) !important;
-  border-color: rgba(16, 185, 129, 0.5) !important;
-  outline: none;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2) inset !important;
-}
 
 /* Smooth transitions */
 * {

@@ -39,17 +39,17 @@ const Recommendations = ({ currentFlowerId, category }) => {
   if (suggestedFlowers.length === 0) return null;
 
   return (
-    <section className="mt-20 border-t border-gray-100 pt-16 mb-20">
+    <section className="mt-20 border-t border-slate-200 pt-16 mb-20">
       <div className="flex items-center justify-between mb-10 px-4">
         <div>
-          <h2 className="text-3xl font-bold text-gray-100 tracking-tight">
+          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
             Top new picks of similar items
           </h2>
         </div>
 
         <button
           onClick={() => navigate("/")}
-          className="text-sm font-bold text-gray-400 hover:text-emerald-900 transition-colors"
+          className="text-sm font-bold text-slate-600 hover:text-rose-600 transition-colors"
         >
           View All →
         </button>

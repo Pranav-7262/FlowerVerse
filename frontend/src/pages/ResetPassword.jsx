@@ -61,8 +61,8 @@ const ResetPassword = () => {
     }
   };
   return (
-    <div className="max-w-md mx-auto mt-20 p-8 bg-slate-800/50 border border-slate-700 rounded-2xl shadow-xl backdrop-blur-xl min-h-[calc(100vh-64px)] flex flex-col justify-center">
-      <h2 className="text-2xl font-bold mb-6 text-gray-100">
+    <div className="max-w-md mx-auto mt-20 p-8 bg-white/70 border border-rose-200/50 rounded-2xl shadow-xl backdrop-blur-sm min-h-[calc(100vh-64px)] flex flex-col justify-center">
+      <h2 className="text-2xl font-bold mb-6 text-slate-900">
         {user ? "Change Your Password" : "Create New Password"}
       </h2>
       <form onSubmit={handleReset} className="space-y-4">
@@ -73,7 +73,7 @@ const ResetPassword = () => {
           placeholder="New Password (min. 6 characters)"
           value={password}
           disabled={loading}
-          className="w-full p-3 border border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-emerald-600/50 disabled:bg-slate-700/50 bg-slate-700/50 text-gray-100 placeholder:text-gray-500"
+          className="w-full p-3 border border-rose-200/50 rounded-xl outline-none focus:ring-2 focus:ring-rose-600/50 disabled:bg-rose-100/30 bg-white/50 text-slate-900 placeholder:text-slate-400"
           onChange={(e) => setPassword(e.target.value)}
         />
         <input
@@ -83,7 +83,7 @@ const ResetPassword = () => {
           placeholder="Confirm New Password"
           value={confirmPassword}
           disabled={loading}
-          className="w-full p-3 border border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-emerald-600/50 disabled:bg-slate-700/50 bg-slate-700/50 text-gray-100 placeholder:text-gray-500"
+          className="w-full p-3 border border-rose-200/50 rounded-xl outline-none focus:ring-2 focus:ring-rose-600/50 disabled:bg-rose-100/30 bg-white/50 text-slate-900 placeholder:text-slate-400"
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
         <button
@@ -93,7 +93,7 @@ const ResetPassword = () => {
             !confirmPassword ||
             password !== confirmPassword
           }
-          className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-emerald-600/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="w-full py-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-rose-600/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {loading
             ? "Updating..."
@@ -102,9 +102,9 @@ const ResetPassword = () => {
               : "Reset Password"}
         </button>
       </form>
-      <p className="text-center text-gray-500 text-xs mt-4">
+      <p className="text-center text-slate-600 text-xs mt-4">
         Remember your password?{" "}
-        <a href="/login" className="text-emerald-600 font-bold hover:underline">
+        <a href="/login" className="text-rose-600 font-bold hover:underline">
           Go to login
         </a>
       </p>

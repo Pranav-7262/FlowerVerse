@@ -14,18 +14,18 @@ const UserManagement = ({
   formatDate,
 }) => {
   return (
-    <div className="p-6 border-b border-slate-700">
+    <div className="p-6 border-b border-rose-200/50">
       {/* Filters Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Search Bar */}
         <div className="relative col-span-1 md:col-span-2">
-          <Search className="absolute left-4 top-3 w-5 h-5 text-gray-500" />
+          <Search className="absolute left-4 top-3 w-5 h-5 text-slate-400" />
           <input
             type="text"
             placeholder="Search by username or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-2.5 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-slate-700/50 hover:bg-slate-700/75 transition-colors shadow-sm text-gray-100 placeholder-gray-500"
+            className="w-full pl-12 pr-4 py-2.5 border border-rose-200/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-600 focus:border-transparent bg-white/50 hover:bg-white/70 transition-colors shadow-sm text-slate-900 placeholder-slate-400"
           />
         </div>
 
@@ -36,38 +36,38 @@ const UserManagement = ({
             setFilter(e.target.value);
             setCurrentPage(1);
           }}
-          className="px-4 py-2.5 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-slate-700/50 hover:bg-slate-700/75 transition-colors font-medium text-gray-100 shadow-sm"
+          className="px-4 py-2.5 border border-rose-200/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-600 focus:border-transparent bg-white/50 hover:bg-white/70 transition-colors font-medium text-slate-900 shadow-sm"
         >
-          <option value="all" className="bg-slate-800 text-gray-100">
+          <option value="all" className="bg-amber-50 text-slate-900">
             All Roles
           </option>
-          <option value="admin" className="bg-slate-800 text-gray-100">
+          <option value="admin" className="bg-amber-50 text-slate-900">
             Admin Only
           </option>
-          <option value="customer" className="bg-slate-800 text-gray-100">
+          <option value="customer" className="bg-amber-50 text-slate-900">
             Customers Only
           </option>
         </select>
       </div>
 
       {/* Users Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-700 bg-slate-800/50 shadow-lg">
+      <div className="overflow-x-auto rounded-xl border border-rose-200/50 bg-white/70 shadow-lg">
         <table className="w-full">
-          <thead className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700">
+          <thead className="bg-gradient-to-r from-white/50 to-white/30 border-b border-rose-200/50">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-slate-900">
                 Username
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-slate-900">
                 Email
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-slate-900">
                 Role
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-slate-900">
                 Joined
               </th>
-              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-gray-100">
+              <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-widest text-slate-900">
                 Actions
               </th>
             </tr>
@@ -85,7 +85,7 @@ const UserManagement = ({
               <tr>
                 <td
                   colSpan="5"
-                  className="text-center py-8 text-gray-400 font-medium"
+                  className="text-center py-8 text-slate-600 font-medium"
                 >
                   No users found
                 </td>
@@ -94,26 +94,26 @@ const UserManagement = ({
               users.map((user) => (
                 <tr
                   key={user._id}
-                  className="border-b border-slate-700 hover:bg-slate-700/50 transition-colors duration-150"
+                  className="border-b border-rose-200/50 hover:bg-white/50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 text-sm font-semibold text-gray-100">
+                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">
                     {user.userName}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-300">
+                  <td className="px-6 py-4 text-sm text-slate-700">
                     {user.email}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span
                       className={`inline-flex px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
                         user.role === "admin"
-                          ? "bg-purple-600/20 text-purple-400"
-                          : "bg-emerald-600/20 text-emerald-400"
+                          ? "bg-purple-100/50 text-purple-700"
+                          : "bg-rose-100/50 text-rose-700"
                       }`}
                     >
                       {user.role === "admin" ? "👑 Admin" : "🛍️ Customer"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-300">
+                  <td className="px-6 py-4 text-sm text-slate-700">
                     {formatDate(user.createdAt)}
                   </td>
                   <td className="px-6 py-4 text-sm">
@@ -123,17 +123,17 @@ const UserManagement = ({
                         handleChangeRole(user._id, e.target.value)
                       }
                       disabled={changingRole === user._id}
-                      className="px-3 py-2 border border-slate-600 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 bg-slate-700/50 hover:bg-slate-700/75 transition-colors shadow-sm cursor-pointer text-gray-100"
+                      className="px-3 py-2 border border-rose-200/50 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-600 disabled:opacity-50 bg-white/50 hover:bg-white/70 transition-colors shadow-sm cursor-pointer text-slate-900"
                     >
                       <option
                         value="customer"
-                        className="bg-slate-800 text-gray-100"
+                        className="bg-amber-50 text-slate-900"
                       >
                         Customer
                       </option>
                       <option
                         value="admin"
-                        className="bg-slate-800 text-gray-100"
+                        className="bg-amber-50 text-slate-900"
                       >
                         Admin
                       </option>

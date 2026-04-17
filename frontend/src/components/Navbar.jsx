@@ -54,7 +54,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-slate-900 to-slate-800 backdrop-blur-md border-b border-slate-700 sticky top-0 z-[100] h-20 flex items-center shadow-lg shadow-black/30">
+    <nav className="bg-gradient-to-r from-white via-rose-50 to-pink-50 backdrop-blur-md border-b border-rose-100/50 sticky top-0 z-[100] h-20 flex items-center shadow-md shadow-rose-200/30">
       <div
         className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between"
         ref={dropdownRef}
@@ -63,15 +63,15 @@ const Navbar = () => {
         <Link to="/" className="group flex items-center gap-3">
           <motion.div
             whileHover={{ rotate: 15 }}
-            className="bg-gradient-to-r from-emerald-600 to-teal-600 p-2.5 rounded-2xl shadow-lg shadow-emerald-600/40 group-hover:shadow-lg group-hover:shadow-emerald-600/60 transition-all"
+            className="bg-gradient-to-r from-rose-600 to-pink-600 p-2.5 rounded-2xl shadow-lg shadow-rose-600/40 group-hover:shadow-lg group-hover:shadow-rose-600/60 transition-all"
           >
             <Flower className="text-white" size={24} />
           </motion.div>
           <div className="flex flex-col">
-            <span className="text-2xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300 tracking-tighter leading-none">
+            <span className="text-2xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-700 to-pink-600 tracking-tighter leading-none">
               FlowerMart
             </span>
-            <span className="text-[9px] font-black text-teal-400 uppercase tracking-[0.3em] mt-1">
+            <span className="text-[9px] font-black text-rose-600 uppercase tracking-[0.3em] mt-1">
               Boutique
             </span>
           </div>
@@ -85,8 +85,8 @@ const Navbar = () => {
                 to="/orders"
                 className={`hidden sm:flex flex-col items-start px-4 py-2 rounded-2xl transition-all border ${
                   location.pathname === "/orders"
-                    ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
-                    : "border-transparent hover:bg-slate-700/50 text-gray-400 hover:text-gray-300"
+                    ? "bg-rose-600/20 border-rose-500/50 text-rose-700"
+                    : "border-transparent hover:bg-rose-100/50 text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">
@@ -107,8 +107,8 @@ const Navbar = () => {
                   }
                   className={`flex flex-col items-start px-4 py-2 rounded-2xl transition-all ${
                     activeDropdown === "account"
-                      ? "bg-slate-700/70 text-emerald-300"
-                      : "hover:bg-slate-700/50 text-gray-400 hover:text-gray-300"
+                      ? "bg-rose-100/50 text-rose-700"
+                      : "hover:bg-white/50 text-slate-600 hover:text-slate-700"
                   }`}
                 >
                   <span className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">
@@ -130,18 +130,18 @@ const Navbar = () => {
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      className="absolute right-0 mt-3 w-64 bg-slate-900/95 backdrop-blur-xl border border-slate-700 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[2rem] py-4 z-50 overflow-hidden"
+                      className="absolute right-0 mt-3 w-64 bg-white/90 backdrop-blur-xl border border-rose-200/50 shadow-lg shadow-rose-200/20 rounded-[2rem] py-4 z-50 overflow-hidden"
                     >
                       <Link
                         to="/account"
-                        className="flex items-center gap-3 px-6 py-3 text-sm font-bold text-gray-300 hover:bg-emerald-600/20 hover:text-emerald-300 transition-colors"
+                        className="flex items-center gap-3 px-6 py-3 text-sm font-bold text-slate-700 hover:bg-rose-100/50 hover:text-rose-700 transition-colors"
                       >
                         <User size={18} /> Profile Details
                       </Link>
 
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-6 py-4 text-sm font-bold text-red-400 hover:bg-red-600/20 mt-2 border-t border-slate-700"
+                        className="w-full flex items-center gap-3 px-6 py-4 text-sm font-bold text-red-600 hover:bg-red-100/50 mt-2 border-t border-rose-200/30"
                       >
                         <LogOut size={18} /> Sign Out
                       </button>
@@ -155,8 +155,8 @@ const Navbar = () => {
                   to="/admin/dashboard"
                   className={`hidden lg:flex flex-col items-start px-4 py-2 rounded-2xl transition-all border ${
                     location.pathname === "/admin/dashboard"
-                      ? "bg-amber-600/20 border-amber-500/50 text-amber-300"
-                      : "border-transparent hover:bg-slate-700/50 text-gray-400"
+                      ? "bg-amber-100/50 border-amber-300/50 text-amber-700"
+                      : "border-transparent hover:bg-white/50 text-slate-600"
                   }`}
                 >
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] leading-none mb-1 flex items-center gap-1">
@@ -171,16 +171,16 @@ const Navbar = () => {
               {/* 4. CART (The Primary Action) */}
               <Link
                 to="/cart"
-                className="group relative flex items-center gap-3 ml-2 px-5 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl hover:shadow-xl hover:shadow-emerald-600/50 transition-all duration-300 shadow-lg shadow-emerald-600/40"
+                className="group relative flex items-center gap-3 ml-2 px-5 py-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-2xl hover:shadow-xl hover:shadow-rose-600/50 transition-all duration-300 shadow-lg shadow-rose-600/40"
               >
                 <ShoppingBag size={20} />
                 <div className="flex flex-col items-start mr-1">
-                  <span className="text-[9px] font-black text-emerald-100 uppercase leading-none mb-0.5">
+                  <span className="text-[9px] font-black text-rose-100 uppercase leading-none mb-0.5">
                     My Bag
                   </span>
                   <span className="text-xs font-bold">Items</span>
                 </div>
-                <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] font-black h-6 w-6 rounded-full flex items-center justify-center border-2 border-slate-900 shadow-lg shadow-pink-500/50">
+                <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] font-black h-6 w-6 rounded-full flex items-center justify-center border-2 border-white shadow-lg shadow-pink-500/50">
                   {cartCount}
                 </span>
               </Link>
@@ -189,13 +189,13 @@ const Navbar = () => {
             <div className="flex items-center gap-6">
               <Link
                 to="/login"
-                className="text-sm font-black text-gray-400 hover:text-emerald-300 uppercase tracking-widest transition-colors"
+                className="text-sm font-black text-slate-600 hover:text-rose-600 uppercase tracking-widest transition-colors"
               >
                 Log In
               </Link>
               <Link
                 to="/register"
-                className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-emerald-600/40 hover:shadow-xl hover:shadow-emerald-600/60 hover:-translate-y-0.5 transition-all"
+                className="bg-gradient-to-r from-rose-600 to-pink-600 text-white px-8 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-rose-600/40 hover:shadow-xl hover:shadow-rose-600/60 hover:-translate-y-0.5 transition-all"
               >
                 Sign Up
               </Link>

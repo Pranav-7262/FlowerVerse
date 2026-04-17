@@ -24,7 +24,7 @@ const Account = () => {
       desc: "Edit login, name, and mobile number",
       icon: ShieldCheck,
       link: "/account/security",
-      color: "bg-emerald-600/20 text-emerald-400",
+      color: "bg-rose-100/50 text-rose-700",
     },
 
     {
@@ -40,7 +40,7 @@ const Account = () => {
       desc: "Contact our flower care team",
       icon: MessageSquare,
       link: "/support",
-      color: "bg-teal-600/20 text-teal-400",
+      color: "bg-rose-100/50 text-rose-700",
     },
     {
       title: "Remove Account",
@@ -52,29 +52,31 @@ const Account = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto py-12 px-4 min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900">
-      <h1 className="text-3xl font-serif font-bold text-gray-100 mb-8">
-        Your Account
-      </h1>
+    <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50">
+      <div className="max-w-5xl mx-auto py-12 px-4">
+        <h1 className="text-3xl font-serif font-bold text-slate-900 mb-8">
+          Your Account
+        </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {accountLinks.map((item, index) => (
-          <Link
-            key={index}
-            to={item.link}
-            className="flex p-6 border border-slate-700 rounded-xl hover:bg-slate-800/50 bg-slate-800/30 transition-all gap-4"
-          >
-            <div className={`p-3 rounded-lg h-fit ${item.color}`}>
-              <item.icon size={24} />
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-100">{item.title}</h3>
-              <p className="text-sm text-gray-400 mt-1 leading-snug">
-                {item.desc}
-              </p>
-            </div>
-          </Link>
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {accountLinks.map((item, index) => (
+            <Link
+              key={index}
+              to={item.link}
+              className="flex p-6 border border-rose-200/50 rounded-xl hover:bg-white/70 bg-white/60 transition-all gap-4"
+            >
+              <div className={`p-3 rounded-lg h-fit ${item.color}`}>
+                <item.icon size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900">{item.title}</h3>
+                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                  {item.desc}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

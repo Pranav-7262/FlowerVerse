@@ -162,73 +162,75 @@ const AdminDashboard = () => {
     if (activeTab === "orders") fetchAllOrders();
   }, [activeTab]);
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50/30">
-      {/* Header */}
-      <DashboardHeader />
+    <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50">
+      <div className="max-w-7xl mx-auto px-4 py-10">
+        {/* Header */}
+        <DashboardHeader />
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Stats Section */}
-        <StatsSection stats={stats} />
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Stats Section */}
+          <StatsSection stats={stats} />
 
-        {/* Management Tabs */}
-        <div className="bg-slate-800/50 rounded-2xl shadow-lg shadow-black/40 overflow-hidden border border-slate-700">
-          {/* Tab Navigation */}
-          <TabNavigation
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            onAddFlower={() => setActiveTab("flowers")}
-          />
+          {/* Management Tabs */}
+          <div className="bg-white/70 rounded-2xl shadow-lg shadow-rose-200/30 overflow-hidden border border-rose-200/50">
+            {/* Tab Navigation */}
+            <TabNavigation
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              onAddFlower={() => setActiveTab("flowers")}
+            />
 
-          {/* User Management Tab */}
-          {activeTab === "users" && (
-            <>
-              <UserManagement
-                users={users}
+            {/* User Management Tab */}
+            {activeTab === "users" && (
+              <>
+                <UserManagement
+                  users={users}
+                  loading={loading}
+                  search={search}
+                  setSearch={setSearch}
+                  filter={filter}
+                  setFilter={setFilter}
+                  setCurrentPage={setCurrentPage}
+                  changingRole={changingRole}
+                  handleChangeRole={handleChangeRole}
+                  formatDate={formatDate}
+                />
+                <PaginationControls
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPreviousClick={() => {
+                    if (currentPage > 1) {
+                      fetchUsers(currentPage - 1, filter, search);
+                    }
+                  }}
+                  onNextClick={() => {
+                    if (currentPage < totalPages) {
+                      fetchUsers(currentPage + 1, filter, search);
+                    }
+                  }}
+                />
+              </>
+            )}
+
+            {/* Flower Management Tab */}
+            {activeTab === "flowers" && (
+              <FlowerManagement
+                flowers={flowers}
                 loading={loading}
-                search={search}
-                setSearch={setSearch}
-                filter={filter}
-                setFilter={setFilter}
-                setCurrentPage={setCurrentPage}
-                changingRole={changingRole}
-                handleChangeRole={handleChangeRole}
+                formatDate={formatDate}
+                handleDeleteFlower={handleDeleteFlower}
+              />
+            )}
+            {activeTab === "orders" && (
+              <OrderManagement
+                orders={orders}
+                loading={loading}
+                onUpdateStatus={handleUpdateStatus}
                 formatDate={formatDate}
               />
-              <PaginationControls
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPreviousClick={() => {
-                  if (currentPage > 1) {
-                    fetchUsers(currentPage - 1, filter, search);
-                  }
-                }}
-                onNextClick={() => {
-                  if (currentPage < totalPages) {
-                    fetchUsers(currentPage + 1, filter, search);
-                  }
-                }}
-              />
-            </>
-          )}
-
-          {/* Flower Management Tab */}
-          {activeTab === "flowers" && (
-            <FlowerManagement
-              flowers={flowers}
-              loading={loading}
-              formatDate={formatDate}
-              handleDeleteFlower={handleDeleteFlower}
-            />
-          )}
-          {activeTab === "orders" && (
-            <OrderManagement
-              orders={orders}
-              loading={loading}
-              onUpdateStatus={handleUpdateStatus}
-              formatDate={formatDate}
-            />
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

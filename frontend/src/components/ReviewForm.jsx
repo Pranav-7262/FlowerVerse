@@ -57,11 +57,11 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
   if (!user) {
     return (
       <div className="bg-amber-600/20 border border-amber-600/40 rounded-xl p-6 text-center">
-        <p className="text-gray-300">
+        <p className="text-slate-700">
           Please{" "}
           <a
             href="/login"
-            className="text-amber-400 font-semibold hover:text-amber-300 transition-colors"
+            className="text-amber-600 font-semibold hover:text-amber-700 transition-colors"
           >
             log in
           </a>{" "}
@@ -75,10 +75,10 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 shadow-lg shadow-black/40"
+      className="bg-white/70 rounded-2xl p-8 border border-rose-200/50 shadow-lg shadow-rose-200/20"
     >
-      <h3 className="text-2xl font-bold text-gray-100 mb-1">Write a Review</h3>
-      <p className="text-gray-400 text-sm mb-6">
+      <h3 className="text-2xl font-bold text-slate-900 mb-1">Write a Review</h3>
+      <p className="text-slate-600 text-sm mb-6">
         Share your experience with this flower
       </p>
 
@@ -103,7 +103,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
                   className={`${
                     star <= (hoverRating || rating)
                       ? "fill-amber-400 text-amber-400"
-                      : "text-gray-400"
+                      : "text-slate-300"
                   } transition-colors`}
                 />
               </button>
@@ -126,7 +126,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Summarize your experience in a few words"
-            className="w-full px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+            className="w-full px-4 py-3 border border-rose-200/50 rounded-lg bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:border-transparent transition"
             maxLength="100"
           />
           <p className="text-xs text-gray-400 mt-1">{title.length}/100</p>

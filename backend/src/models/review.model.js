@@ -34,6 +34,7 @@ const reviewSchema = new mongoose.Schema(
     helpful: {
       type: Number,
       default: 0,
+      required: false,
     },
   },
   { timestamps: true },

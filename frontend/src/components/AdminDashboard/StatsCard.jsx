@@ -22,10 +22,10 @@ const StatsCard = ({
       gradient: "from-purple-600/10 to-transparent",
     },
     emerald: {
-      bg: "bg-emerald-600/20",
-      text: "text-emerald-400",
-      hover: "hover:border-emerald-500/50",
-      gradient: "from-emerald-600/10 to-transparent",
+      bg: "bg-rose-600/20",
+      text: "text-rose-600",
+      hover: "hover:border-rose-500/50",
+      gradient: "from-rose-600/10 to-transparent",
     },
     pink: {
       bg: "bg-pink-600/20",
@@ -39,17 +39,17 @@ const StatsCard = ({
 
   return (
     <div
-      className={`group bg-slate-800/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-slate-700 ${style.hover} overflow-hidden relative hover:border-emerald-500/50`}
+      className={`group bg-white/70 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-rose-200/50 ${style.hover} overflow-hidden relative hover:border-rose-300/50`}
     >
       <div
         className={`absolute inset-0 bg-gradient-to-r ${style.gradient} opacity-0 group-hover:opacity-100 transition-opacity`}
       />
       <div className="relative flex justify-between items-start">
         <div>
-          <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+          <p className="text-slate-600 text-xs font-bold uppercase tracking-widest">
             {label}
           </p>
-          <p className="text-4xl font-black text-gray-100 mt-4">{value}</p>
+          <p className="text-4xl font-black text-slate-900 mt-4">{value}</p>
           <p className={`text-xs ${style.text}/70 mt-3 font-medium`}>
             {description}
           </p>

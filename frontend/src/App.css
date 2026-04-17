@@ -2,41 +2,49 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Smooth gradient animation */
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    background-position: 100% 50%;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
+/* Elegant hover effects */
 .card {
   padding: 2em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.read-the-docs {
-  color: #888;
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(194, 65, 12, 0.1);
+}
+
+/* Button improvements */
+button {
+  font-family:
+    "Segoe UI",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Link styling */
+a {
+  color: #c2410c;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #ea580c;
+  text-decoration: underline;
 }

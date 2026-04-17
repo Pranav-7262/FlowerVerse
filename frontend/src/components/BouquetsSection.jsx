@@ -40,7 +40,7 @@ const BouquetsSection = ({ onViewAll }) => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xs font-bold uppercase tracking-[0.25em] text-emerald-400/70 mb-2"
+            className="text-xs font-bold uppercase tracking-[0.25em] text-rose-700/70 mb-2"
           >
             Curated Collections
           </motion.p>
@@ -48,7 +48,7 @@ const BouquetsSection = ({ onViewAll }) => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300"
+            className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-700 via-pink-600 to-red-600"
           >
             Exquisite Bouquets
           </motion.h2>
@@ -56,7 +56,7 @@ const BouquetsSection = ({ onViewAll }) => {
         <motion.button
           whileHover={{ x: 5 }}
           onClick={onViewAll}
-          className="h-12 px-6 rounded-full bg-gradient-to-r from-emerald-600/20 to-teal-600/20 border border-emerald-500/50 text-emerald-300 text-sm font-bold hover:bg-gradient-to-r hover:from-emerald-600/40 hover:to-teal-600/40 transition-all flex items-center gap-2 group"
+          className="h-12 px-6 rounded-full bg-gradient-to-r from-rose-600/20 to-pink-600/20 border border-rose-500/50 text-rose-700 text-sm font-bold hover:bg-gradient-to-r hover:from-rose-600/40 hover:to-pink-600/40 transition-all flex items-center gap-2 group"
         >
           View All
           <ChevronRight
@@ -96,7 +96,7 @@ const BouquetsSection = ({ onViewAll }) => {
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ delay: 0.5, duration: 0.8 }}
-        className="mt-16 h-1 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent rounded-full"
+        className="mt-16 h-1 bg-gradient-to-r from-transparent via-rose-400/40 to-transparent rounded-full"
       />
     </motion.div>
   );

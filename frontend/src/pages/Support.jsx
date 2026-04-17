@@ -14,33 +14,33 @@ const Support = () => {
       title: "Track Delivery",
       desc: "Live status of your active floral arrangements",
       icon: Truck,
-      color: "bg-emerald-600/20 text-emerald-400",
+      color: "bg-rose-600/20 text-rose-600",
       action: "Track Now",
     },
     {
       title: "Flower Care Guide",
       desc: "Learn how to keep your blooms fresh for 10+ days",
       icon: Droplets,
-      color: "bg-blue-600/20 text-blue-400",
+      color: "bg-blue-600/20 text-blue-600",
       action: "Read Guide",
     },
     {
       title: "Refunds & Returns",
       desc: "Our 100% freshness guarantee policy",
       icon: RefreshCcw,
-      color: "bg-orange-600/20 text-orange-400",
+      color: "bg-orange-600/20 text-orange-600",
       action: "View Policy",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 py-12 px-6">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 py-12 px-6">
       <div className="max-w-4xl mx-auto">
         <header className="mb-12">
-          <h1 className="text-4xl font-serif font-black text-gray-100 mb-4">
-            How can we <span className="text-teal-400 italic">help?</span>
+          <h1 className="text-4xl font-serif font-black text-slate-900 mb-4">
+            How can we <span className="text-rose-600 italic">help?</span>
           </h1>
-          <p className="text-gray-400 max-w-lg leading-relaxed">
+          <p className="text-slate-600 max-w-lg leading-relaxed">
             From tracking a surprise delivery to learning how to care for your
             lilies, our concierge team is here for you.
           </p>
@@ -51,18 +51,18 @@ const Support = () => {
           {supportOptions.map((opt, i) => (
             <div
               key={i}
-              className="bg-slate-800/50 p-8 rounded-[2.5rem] border border-slate-700 shadow-lg hover:shadow-xl hover:border-emerald-500/50 transition-all"
+              className="bg-white/70 p-8 rounded-[2.5rem] border border-rose-200/50 shadow-lg hover:shadow-xl hover:border-rose-300/50 transition-all"
             >
               <div
                 className={`${opt.color} w-12 h-12 rounded-2xl flex items-center justify-center mb-6`}
               >
                 <opt.icon size={24} />
               </div>
-              <h3 className="font-bold text-gray-100 mb-2">{opt.title}</h3>
-              <p className="text-xs text-gray-300 leading-relaxed mb-6">
+              <h3 className="font-bold text-slate-900 mb-2">{opt.title}</h3>
+              <p className="text-xs text-slate-700 leading-relaxed mb-6">
                 {opt.desc}
               </p>
-              <button className="text-[10px] font-black uppercase tracking-widest text-gray-300 flex items-center gap-2 group hover:text-emerald-400 transition-colors">
+              <button className="text-[10px] font-black uppercase tracking-widest text-slate-700 flex items-center gap-2 group hover:text-rose-600 transition-colors">
                 {opt.action}{" "}
                 <ChevronRight
                   size={14}

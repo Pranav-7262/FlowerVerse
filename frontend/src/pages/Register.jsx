@@ -39,58 +39,60 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center py-12 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 min-h-screen">
-      <div className="w-full max-w-md bg-slate-800/50 p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-700 backdrop-blur-xl">
+    <div className="flex items-center justify-center py-12 bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 min-h-screen">
+      <div className="w-full max-w-md bg-white/70 p-10 rounded-3xl shadow-lg shadow-rose-200/30 border border-rose-200/50 backdrop-blur-sm">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600/20 rounded-2xl mb-4 border border-emerald-600/40">
-            <UserPlus className="w-8 h-8 text-emerald-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-rose-600/10 rounded-2xl mb-4 border border-rose-600/30">
+            <UserPlus className="w-8 h-8 text-rose-600" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-100 tracking-tight">
+          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
             Create Account
           </h2>
-          <p className="text-gray-400 mt-2">Join us and start shopping today</p>
+          <p className="text-slate-600 mt-2">
+            Join us and start shopping today
+          </p>
         </div>
 
         <form onSubmit={submit} className="space-y-5">
           {/* Name Field */}
           <div className="relative group">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-rose-600 transition-colors" />
             <input
               type="text"
               required
               placeholder="Username"
-              className="w-full bg-slate-700/50 border border-slate-600 p-4 pl-12 rounded-2xl text-gray-100 placeholder:text-gray-500 outline-none focus:ring-4 focus:ring-emerald-600/20 focus:border-emerald-600 transition-all"
+              className="w-full bg-white/50 border border-rose-200/50 p-4 pl-12 rounded-2xl text-slate-900 placeholder:text-slate-400 outline-none focus:ring-4 focus:ring-rose-600/20 focus:border-rose-600 transition-all"
               onChange={(e) => setForm({ ...form, userName: e.target.value })}
             />
           </div>
 
           {/* Email Field */}
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-rose-600 transition-colors" />
             <input
               type="email"
               required
               placeholder="Email address"
-              className="w-full bg-slate-700/50 border border-slate-600 p-4 pl-12 rounded-2xl text-gray-100 placeholder:text-gray-500 outline-none focus:ring-4 focus:ring-emerald-600/20 focus:border-emerald-600 transition-all"
+              className="w-full bg-white/50 border border-rose-200/50 p-4 pl-12 rounded-2xl text-slate-900 placeholder:text-slate-400 outline-none focus:ring-4 focus:ring-rose-600/20 focus:border-rose-600 transition-all"
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
           </div>
 
           {/* Password Field */}
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-rose-600 transition-colors" />
             <input
               type="password"
               required
               placeholder="Create Password"
-              className="w-full bg-slate-700/50 border border-slate-600 p-4 pl-12 rounded-2xl text-gray-100 placeholder:text-gray-500 outline-none focus:ring-4 focus:ring-emerald-600/20 focus:border-emerald-600 transition-all"
+              className="w-full bg-white/50 border border-rose-200/50 p-4 pl-12 rounded-2xl text-slate-900 placeholder:text-slate-400 outline-none focus:ring-4 focus:ring-rose-600/20 focus:border-rose-600 transition-all"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
           </div>
 
           <button
             disabled={loading}
-            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:shadow-lg hover:shadow-emerald-600/40 text-white font-semibold py-4 rounded-2xl shadow-lg shadow-black/20 transform transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70"
+            className="w-full bg-gradient-to-r from-rose-600 to-pink-600 hover:shadow-lg hover:shadow-rose-600/30 text-white font-semibold py-4 rounded-2xl shadow-lg shadow-rose-200/20 transform transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70"
           >
             {loading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -103,12 +105,12 @@ const Register = () => {
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-slate-700 text-center">
-          <p className="text-gray-400 text-sm">
+        <div className="mt-8 pt-6 border-t border-rose-200/30 text-center">
+          <p className="text-slate-600 text-sm">
             Already have an account?{" "}
             <button
               onClick={() => navigate("/login")}
-              className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
+              className="text-rose-600 hover:text-rose-700 font-semibold transition-colors"
             >
               Sign In
             </button>
