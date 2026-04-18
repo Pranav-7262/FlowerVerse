@@ -11,7 +11,6 @@ import FilterPanel from "../components/FilterPanel";
 import FlowerCard from "../components/FlowerCard";
 import SortDropdown from "../components/SortDropdown";
 import BouquetsSection from "../components/BouquetsSection";
-import Footer from "../components/Footer";
 
 const CATEGORIES = [
   "All",
@@ -42,6 +41,7 @@ export default function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const {
+    flowers = [],
     filteredFlowers = [],
     search,
     selectedCategory,
@@ -57,12 +57,25 @@ export default function Home() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
+  const [hasInitialized, setHasInitialized] = useState(false);
+
+  // Initialize flowers on first mount
   useEffect(() => {
-    fetchFlowers(selectedCategory);
+    if (!hasInitialized) {
+      fetchFlowers("All");
+      setHasInitialized(true);
+    }
+  }, []);
+
+  // Handle category filter changes
+  useEffect(() => {
+    if (selectedCategory !== "All") {
+      fetchFlowers(selectedCategory);
+    }
   }, [selectedCategory]);
 
   // Combined Filtering & Sorting Logic
-  const displayed = filteredFlowers
+  const displayed = (filteredFlowers.length > 0 ? filteredFlowers : flowers)
     .filter((f) => f.price >= priceRange[0] && f.price <= priceRange[1])
     .sort((a, b) => {
       if (sortBy === "price_asc") return a.price - b.price;
@@ -78,19 +91,25 @@ export default function Home() {
     priceRange[0] > 0 ||
     priceRange[1] < PRICE_MAX;
 
+  // Debug info
+  const totalFlowers =
+    filteredFlowers.length > 0 ? filteredFlowers.length : flowers.length;
+
+  filteredFlowers.length > 0 ? filteredFlowers.length : flowers.length;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 text-slate-800 flex flex-col selection:bg-rose-200/50">
+    <div className="w-full min-h-screen">
       {/* Subtle Background Glows */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-rose-200/5 blur-[120px] rounded-full" />
         <div className="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-pink-100/5 blur-[100px] rounded-full" />
       </div>
 
-      <div className="flex-1 max-w-7xl mx-auto w-full px-6 pt-12 relative z-10">
+      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 pt-8 pb-20 relative z-10">
         {/* Unified Search & Action Bar */}
         <div className="flex flex-wrap items-center gap-4 mb-12">
           {/* Search Input */}
-          <div className="relative flex-1 min-w-[280px] group">
+          <div className="relative flex-1 min-w-70 group">
             <Search
               size={18}
               className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-rose-600 transition-colors duration-300"
@@ -132,8 +151,10 @@ export default function Home() {
             {activeFilters && (
               <button
                 onClick={() => {
+                  console.log("🔄 Resetting filters");
                   filterByCategory("All");
                   setPriceRange([0, PRICE_MAX]);
+                  searchFlowers(""); // Clear search
                 }}
                 className="h-14 px-6 rounded-2xl bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all border border-red-300/50"
               >
@@ -167,31 +188,53 @@ export default function Home() {
         {/* Flowers Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 md:gap-8"
         >
-          <AnimatePresence mode="popLayout">
-            {displayed.map((flower) => (
-              <FlowerCard
-                key={flower._id}
-                flower={flower}
-                onNavigate={() => navigate(`/flowers/${flower._id}`)}
-                onAddToCart={(id) =>
-                  user ? addToCart(id, 1) : navigate("/login")
-                }
+          {loading ? (
+            // Loading skeleton
+            [...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className="aspect-3/4 bg-linear-to-br from-rose-100/30 to-pink-100/20 rounded-3xl animate-pulse"
               />
-            ))}
-          </AnimatePresence>
+            ))
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {displayed.length > 0 ? (
+                displayed.map((flower) => (
+                  <FlowerCard
+                    key={flower._id}
+                    flower={flower}
+                    onNavigate={() => navigate(`/flowers/${flower._id}`)}
+                    onAddToCart={(id) =>
+                      user ? addToCart(id, 1) : navigate("/login")
+                    }
+                  />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-32">
+                  <div className="inline-flex p-6 rounded-full bg-rose-100/50 border border-rose-200 mb-4">
+                    <Search size={32} className="text-rose-600/60" />
+                  </div>
+                  <p className="text-slate-600 text-sm font-bold uppercase tracking-widest mb-2">
+                    No flowers found
+                  </p>
+                  <p className="text-slate-500 text-xs">
+                    Try adjusting your filters or search terms
+                  </p>
+                </div>
+              )}
+            </AnimatePresence>
+          )}
         </motion.div>
 
-        {/* Empty State */}
-        {!loading && displayed.length === 0 && (
-          <div className="text-center py-32">
-            <div className="inline-flex p-6 rounded-full bg-rose-100/50 border border-rose-200 mb-4">
-              <Search size={32} className="text-rose-600/60" />
-            </div>
-            <p className="text-slate-600 text-sm font-bold uppercase tracking-widest">
-              No rare specimens match your criteria
-            </p>
+        {/* Flowers Count Info */}
+        {!loading && displayed.length > 0 && (
+          <div className="mt-8 text-center text-sm text-slate-600">
+            Showing{" "}
+            <span className="font-bold text-rose-700">{displayed.length}</span>{" "}
+            of <span className="font-bold text-rose-700">{totalFlowers}</span>{" "}
+            flowers
           </div>
         )}
 
@@ -217,8 +260,6 @@ export default function Home() {
           />
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

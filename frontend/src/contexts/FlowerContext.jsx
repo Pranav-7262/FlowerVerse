@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import api from "../api/axios.js";
 import toast from "react-hot-toast";
 
@@ -12,25 +12,43 @@ export const FlowerProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const fetchFlowers = async (category = "All") => {
+  const fetchFlowers = useCallback(async (category = "All") => {
     setLoading(true);
     try {
       const endpoint =
         category === "All" ? "/flowers" : `/flowers?category=${category}`;
+
+      console.log(`Fetching flowers from: ${endpoint}`);
+
       const res = await api.get(endpoint);
-      const flowersData = res.data.data.flowers || [];
+      const flowersData = res.data?.data?.flowers || res.data?.flowers || [];
+
+      console.log(
+        `✅ Fetched ${flowersData.length} flowers for category: ${category}`,
+        flowersData,
+      );
+
+      if (flowersData.length === 0) {
+        console.warn(`⚠️ No flowers found for category: ${category}`);
+      }
+
       setFlowers(flowersData);
       setFilteredFlowers(flowersData);
+      setSearch(""); // Clear search when category changes
       return flowersData;
     } catch (err) {
-      console.error("Error fetching flowers:", err);
+      console.error(
+        "❌ Error fetching flowers:",
+        err.response?.data || err.message,
+      );
       setFlowers([]);
       setFilteredFlowers([]);
       toast.error("Failed to load flowers");
+      return [];
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const fetchFlowerById = async (flowerId) => {
     setLoading(true);
@@ -49,16 +67,29 @@ export const FlowerProvider = ({ children }) => {
 
   const searchFlowers = (query) => {
     setSearch(query);
-    const filtered = flowers.filter((flower) =>
-      flower.name.toLowerCase().includes(query.toLowerCase()),
+    if (!query.trim()) {
+      // If search is empty, show all current flowers
+      setFilteredFlowers(flowers);
+      return;
+    }
+
+    const filtered = flowers.filter(
+      (flower) =>
+        flower.name.toLowerCase().includes(query.toLowerCase()) ||
+        flower.category.toLowerCase().includes(query.toLowerCase()),
     );
     setFilteredFlowers(filtered);
+    console.log(`Search "${query}" found ${filtered.length} flowers`);
   };
 
-  const filterByCategory = async (category) => {
-    setSelectedCategory(category);
-    await fetchFlowers(category);
-  };
+  const filterByCategory = useCallback(
+    async (category) => {
+      console.log(`Filtering by category: ${category}`);
+      setSelectedCategory(category);
+      await fetchFlowers(category);
+    },
+    [fetchFlowers],
+  );
 
   const createFlower = async (flowerData) => {
     try {

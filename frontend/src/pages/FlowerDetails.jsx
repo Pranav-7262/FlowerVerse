@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Star,
   MessageSquare,
+  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useFlower } from "../contexts/FlowerContext";
@@ -22,6 +23,11 @@ import ReviewDisplay from "../components/ReviewDisplay";
 import api from "../api/axios";
 import Recommendations from "../components/Recommendations";
 import StarRating from "../components/StarRating";
+import {
+  parseDescriptionPoints,
+  limitDescriptionPoints,
+  formatDescriptionPoint,
+} from "../utils/descriptionParser";
 
 const FlowerDetails = () => {
   const { flowerId } = useParams();
@@ -236,10 +242,32 @@ const FlowerDetails = () => {
                 </div>
               </div>
 
-              {/* Description */}
-              <p className="text-slate-700 text-lg leading-relaxed font-medium opacity-90 italic font-serif">
-                "{selectedFlower.description}"
-              </p>
+              {/* Description - Line by Line Points */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-black uppercase tracking-[0.25em] text-rose-700 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-rose-600"></span>
+                  About This Bloom
+                </h3>
+                <div className="space-y-3 pl-2">
+                  {limitDescriptionPoints(
+                    parseDescriptionPoints(selectedFlower.description),
+                  ).map((line, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-3 text-slate-700 leading-relaxed"
+                    >
+                      <CheckCircle2
+                        size={18}
+                        className="text-rose-500 flex-shrink-0 mt-0.5"
+                        strokeWidth={2}
+                      />
+                      <p className="text-sm font-medium text-slate-700 opacity-90">
+                        {formatDescriptionPoint(line)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Ownership Meta */}
               <div className="flex items-center gap-4 py-2">
@@ -329,12 +357,10 @@ const FlowerDetails = () => {
                 reviews={reviews}
                 averageRating={averageRating}
                 totalReviews={totalReviews}
-                currentUserId= {user._id}
-                currentUserRole = {user.role}
-                 onReviewDeleted = {handleReviewDeleted}
-                onReviewUpdated = {handleReviewUpdated}
-
-
+                currentUserId={user._id}
+                currentUserRole={user.role}
+                onReviewDeleted={handleReviewDeleted}
+                onReviewUpdated={handleReviewUpdated}
               />
             </div>
           </div>

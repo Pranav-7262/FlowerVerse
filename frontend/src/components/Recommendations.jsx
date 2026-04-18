@@ -56,7 +56,7 @@ const Recommendations = ({ currentFlowerId, category }) => {
       </div>
 
       {/* Horizontal scroll on mobile, Grid on Desktop */}
-      <div className="flex overflow-x-auto pb-8 gap-6 no-scrollbar lg:grid lg:grid-cols-4 lg:overflow-visible px-4">
+      <div className="flex overflow-x-auto pb-6 gap-5 no-scrollbar lg:grid lg:grid-cols-4 lg:overflow-visible px-4 sm:px-0">
         <AnimatePresence mode="popLayout">
           {suggestedFlowers.map((flower, i) => (
             <motion.div
@@ -65,7 +65,7 @@ const Recommendations = ({ currentFlowerId, category }) => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
-              className="min-w-[280px] lg:min-w-0"
+              className="min-w-65 lg:min-w-0"
             >
               <FlowerCard
                 flower={flower}

@@ -4,15 +4,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import PublicRoute from "./components/PublicRoutes";
 import { Toaster } from "react-hot-toast";
+import Layout from "./components/Layout";
 
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import FlowerDetails from "./pages/FlowerDetails";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
-
 import Checkout from "./pages/Checkout";
 import CreateFlower from "./pages/CreateFlower";
 import EditFlower from "./pages/EditFlower";
@@ -23,19 +22,18 @@ import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import RemoveAccount from "./pages/RemoveAccount";
 import Address from "./pages/Address";
-
 import Support from "./pages/Support";
 
 const App = () => {
   return (
-    <div className="min-h-screen  from-amber-50 via-rose-50 to-pink-50 text-slate-800  flex flex-col selection:bg-rose-200/50">
+    <div className="selection:bg-rose-200/50">
       <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            background: "#0f172a", // Slate-900
+            background: "#0f172a",
             color: "#f8fafc",
-            border: "1px solid rgba(16, 185, 129, 0.2)", // Subtle Emerald
+            border: "1px solid rgba(16, 185, 129, 0.2)",
             borderRadius: "12px",
             fontSize: "14px",
           },
@@ -45,12 +43,12 @@ const App = () => {
         }}
       />
 
-      <Navbar />
-
-      <main className="flex-1 w-full">
-        <Routes>
-          {/* Public */}
+      <Routes>
+        {/* Layout wrapper route - includes Navbar, Outlet, and Footer */}
+        <Route element={<Layout />}>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
+
           <Route
             path="/login"
             element={
@@ -68,12 +66,12 @@ const App = () => {
               </PublicRoute>
             }
           />
+
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-
           <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
 
-          {/* Protected */}
+          {/* Protected Routes */}
           <Route
             path="/account"
             element={
@@ -82,6 +80,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/account/security"
             element={
@@ -90,12 +89,13 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
-            path="/flowers/create-flower"
+            path="/account/addresses"
             element={
-              <AdminRoute>
-                <CreateFlower />
-              </AdminRoute>
+              <ProtectedRoute>
+                <Address />
+              </ProtectedRoute>
             }
           />
 
@@ -116,14 +116,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/account/addresses"
-            element={
-              <ProtectedRoute>
-                <Address />
-              </ProtectedRoute>
-            }
-          ></Route>
 
           <Route
             path="/orders"
@@ -133,6 +125,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/remove-acc"
             element={
@@ -141,12 +134,23 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/support"
             element={
               <ProtectedRoute>
                 <Support />
               </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Routes */}
+          <Route
+            path="/flowers/create-flower"
+            element={
+              <AdminRoute>
+                <CreateFlower />
+              </AdminRoute>
             }
           />
 
@@ -159,7 +163,6 @@ const App = () => {
             }
           />
 
-          {/* Admin Routes */}
           <Route
             path="/admin/dashboard"
             element={
@@ -168,8 +171,8 @@ const App = () => {
               </AdminRoute>
             }
           />
-        </Routes>
-      </main>
+        </Route>
+      </Routes>
     </div>
   );
 };

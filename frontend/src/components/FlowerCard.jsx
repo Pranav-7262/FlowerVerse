@@ -9,34 +9,34 @@ const FlowerCard = ({ flower, onNavigate, onAddToCart }) => {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -10 }}
-      className="group relative bg-white rounded-2xl p-5 border border-rose-100/50 shadow-md hover:shadow-2xl hover:border-rose-200 transition-all duration-500 flex flex-col h-full overflow-hidden"
+      whileHover={{ y: -8 }}
+      className="group relative bg-white rounded-3xl border border-rose-100 shadow-sm hover:shadow-2xl hover:border-rose-300/50 transition-all duration-500 flex flex-col h-full overflow-hidden"
     >
       {/* Gradient Background Decoration */}
-      <div className="absolute top-0 right-0 -z-10 w-40 h-40 bg-gradient-to-br from-rose-100/40 to-pink-100/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700" />
+      <div className="absolute top-0 right-0 -z-10 w-48 h-48 bg-linear-to-br from-rose-100/50 to-pink-100/30 rounded-full blur-3xl group-hover:scale-130 transition-transform duration-700" />
 
       {/* Image Container */}
       <div
         onClick={onNavigate}
-        className="relative aspect-square w-full overflow-hidden rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 cursor-pointer mb-4"
+        className="relative w-full aspect-3/4 overflow-hidden rounded-2xl bg-linear-to-br from-rose-50 to-pink-50 cursor-pointer"
       >
         <img
           src={flower.image}
           alt={flower.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
 
         {/* Elegant Overlay on Hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
           <motion.div
-            initial={{ scale: 0.7, opacity: 0 }}
+            initial={{ scale: 0.8, opacity: 0 }}
             whileHover={{ scale: 1, opacity: 1 }}
-            className="bg-white/95 backdrop-blur-md p-3.5 rounded-full shadow-lg hover:shadow-2xl"
+            className="bg-white/95 backdrop-blur-lg p-4 rounded-full shadow-2xl"
           >
             <ArrowUpRight
-              size={20}
+              size={22}
               className="text-rose-600"
               strokeWidth={2.5}
             />
@@ -46,72 +46,75 @@ const FlowerCard = ({ flower, onNavigate, onAddToCart }) => {
         {/* Favorite Button */}
         <button
           onClick={() => setIsFavorite(!isFavorite)}
-          className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 z-10"
+          className="absolute top-4 right-4 bg-white/90 backdrop-blur-lg p-2.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-10"
         >
           <Heart
-            size={18}
+            size={20}
             className={`transition-all duration-300 ${
-              isFavorite ? "fill-rose-500 text-rose-500" : "text-slate-600"
+              isFavorite ? "fill-rose-500 text-rose-500" : "text-slate-700"
             }`}
           />
         </button>
       </div>
 
       {/* Content Section */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 p-5 gap-3">
         {/* Category Badge */}
-        <div className="mb-2">
-          <span className="inline-block text-xs font-semibold uppercase tracking-widest text-rose-600/95 bg-rose-50/80 px-2.5 py-1.5 rounded-full">
+        <div className="flex items-center gap-2">
+          <span className="inline-block text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-100 px-3 py-1.5 rounded-full">
             {flower.category}
           </span>
         </div>
 
         {/* Flower Name */}
-        <h3 className="text-lg font-bold text-slate-900 line-clamp-2 leading-tight mb-2 group-hover:text-rose-700 transition-colors duration-300">
+        <h3
+          onClick={onNavigate}
+          className="text-base font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-rose-700 transition-colors duration-300 cursor-pointer"
+        >
           {flower.name}
         </h3>
 
         {/* Rating */}
-        <div className="mb-4">
+        <div className="flex items-center gap-2">
           <StarRating
             rating={flower.averageRating || 4}
             totalReviews={flower.totalReviews || 2}
             size={13}
           />
+          <span className="text-xs text-slate-500">
+            ({flower.totalReviews || 0})
+          </span>
         </div>
 
-        {/* Description/Spacing */}
+        {/* Spacing */}
         <div className="flex-1" />
 
         {/* Price & Action Footer */}
-        <div className="border-t border-rose-100/60 pt-4 flex items-end justify-between gap-3">
+        <div className="border-t border-rose-100 pt-4 flex flex-col gap-3">
           {/* Price Section */}
-          <div className="flex flex-col">
-            <span className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">
-              Price
+          <div className="flex items-baseline gap-1">
+            <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+              ₹
             </span>
-            <div className="flex items-baseline gap-0.5">
-              <span className="text-sm font-bold text-slate-900">₹</span>
-              <span className="text-2xl font-bold text-rose-700 tracking-tight">
-                {flower.price}
+            <span className="text-2xl font-bold text-rose-700">
+              {flower.price}
+            </span>
+            {flower.category !== "Mixed Bouquets" && (
+              <span className="text-xs text-slate-500 font-medium ml-auto">
+                per kg
               </span>
-              {flower.category !== "Mixed Bouquets" && (
-                <span className="text-xs text-slate-500 font-semibold ml-1">
-                  /kg
-                </span>
-              )}
-            </div>
+            )}
           </div>
 
           {/* Add to Cart Button */}
           <motion.button
             onClick={() => onAddToCart(flower._id)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="h-11 px-4 rounded-lg bg-gradient-to-br from-rose-600 to-rose-700 text-white hover:from-rose-700 hover:to-rose-800 active:scale-95 transition-all duration-300 flex items-center gap-2 text-sm font-bold shadow-lg shadow-rose-200 hover:shadow-rose-300/50 hover:shadow-xl"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full py-3 px-4 rounded-xl bg-linear-to-r from-rose-600 to-rose-700 text-white hover:from-rose-700 hover:to-rose-800 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-bold shadow-md shadow-rose-200 hover:shadow-lg"
           >
             <Plus size={18} strokeWidth={2.5} />
-            <span className="hidden sm:inline">Add</span>
+            <span>Add to Cart</span>
           </motion.button>
         </div>
       </div>

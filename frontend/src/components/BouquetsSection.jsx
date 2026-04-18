@@ -10,19 +10,22 @@ import FlowerCard from "./FlowerCard";
 const BouquetsSection = ({ onViewAll }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { flowers, loading, fetchFlowers } = useFlower();
+  const { flowers, loading } = useFlower();
   const { addToCart } = useCart();
   const [bouquets, setBouquets] = useState([]);
 
   useEffect(() => {
-    const loadBouquets = async () => {
-      const flowersData = await fetchFlowers("Mixed Bouquets");
-      if (flowersData) {
-        setBouquets(flowersData.slice(0, 4)); // Show first 4 bouquets
-      }
-    };
-    loadBouquets();
-  }, []);
+    // Filter mixed bouquets from all flowers instead of making another API call
+    if (flowers && flowers.length > 0) {
+      const mixedBouquets = flowers.filter(
+        (f) => f.category === "Mixed Bouquets",
+      );
+      console.log(
+        `📦 Found ${mixedBouquets.length} mixed bouquets from ${flowers.length} total flowers`,
+      );
+      setBouquets(mixedBouquets.slice(0, 4)); // Show first 4 bouquets
+    }
+  }, [flowers]);
 
   if (loading || bouquets.length === 0) return null;
 
@@ -48,7 +51,7 @@ const BouquetsSection = ({ onViewAll }) => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-700 via-pink-600 to-red-600"
+            className="text-4xl font-black text-transparent bg-clip-text bg-linear-to-r from-rose-700 via-pink-600 to-red-600"
           >
             Exquisite Bouquets
           </motion.h2>
@@ -56,7 +59,7 @@ const BouquetsSection = ({ onViewAll }) => {
         <motion.button
           whileHover={{ x: 5 }}
           onClick={onViewAll}
-          className="h-12 px-6 rounded-full bg-gradient-to-r from-rose-600/20 to-pink-600/20 border border-rose-500/50 text-rose-700 text-sm font-bold hover:bg-gradient-to-r hover:from-rose-600/40 hover:to-pink-600/40 transition-all flex items-center gap-2 group"
+          className="h-12 px-6 rounded-full bg-linear-to-r from-rose-600/20 to-pink-600/20 border border-rose-500/50 text-rose-700 text-sm font-bold hover:bg-linear-to-r hover:from-rose-600/40 hover:to-pink-600/40 transition-all flex items-center gap-2 group"
         >
           View All
           <ChevronRight
@@ -96,7 +99,7 @@ const BouquetsSection = ({ onViewAll }) => {
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ delay: 0.5, duration: 0.8 }}
-        className="mt-16 h-1 bg-gradient-to-r from-transparent via-rose-400/40 to-transparent rounded-full"
+        className="mt-16 h-1 bg-linear-to-r from-transparent via-rose-400/40 to-transparent rounded-full"
       />
     </motion.div>
   );
