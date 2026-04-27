@@ -98,6 +98,27 @@ const FlowerDetails = () => {
       // Error toast already shown by context
     }
   };
+  const handleAcquireNow = async (id) => {
+    if (!user) return navigate("/login");
+    try {
+      // Prepare checkout data with full flower details
+      const checkoutData = {
+        items: [
+          {
+            _id: selectedFlower._id,
+            flower: selectedFlower,
+            quantity: 1,
+          },
+        ],
+        totalAmount: selectedFlower.price * 1, // price * quantity
+      };
+
+      // Navigate to checkout with state instead of creating order here
+      navigate("/checkout", { state: checkoutData });
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
 
   if (loading)
     return (
@@ -313,6 +334,7 @@ const FlowerDetails = () => {
 
                     <button
                       disabled={isOutOfStock}
+                      onClick={() => handleAcquireNow(selectedFlower._id)}
                       className="flex-[2] bg-gradient-to-r from-rose-600 to-pink-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] shadow-lg shadow-rose-200/30 hover:shadow-rose-300/40 hover:-translate-y-1 disabled:opacity-20 transition-all"
                     >
                       Acquire Now

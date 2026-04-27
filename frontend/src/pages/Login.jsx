@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
+import { Mail, Lock, LogIn, Loader2, Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const { login } = useAuth();
@@ -11,6 +11,7 @@ const Login = () => {
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -58,12 +59,23 @@ const Login = () => {
           <div className="relative group">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-green-600 transition-colors" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               required
               placeholder="Password"
-              className="w-full bg-slate-700/50 border border-slate-600 p-3 pl-10 rounded-xl text-gray-100 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-emerald-600/50 focus:border-emerald-600 transition-all"
+              className="w-full bg-slate-700/50 border border-slate-600 p-3 pl-10 pr-10 rounded-xl text-gray-100 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-emerald-600/50 focus:border-emerald-600 transition-all"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
+            </button>
           </div>
           <div className="flex justify-end mt-1">
             <Link
