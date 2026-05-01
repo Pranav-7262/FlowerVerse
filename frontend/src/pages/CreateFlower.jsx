@@ -182,6 +182,7 @@ const CreateFlower = () => {
                     type="file"
                     accept="image/*"
                     required
+                    name="image"
                     onChange={handleFileChange}
                     className="hidden"
                     id="flower-image"

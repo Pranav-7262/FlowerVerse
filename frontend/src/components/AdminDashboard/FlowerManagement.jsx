@@ -76,7 +76,7 @@ const FlowerManagement = ({
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm font-bold text-rose-600">
-                    ₹{flower.price.toLocaleString()}/kg
+                    ₹{flower.price.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span

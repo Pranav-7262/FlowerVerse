@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Plus, ArrowUpRight, Heart } from "lucide-react";
+import { Plus, ArrowUpRight } from "lucide-react";
 import StarRating from "./StarRating";
 
 const FlowerCard = ({ flower, onNavigate, onAddToCart }) => {
@@ -42,19 +42,6 @@ const FlowerCard = ({ flower, onNavigate, onAddToCart }) => {
             />
           </motion.div>
         </div>
-
-        {/* Favorite Button */}
-        <button
-          onClick={() => setIsFavorite(!isFavorite)}
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur-lg p-2.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-10"
-        >
-          <Heart
-            size={20}
-            className={`transition-all duration-300 ${
-              isFavorite ? "fill-rose-500 text-rose-500" : "text-slate-700"
-            }`}
-          />
-        </button>
       </div>
 
       {/* Content Section */}

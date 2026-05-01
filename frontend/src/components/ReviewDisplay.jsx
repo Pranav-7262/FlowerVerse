@@ -82,10 +82,10 @@ const ReviewDisplay = ({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white/70 rounded-2xl p-8 border border-rose-200/50 text-center"
+        className="bg-white/70 rounded-[2.5rem] p-12 border border-rose-200/50 text-center"
       >
-        <p className="text-slate-600 text-lg">
-          No reviews yet. Be the first to review!
+        <p className="text-slate-600 text-lg font-medium">
+          No reviews yet. Be the first to share your experience with this bloom!
         </p>
       </motion.div>
     );
@@ -98,40 +98,40 @@ const ReviewDisplay = ({
       className="space-y-6"
     >
       {/* Rating Summary */}
-      <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/20 rounded-2xl p-8 border border-amber-600/30">
-        <div className="flex items-center gap-6">
-          <div className="text-center">
-            <div className="text-5xl font-bold text-amber-400 mb-2">
+      <div className="bg-white/70 rounded-[2.5rem] p-10 border border-rose-200/50 shadow-lg shadow-rose-200/20">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
+          <div className="text-center md:text-left min-w-max">
+            <div className="text-6xl font-black text-rose-600 mb-3">
               {averageRating?.toFixed(1)}
             </div>
-            <div className="flex justify-center mb-2">
+            <div className="flex justify-center md:justify-start mb-3">
               {renderStars(Math.round(averageRating || 0))}
             </div>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm font-bold text-slate-600 uppercase tracking-widest">
               Based on {totalReviews} review{totalReviews !== 1 ? "s" : ""}
             </p>
           </div>
 
           {/* Rating Breakdown */}
-          <div className="flex-1 space-y-2">
+          <div className="w-full md:flex-1 space-y-3">
             {[5, 4, 3, 2, 1].map((stars) => {
               const count = reviews.filter((r) => r.rating === stars).length;
               const percentage =
                 totalReviews > 0 ? (count / totalReviews) * 100 : 0;
               return (
-                <div key={stars} className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-slate-700 w-12">
+                <div key={stars} className="flex items-center gap-3">
+                  <span className="text-sm font-bold text-slate-700 w-16">
                     {stars} {stars === 1 ? "star" : "stars"}
                   </span>
-                  <div className="w-32 h-2 bg-slate-300 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-rose-100 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${percentage}%` }}
                       transition={{ duration: 0.8, ease: "easeOut" }}
-                      className="h-full bg-amber-400 rounded-full"
+                      className="h-full bg-rose-600 rounded-full"
                     />
                   </div>
-                  <span className="text-sm text-slate-600 w-8">
+                  <span className="text-sm font-bold text-slate-600 w-10 text-right">
                     {Math.round(percentage)}%
                   </span>
                 </div>
@@ -146,27 +146,27 @@ const ReviewDisplay = ({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-red-600/20 border border-red-600/40 text-red-300 px-4 py-3 rounded-lg text-sm"
+          className="bg-red-100/50 border border-red-300/50 text-red-600 px-6 py-4 rounded-xl text-sm font-medium"
         >
           {error}
         </motion.div>
       )}
 
       {/* Reviews List */}
-      <div className="space-y-4">
+      <div className="space-y-5">
         {reviews.map((review, index) => (
           <motion.div
             key={review._id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="bg-white/70 rounded-xl p-6 border border-rose-200/50 hover:shadow-lg hover:shadow-rose-200/20 transition-shadow"
+            className="bg-white/70 rounded-[2rem] p-8 border border-rose-200/50 hover:shadow-lg hover:shadow-rose-200/20 transition-all"
           >
             {editingReviewId === review._id ? (
               // Edit Mode
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-widest">
                     Rating
                   </label>
                   <div className="flex gap-2">
@@ -180,11 +180,11 @@ const ReviewDisplay = ({
                         className="transition-transform hover:scale-110"
                       >
                         <Star
-                          size={24}
+                          size={28}
                           className={`${
                             star <= editingData.rating
                               ? "fill-amber-400 text-amber-400"
-                              : "text-slate-400"
+                              : "text-slate-300"
                           }`}
                         />
                       </button>
@@ -192,86 +192,108 @@ const ReviewDisplay = ({
                   </div>
                 </div>
 
-                <input
-                  type="text"
-                  value={editingData.title}
-                  onChange={(e) =>
-                    setEditingData({ ...editingData, title: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-rose-200/50 rounded-lg bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600"
-                  maxLength="100"
-                />
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-widest">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    value={editingData.title}
+                    onChange={(e) =>
+                      setEditingData({ ...editingData, title: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-rose-200/50 rounded-xl bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600"
+                    maxLength="100"
+                  />
+                </div>
 
-                <textarea
-                  value={editingData.comment}
-                  onChange={(e) =>
-                    setEditingData({ ...editingData, comment: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-rose-200/50 rounded-lg bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600 resize-none"
-                  rows="3"
-                  maxLength="1000"
-                />
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-widest">
+                    Comment
+                  </label>
+                  <textarea
+                    value={editingData.comment}
+                    onChange={(e) =>
+                      setEditingData({
+                        ...editingData,
+                        comment: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border border-rose-200/50 rounded-xl bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600 resize-none"
+                    rows="4"
+                    maxLength="1000"
+                  />
+                </div>
 
-                <div className="flex gap-2 justify-end">
+                <div className="flex gap-3 justify-end pt-2">
                   <button
                     onClick={() => setEditingReviewId(null)}
-                    className="px-4 py-2 text-slate-600 hover:text-slate-700 hover:bg-white/50 rounded-lg transition-colors"
+                    className="px-6 py-2 text-slate-600 hover:text-slate-700 hover:bg-white/70 rounded-lg transition-colors font-medium"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleEditSave}
                     disabled={loading}
-                    className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 disabled:bg-slate-400 transition-colors"
+                    className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-lg hover:from-rose-700 hover:to-pink-700 disabled:opacity-50 transition-all font-bold"
                   >
-                    {loading ? "Saving..." : "Save"}
+                    {loading ? "Saving..." : "Save Changes"}
                   </button>
                 </div>
               </div>
             ) : (
               // View Mode
               <>
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-5">
                   <div className="flex-1">
-                    <div className="flex items-center gap-4 mb-2">
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-900">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 mb-3">
+                      <div>
+                        <p className="font-black text-slate-900 text-sm">
                           {review.reviewer?.userName}
                         </p>
-                        <p className="text-xs text-slate-600">
-                          {new Date(review.createdAt).toLocaleDateString()}
+                        <p className="text-xs text-slate-500 font-medium">
+                          {new Date(review.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
-                      <div className="flex">{renderStars(review.rating)}</div>
+                      <div className="flex gap-1">
+                        {renderStars(review.rating)}
+                      </div>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-900 mb-2">
+                    <h4 className="text-lg font-black text-slate-900 mb-2">
                       {review.title}
                     </h4>
-                    <p className="text-slate-700 leading-relaxed">
+                    <p className="text-slate-700 leading-relaxed text-sm">
                       {review.comment}
                     </p>
                   </div>
 
                   {(currentUserId === review.reviewer?._id ||
                     currentUserRole === "admin") && (
-                    <div className="flex items-center gap-2 ml-4">
+                    <div className="flex items-center gap-1 ml-4 flex-shrink-0">
                       {currentUserId === review.reviewer?._id && (
                         <button
                           onClick={() => handleEditStart(review)}
                           className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
                           title="Edit review"
                         >
-                          <Edit2 size={18} />
+                          <Edit2 size={18} strokeWidth={2} />
                         </button>
                       )}
 
                       <button
                         onClick={() => handleDelete(review._id)}
                         disabled={loading}
-                        className="p-2 rounded-lg text-red-600 hover:bg-red-100/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed\"
+                        className="p-2 rounded-lg text-red-600 hover:bg-red-100/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Delete review"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={18} strokeWidth={2} />
                       </button>
                     </div>
                   )}

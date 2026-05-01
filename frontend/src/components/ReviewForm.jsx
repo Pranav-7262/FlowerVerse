@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Star, Send } from "lucide-react";
 import api from "../api/axios.js";
 
-const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
+const ReviewForm = ({ flowerId, onReviewAdded, user, canReview = true }) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [title, setTitle] = useState("");
@@ -55,38 +55,24 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
   };
 
   if (!user) {
-    return (
-      <div className="bg-amber-600/20 border border-amber-600/40 rounded-xl p-6 text-center">
-        <p className="text-slate-700">
-          Please{" "}
-          <a
-            href="/login"
-            className="text-amber-600 font-semibold hover:text-amber-700 transition-colors"
-          >
-            log in
-          </a>{" "}
-          to write a review.
-        </p>
-      </div>
-    );
+    return null;
+  }
+
+  if (!canReview) {
+    return null;
   }
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/70 rounded-2xl p-8 border border-rose-200/50 shadow-lg shadow-rose-200/20"
+      className="space-y-6"
     >
-      <h3 className="text-2xl font-bold text-slate-900 mb-1">Write a Review</h3>
-      <p className="text-slate-600 text-sm mb-6">
-        Share your experience with this flower
-      </p>
-
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Star Rating */}
         <div>
-          <label className="block text-sm font-semibold text-gray-100 mb-2">
-            Rating *
+          <label className="block text-sm font-bold text-slate-700 uppercase tracking-widest mb-3">
+            Rating
           </label>
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -110,7 +96,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
             ))}
           </div>
           {rating > 0 && (
-            <p className="text-sm text-amber-300 font-medium mt-2">
+            <p className="text-sm text-amber-600 font-bold mt-2">
               {["", "Poor", "Fair", "Good", "Very Good", "Excellent"][rating]}
             </p>
           )}
@@ -118,37 +104,37 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
 
         {/* Title */}
         <div>
-          <label className="block text-sm font-semibold text-gray-100 mb-2">
-            Review Title *
+          <label className="block text-sm font-bold text-slate-700 uppercase tracking-widest mb-3">
+            Review Title
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Summarize your experience in a few words"
-            className="w-full px-4 py-3 border border-rose-200/50 rounded-lg bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:border-transparent transition"
+            className="w-full px-4 py-3 border border-rose-200/50 rounded-xl bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:border-transparent transition"
             maxLength="100"
           />
-          <p className="text-xs text-gray-400 mt-1">{title.length}/100</p>
+          <p className="text-xs text-slate-500 mt-1">{title.length}/100</p>
         </div>
 
         {/* Comment */}
         <div>
-          <label className="block text-sm font-semibold text-gray-100 mb-2">
-            Your Review *
+          <label className="block text-sm font-bold text-slate-700 uppercase tracking-widest mb-3">
+            Your Review
           </label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share details about your experience (minimum 10 characters)"
-            className="w-full px-4 py-3 border border-slate-600 rounded-lg bg-slate-700/50 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition resize-none"
+            className="w-full px-4 py-3 border border-rose-200/50 rounded-xl bg-white/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:border-transparent transition resize-none"
             rows="4"
             maxLength="1000"
           />
           <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-gray-400">{comment.length}/1000</p>
+            <p className="text-xs text-slate-500">{comment.length}/1000</p>
             {comment.length < 10 && comment.length > 0 && (
-              <p className="text-xs text-red-400">
+              <p className="text-xs text-red-500 font-medium">
                 Minimum 10 characters required
               </p>
             )}
@@ -160,7 +146,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-red-600/20 border border-red-600/40 text-red-300 px-4 py-3 rounded-lg text-sm"
+            className="bg-red-100/50 border border-red-300/50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium"
           >
             {error}
           </motion.div>
@@ -171,7 +157,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-emerald-600/20 border border-emerald-600/40 text-emerald-300 px-4 py-3 rounded-lg text-sm"
+            className="bg-green-100/50 border border-green-300/50 text-green-600 px-4 py-3 rounded-xl text-sm font-medium"
           >
             {success}
           </motion.div>
@@ -181,14 +167,14 @@ const ReviewForm = ({ flowerId, onReviewAdded, user }) => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2"
+          className="w-full bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 disabled:opacity-50 text-white font-black py-4 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-sm"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
               <Send size={18} />
-              Submit Review
+              Post Review
             </>
           )}
         </button>

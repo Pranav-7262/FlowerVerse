@@ -93,6 +93,7 @@ const Address = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
             className="flex items-center gap-3 text-rose-700 font-bold text-sm mb-3 tracking-widest uppercase"
           >
             <MapPin size={16} /> Logistics & Delivery

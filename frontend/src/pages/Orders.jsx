@@ -62,7 +62,11 @@ const Orders = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 pb-32 selection:bg-rose-200/50">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 pb-32 selection:bg-rose-200/50"
+    >
       {/* Background Glow */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-rose-200/5 via-transparent to-transparent pointer-events-none" />
 
@@ -160,7 +164,13 @@ const Orders = () => {
                       </div>
 
                       {/* Items List */}
-                      <div className="p-8 lg:p-10 flex flex-col lg:flex-row gap-12">
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                        className="p-5 lg:p-10 flex flex-col lg:flex-row gap-12"
+                      >
                         <div className="flex-1 space-y-6">
                           {order.items.map((item, i) => (
                             <div
@@ -211,7 +221,7 @@ const Orders = () => {
                             </button>
                           )}
                         </div>
-                      </div>
+                      </motion.div>
 
                       {/* Footer Meta */}
                       <div className="px-8 py-4 bg-rose-50/50 border-t border-rose-200/30 flex justify-between items-center">
@@ -236,7 +246,7 @@ const Orders = () => {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

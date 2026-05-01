@@ -41,17 +41,29 @@ const FlowerDetails = () => {
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [averageRating, setAverageRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
+  const [userHasOrdered, setUserHasOrdered] = useState(false);
+  const [checkingOrder, setCheckingOrder] = useState(false);
+  const [checkUserReviewed, setCheckUserReviewed] = useState(false);
 
   useEffect(() => {
     fetchFlowerById(flowerId);
     fetchReviews();
-  }, [flowerId]);
+    if (user) {
+      checkUserOrder();
+    }
+  }, [flowerId, user]);
 
   const fetchReviews = async () => {
     try {
       setReviewsLoading(true);
       const response = await api.get(`/reviews/${flowerId}`);
       console.log("resp :", response.data.data.reviews);
+      if (user) {
+        const hasReviewed = response.data.data.reviews.some(
+          (review) => review.reviewer._id === user._id,
+        );
+        setCheckUserReviewed(hasReviewed);
+      }
 
       setReviews(response.data.data.reviews);
       setAverageRating(response.data.data.averageRating);
@@ -60,6 +72,29 @@ const FlowerDetails = () => {
       console.error("Failed to fetch reviews:", error);
     } finally {
       setReviewsLoading(false);
+    }
+  };
+
+  const checkUserOrder = async () => {
+    if (!user) return;
+    try {
+      setCheckingOrder(true);
+      const response = await api.get("/orders/my");
+      const userOrders = response.data.data || [];
+
+      // Check if user has ordered this specific flower
+      const hasOrdered = userOrders.some((order) =>
+        order.items?.some(
+          (item) => item.flower?._id === flowerId || item.flower === flowerId,
+        ),
+      );
+
+      setUserHasOrdered(hasOrdered);
+    } catch (error) {
+      console.error("Failed to check user orders:", error);
+      setUserHasOrdered(false);
+    } finally {
+      setCheckingOrder(false);
     }
   };
 
@@ -201,10 +236,7 @@ const FlowerDetails = () => {
                     <span className="text-rose-600 text-xl align-top mr-1 font-serif">
                       ₹
                     </span>
-                    {selectedFlower.price.toLocaleString()}/kg
-                  </p>
-                  <p className="text-[10px] text-slate-600 font-black uppercase tracking-widest mt-1">
-                    Per Kilogram
+                    {selectedFlower.price.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -279,7 +311,7 @@ const FlowerDetails = () => {
                     >
                       <CheckCircle2
                         size={18}
-                        className="text-rose-500 flex-shrink-0 mt-0.5"
+                        className="text-rose-500 shrink-0 mt-0.5"
                         strokeWidth={2}
                       />
                       <p className="text-sm font-medium text-slate-700 opacity-90">
@@ -335,7 +367,7 @@ const FlowerDetails = () => {
                     <button
                       disabled={isOutOfStock}
                       onClick={() => handleAcquireNow(selectedFlower._id)}
-                      className="flex-[2] bg-gradient-to-r from-rose-600 to-pink-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] shadow-lg shadow-rose-200/30 hover:shadow-rose-300/40 hover:-translate-y-1 disabled:opacity-20 transition-all"
+                      className="flex-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] shadow-lg shadow-rose-200/30 hover:shadow-rose-300/40 hover:-translate-y-1 disabled:opacity-20 transition-all"
                     >
                       Acquire Now
                     </button>
@@ -362,29 +394,92 @@ const FlowerDetails = () => {
           <div className="flex items-center gap-4">
             <div className="h-10 w-1 bg-rose-600 rounded-full" />
             <h2 className="text-4xl font-serif font-black text-slate-900 tracking-tight">
-              Reviews
+              Customer Reviews
             </h2>
+            {totalReviews > 0 && (
+              <span className="ml-auto text-sm font-bold text-slate-600 bg-rose-100/60 px-4 py-2 rounded-full">
+                {totalReviews} {totalReviews === 1 ? "Review" : "Reviews"}
+              </span>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-1">
-              <ReviewForm
-                flowerId={flowerId}
-                onReviewAdded={handleReviewAdded}
-                user={user}
-              />
-            </div>
-            <div className="lg:col-span-2">
-              <ReviewDisplay
-                reviews={reviews}
-                averageRating={averageRating}
-                totalReviews={totalReviews}
-                currentUserId={user._id}
-                currentUserRole={user.role}
-                onReviewDeleted={handleReviewDeleted}
-                onReviewUpdated={handleReviewUpdated}
-              />
-            </div>
+          {/* Full Width Reviews Section */}
+          <div className="w-full space-y-8">
+            {/* Write Review Section - Conditional */}
+            {user && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white/70 rounded-[2.5rem] p-8 border border-rose-200/50 shadow-lg shadow-rose-200/20 backdrop-blur-sm"
+              >
+                {userHasOrdered && !checkUserReviewed ? (
+                  <div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+                      <MessageSquare size={24} className="text-rose-600" />
+                      Share Your Experience
+                    </h3>
+                    <p className="text-slate-600 text-sm mb-6">
+                      Help other buyers by sharing your honest review
+                    </p>
+                    <ReviewForm
+                      flowerId={flowerId}
+                      onReviewAdded={handleReviewAdded}
+                      user={user}
+                      canReview={true}
+                    />
+                  </div>
+                ) : checkUserReviewed ? (
+                  <div className="text-center py-8">
+                    <div className="flex justify-center mb-4">
+                      <div className="p-4 bg-green-100/50 rounded-full">
+                        <CheckCircle2 size={32} className="text-green-600" />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-bold text-slate-900 mb-2">
+                      Thank You for Your Review
+                    </h4>
+                    <p className="text-slate-600 text-sm max-w-md mx-auto">
+                      You've already shared your experience with this flower.
+                      You can edit or delete your review below.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="flex justify-center mb-4">
+                      <div className="p-4 bg-amber-100/50 rounded-full">
+                        <AlertCircle size={32} className="text-amber-600" />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-bold text-slate-900 mb-2">
+                      Purchase This Flower First
+                    </h4>
+                    <p className="text-slate-600 text-sm max-w-md mx-auto mb-6">
+                      Only verified buyers who have purchased this flower can
+                      leave a review. This helps us maintain authentic feedback.
+                    </p>
+                    <button
+                      onClick={() => handleAcquireNow(selectedFlower._id)}
+                      disabled={isOutOfStock}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50"
+                    >
+                      <ShoppingBag size={18} />
+                      Order Now to Review
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* Reviews Display - Full Width */}
+            <ReviewDisplay
+              reviews={reviews}
+              averageRating={averageRating}
+              totalReviews={totalReviews}
+              currentUserId={user?._id}
+              currentUserRole={user?.role}
+              onReviewDeleted={handleReviewDeleted}
+              onReviewUpdated={handleReviewUpdated}
+            />
           </div>
         </div>
 
