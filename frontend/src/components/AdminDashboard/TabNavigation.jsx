@@ -1,12 +1,18 @@
 import React from "react";
 import { Users, Flower, Plus, ShoppingBag } from "lucide-react"; // Added ShoppingBag
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const TabNavigation = ({ activeTab, setActiveTab }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex border-b border-rose-200/50 bg-white/30 overflow-x-auto whitespace-nowrap">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0, 0.71, 0.2, 1.01] }}
+      className="flex border-b border-rose-200/50 bg-white/30 overflow-x-auto whitespace-nowrap"
+    >
       <button
         onClick={() => setActiveTab("users")}
         className={`flex-1 px-6 py-5 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all relative group ${
@@ -59,7 +65,7 @@ const TabNavigation = ({ activeTab, setActiveTab }) => {
         <Plus size={18} className="bg-rose-100 rounded-full p-0.5" />
         New Flower
       </button>
-    </div>
+    </motion.div>
   );
 };
 

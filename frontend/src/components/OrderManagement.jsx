@@ -1,6 +1,6 @@
 import React from "react";
 import { Package, Truck, CheckCircle, Clock, AlertCircle } from "lucide-react";
-
+import { motion } from "framer-motion";
 const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
   if (loading)
     return (
@@ -25,7 +25,12 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.5, ease: [0, 0.71, 0.2, 1.01] }}
+      className="overflow-x-auto"
+    >
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-white/50 border-b border-rose-200/20">
@@ -85,7 +90,7 @@ const OrderManagement = ({ orders, loading, onUpdateStatus, formatDate }) => {
           ))}
         </tbody>
       </table>
-    </div>
+    </motion.div>
   );
 };
 

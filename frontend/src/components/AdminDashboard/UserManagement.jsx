@@ -1,5 +1,6 @@
 import React from "react";
 import { Search } from "lucide-react";
+import { motion } from "framer-motion";
 
 const UserManagement = ({
   users,
@@ -14,7 +15,12 @@ const UserManagement = ({
   formatDate,
 }) => {
   return (
-    <div className="p-6 border-b border-rose-200/50">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.5, ease: [0, 0.71, 0.2, 1.01] }}
+      className="p-6 border-b border-rose-200/50"
+    >
       {/* Filters Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Search Bar */}
@@ -145,7 +151,7 @@ const UserManagement = ({
           </tbody>
         </table>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

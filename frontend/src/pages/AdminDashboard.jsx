@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import api from "../api/axios";
+import { motion } from "framer-motion";
 import DashboardHeader from "../components/AdminDashboard/DashboardHeader";
 import StatsSection from "../components/AdminDashboard/StatsSection";
 import TabNavigation from "../components/AdminDashboard/TabNavigation";
@@ -173,7 +174,12 @@ const AdminDashboard = () => {
           <StatsSection stats={stats} />
 
           {/* Management Tabs */}
-          <div className="bg-white/70 rounded-2xl shadow-lg shadow-rose-200/30 overflow-hidden border border-rose-200/50">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white/70 rounded-2xl shadow-lg shadow-rose-200/30 overflow-hidden border border-rose-200/50"
+          >
             {/* Tab Navigation */}
             <TabNavigation
               activeTab={activeTab}
@@ -230,7 +236,7 @@ const AdminDashboard = () => {
                 formatDate={formatDate}
               />
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

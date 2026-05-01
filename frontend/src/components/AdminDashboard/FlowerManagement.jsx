@@ -1,6 +1,7 @@
 import React from "react";
 import { Edit2, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {motion} from "framer-motion";
 
 const FlowerManagement = ({
   flowers,
@@ -11,7 +12,13 @@ const FlowerManagement = ({
   const navigate = useNavigate();
 
   return (
-    <div className="p-6">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.5, ease: [0, 0.71, 0.2, 1.01] }}
+      
+      className="p-6">
+
       <div className="overflow-x-auto rounded-xl border border-rose-200/50 bg-white/70">
         <table className="w-full">
           <thead className="bg-gradient-to-r from-white/50 to-white/30 border-b border-rose-200/50">
@@ -107,7 +114,7 @@ const FlowerManagement = ({
           </tbody>
         </table>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
