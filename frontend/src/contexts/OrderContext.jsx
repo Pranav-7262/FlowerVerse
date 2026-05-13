@@ -77,7 +77,6 @@ export const OrderProvider = ({ children }) => {
   const createOrder = async (orderData) => {
     try {
       const res = await api.post("/orders/checkout", orderData);
-      toast.success("Order placed successfully!");
 
       await fetchOrders("buying");
       if (typeof window !== "undefined") {

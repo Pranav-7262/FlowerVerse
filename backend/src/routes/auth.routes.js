@@ -16,6 +16,7 @@ import {
   GetAdress,
   UpdateAdress,
   DeleteAdress,
+  getuserReviews,
 } from "../controllers/auth.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
@@ -33,6 +34,7 @@ router.put("/update-password", verifyJWT, changeCurrentPassword);
 router.delete("/reset-account", verifyJWT, resetAccount);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
+router.get("/get-reviews", verifyJWT, getuserReviews);
 
 // router.post("/add-address", verifyJWT, addAdress);
 router.put("/update-address", verifyJWT, UpdateAdress);

@@ -54,6 +54,15 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     }
   };
+  const getUserReviews = async () => {
+    try {
+      const res = await api.get("/auth/get-reviews");
+      console.log("getUserReviews : ", res.data);
+      return res.data;
+    } catch (error) {
+      console.error("getUserReviews failed:", error?.message);
+    }
+  };
   const updatePassword = async (oldPassword, newPassword, confirmPassword) => {
     try {
       const res = await api.put("/auth/update-password", {
@@ -109,6 +118,7 @@ export const AuthProvider = ({ children }) => {
         resetAccount,
         updateUsername,
         updateEmail,
+        getUserReviews,
       }}
     >
       {!loading && children}

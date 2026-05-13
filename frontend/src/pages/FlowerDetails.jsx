@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import {
   ShoppingBag,
   Pencil,
@@ -105,6 +106,7 @@ const FlowerDetails = () => {
 
   const handleReviewDeleted = (reviewId) => {
     setReviews(reviews.filter((r) => r._id !== reviewId));
+    toast.success("Review deleted successfully");
     fetchReviews(); // Refetch to update average rating
   };
 
@@ -112,6 +114,8 @@ const FlowerDetails = () => {
     setReviews(
       reviews.map((r) => (r._id === updatedReview._id ? updatedReview : r)),
     );
+    toast.success("Review updated successfully");
+
     fetchReviews(); // Refetch to update average rating
   };
 
@@ -136,7 +140,6 @@ const FlowerDetails = () => {
   const handleAcquireNow = async (id) => {
     if (!user) return navigate("/login");
     try {
-      // Prepare checkout data with full flower details
       const checkoutData = {
         items: [
           {

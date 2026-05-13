@@ -49,6 +49,13 @@ const Account = () => {
       link: "/remove-acc",
       color: "bg-red-600/20 text-pink-400",
     },
+    {
+      title: "Your Reviews",
+      desc: "View and manage your flower reviews",
+      icon: Flower2,
+      link: "/account/reviews",
+      color: "bg-green-600/20 text-green-400",
+    },
   ];
 
   return (

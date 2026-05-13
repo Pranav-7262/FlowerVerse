@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Send } from "lucide-react";
 import api from "../api/axios.js";
+import toast from "react-hot-toast";
 
 const ReviewForm = ({ flowerId, onReviewAdded, user, canReview = true }) => {
   const [rating, setRating] = useState(0);
@@ -10,12 +11,10 @@ const ReviewForm = ({ flowerId, onReviewAdded, user, canReview = true }) => {
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     if (!rating || !title || !comment) {
       setError("Please fill all fields including rating");
@@ -34,8 +33,7 @@ const ReviewForm = ({ flowerId, onReviewAdded, user, canReview = true }) => {
         title,
         comment,
       });
-
-      setSuccess("Review added successfully!");
+      toast.success("Review added successfully!");
       setRating(0);
       setTitle("");
       setComment("");
@@ -44,9 +42,6 @@ const ReviewForm = ({ flowerId, onReviewAdded, user, canReview = true }) => {
       if (onReviewAdded) {
         onReviewAdded(response.data.data);
       }
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add review");
     } finally {
@@ -149,17 +144,6 @@ const ReviewForm = ({ flowerId, onReviewAdded, user, canReview = true }) => {
             className="bg-red-100/50 border border-red-300/50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium"
           >
             {error}
-          </motion.div>
-        )}
-
-        {/* Success Message */}
-        {success && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-green-100/50 border border-green-300/50 text-green-600 px-4 py-3 rounded-xl text-sm font-medium"
-          >
-            {success}
           </motion.div>
         )}
 

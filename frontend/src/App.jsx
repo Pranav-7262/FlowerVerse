@@ -23,6 +23,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import RemoveAccount from "./pages/RemoveAccount";
 import Address from "./pages/Address";
 import Support from "./pages/Support";
+import AccountReviews from "./pages/AccountReviews";
 
 const App = () => {
   return (
@@ -122,6 +123,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account/reviews"
+            element={
+              <ProtectedRoute>
+                <AccountReviews />
               </ProtectedRoute>
             }
           />

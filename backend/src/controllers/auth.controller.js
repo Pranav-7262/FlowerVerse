@@ -288,6 +288,36 @@ export const updateEmail = async_handler(async (req, res) => {
   ).select("-password -refreshToken");
   return res.status(200).json(new ApiResponse(200, user, "Email updated !"));
 });
+export const getuserReviews = async_handler(async (req, res) => {
+  const userId = req.userId;
+  const user = await User.aggregate([
+    {
+      $match: { _id: userId },
+    },
+    {
+      $lookup: {
+        from: "reviews",
+        localField: "_id",
+        foreignField: "reviewer",
+        as: "reviews",
+      },
+    },
+    {
+      $addFields: {
+        countReviews: {
+          $size: "$reviews",
+        },
+      },
+    },
+  ]);
+  if (!user || user.length === 0) {
+    throw new ApiError(404, "User not found");
+  }
+  console.log("User with reviews:", JSON.stringify(user, null, 2));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user[0], "User reviews fetched successfully"));
+});
 export const resetAccount = async_handler(async (req, res) => {
   const userId = req.userId;
 
