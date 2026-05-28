@@ -11,31 +11,28 @@ export const FlowerProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalFlowers, setTotalFlowers] = useState(0);
+  const ITEMS_PER_PAGE = 12;
 
-  const fetchFlowers = useCallback(async (category = "All") => {
+  const fetchFlowers = useCallback(async (category = "All", page = 1) => {
     setLoading(true);
     try {
       const endpoint =
-        category === "All" ? "/flowers" : `/flowers?category=${category}`;
-
-      console.log(`Fetching flowers from: ${endpoint}`);
+        category === "All"
+          ? `/flowers?limit=1000`
+          : `/flowers?category=${category}&limit=1000`;
 
       const res = await api.get(endpoint);
       const flowersData = res.data?.data?.flowers || res.data?.flowers || [];
-
-      console.log(
-        `✅ Fetched ${flowersData.length} flowers for category: ${category}`,
-        flowersData,
-      );
-
-      if (flowersData.length === 0) {
-        console.warn(`⚠️ No flowers found for category: ${category}`);
-      }
+      const total = res.data?.data?.total || flowersData.length;
 
       setFlowers(flowersData);
       setFilteredFlowers(flowersData);
+      setTotalFlowers(total);
+      setCurrentPage(page);
       setSearch(""); // Clear search when category changes
-      return flowersData;
+      return { flowers: flowersData, total };
     } catch (err) {
       console.error(
         "❌ Error fetching flowers:",
@@ -43,8 +40,9 @@ export const FlowerProvider = ({ children }) => {
       );
       setFlowers([]);
       setFilteredFlowers([]);
+      setTotalFlowers(0);
       toast.error("Failed to load flowers");
-      return [];
+      return { flowers: [], total: 0 };
     } finally {
       setLoading(false);
     }
@@ -79,14 +77,12 @@ export const FlowerProvider = ({ children }) => {
         flower.category.toLowerCase().includes(query.toLowerCase()),
     );
     setFilteredFlowers(filtered);
-    console.log(`Search "${query}" found ${filtered.length} flowers`);
   };
 
   const filterByCategory = useCallback(
     async (category) => {
-      console.log(`Filtering by category: ${category}`);
       setSelectedCategory(category);
-      await fetchFlowers(category);
+      await fetchFlowers(category, 1);
     },
     [fetchFlowers],
   );
@@ -165,6 +161,9 @@ export const FlowerProvider = ({ children }) => {
         loading,
         search,
         selectedCategory,
+        currentPage,
+        totalFlowers,
+        ITEMS_PER_PAGE,
         fetchFlowers,
         fetchFlowerById,
         searchFlowers,
@@ -173,6 +172,7 @@ export const FlowerProvider = ({ children }) => {
         updateFlower,
         deleteFlower,
         addToCart,
+        setCurrentPage,
       }}
     >
       {children}

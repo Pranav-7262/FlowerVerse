@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   const getUserReviews = async () => {
     try {
       const res = await api.get("/auth/get-reviews");
-      console.log("getUserReviews : ", res.data);
+
       return res.data;
     } catch (error) {
       console.error("getUserReviews failed:", error?.message);

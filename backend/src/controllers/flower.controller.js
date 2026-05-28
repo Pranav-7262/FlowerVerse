@@ -6,10 +6,13 @@ import { ApiResponse } from "../lib/ApiResponse.js";
 import { ApiError } from "../lib/ApiError.js";
 
 export const getAllFlowers = async_handler(async (req, res) => {
-  const { category, page = 1, limit = 10 } = req.query; // pagination and category filter
+  const { category, page = 1, limit = 1000 } = req.query; // pagination and category filter
 
   const filter = { stock: { $gt: 0 } }; // only get flowers that are in stock or available flowers
   if (category) filter.category = category;
+
+  // Get total count for pagination metadata
+  const total = await Flower.countDocuments(filter);
 
   const flowers = await Flower.find(filter)
     .populate("owner", "userName")
@@ -19,7 +22,13 @@ export const getAllFlowers = async_handler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { flowers: flowers }, "All flowers"));
+    .json(
+      new ApiResponse(
+        200,
+        { flowers, total, page: Number(page), limit: Number(limit) },
+        "All flowers",
+      ),
+    );
 });
 
 export const getFlowerById = async_handler(async (req, res) => {

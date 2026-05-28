@@ -46,9 +46,13 @@ export default function Home() {
     search,
     selectedCategory,
     loading,
+    currentPage,
+    totalFlowers,
+    ITEMS_PER_PAGE,
     fetchFlowers,
     searchFlowers,
     filterByCategory,
+    setCurrentPage,
   } = useFlower();
   const { addToCart } = useCart();
 
@@ -62,20 +66,27 @@ export default function Home() {
   // Initialize flowers on first mount
   useEffect(() => {
     if (!hasInitialized) {
-      fetchFlowers("All");
+      fetchFlowers("All", 1);
       setHasInitialized(true);
     }
   }, []);
 
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, priceRange, sortBy]);
+
   // Handle category filter changes
   useEffect(() => {
     if (selectedCategory !== "All") {
-      fetchFlowers(selectedCategory);
+      fetchFlowers(selectedCategory, 1);
     }
   }, [selectedCategory]);
 
-  // Combined Filtering & Sorting Logic
-  const displayed = (filteredFlowers.length > 0 ? filteredFlowers : flowers)
+  // Combined Filtering & Sorting Logic (apply on frontend)
+  const filteredAndSorted = (
+    filteredFlowers.length > 0 ? filteredFlowers : flowers
+  )
     .filter((f) => f.price >= priceRange[0] && f.price <= priceRange[1])
     .sort((a, b) => {
       if (sortBy === "price_asc") return a.price - b.price;
@@ -86,16 +97,24 @@ export default function Home() {
       return 0;
     });
 
+  // Simple pagination using slice
+  const totalPages = Math.ceil(filteredAndSorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const displayed = filteredAndSorted.slice(startIndex, endIndex);
+
   const activeFilters =
     selectedCategory !== "All" ||
     priceRange[0] > 0 ||
     priceRange[1] < PRICE_MAX;
 
-  // Debug info
-  const totalFlowers =
-    filteredFlowers.length > 0 ? filteredFlowers.length : flowers.length;
-
-  filteredFlowers.length > 0 ? filteredFlowers.length : flowers.length;
+  // Handle page change - simple client-side pagination
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -229,36 +248,69 @@ export default function Home() {
         </motion.div>
 
         {/* Flowers Count Info */}
-        {!loading && displayed.length > 0 && (
+        {!loading && filteredAndSorted.length > 0 && (
           <div className="mt-8 text-center text-sm text-slate-600">
             Showing{" "}
-            <span className="font-bold text-rose-700">{displayed.length}</span>{" "}
-            of <span className="font-bold text-rose-700">{totalFlowers}</span>{" "}
+            <span className="font-bold text-rose-700">
+              {Math.min(displayed.length, ITEMS_PER_PAGE)}
+            </span>{" "}
+            of{" "}
+            <span className="font-bold text-rose-700">
+              {filteredAndSorted.length}
+            </span>{" "}
             flowers
           </div>
         )}
 
-        {/* Featured Section Divider */}
-        <div className="mt-40 pt-20 border-t border-rose-200/30">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-4xl font-serif font-black text-rose-900 tracking-tight">
-              Curated Bouquets
-            </h2>
+        {/* Pagination Controls */}
+        {!loading && displayed.length > 0 && totalPages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-3">
+            {/* Previous Button */}
             <button
-              onClick={() => filterByCategory("Mixed Bouquets")}
-              className="group text-[10px] font-black uppercase tracking-widest text-rose-700 flex items-center gap-2"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                currentPage === 1
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-rose-600 text-white hover:bg-rose-700 hover:shadow-lg"
+              }`}
             >
-              View All{" "}
-              <ArrowRight
-                size={12}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              ← Previous
+            </button>
+
+            {/* Page Numbers - Simple Display */}
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
+                      pageNum === currentPage
+                        ? "bg-rose-600 text-white shadow-lg"
+                        : "bg-white text-rose-600 border border-rose-200 hover:bg-rose-50"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                ),
+              )}
+            </div>
+
+            {/* Next Button */}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                currentPage === totalPages
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-rose-600 text-white hover:bg-rose-700 hover:shadow-lg"
+              }`}
+            >
+              Next →
             </button>
           </div>
-          <BouquetsSection
-            onViewAll={() => filterByCategory("Mixed Bouquets")}
-          />
-        </div>
+        )}
       </div>
     </div>
   );

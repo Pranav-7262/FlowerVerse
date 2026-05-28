@@ -313,7 +313,7 @@ export const getuserReviews = async_handler(async (req, res) => {
   if (!user || user.length === 0) {
     throw new ApiError(404, "User not found");
   }
-  console.log("User with reviews:", JSON.stringify(user, null, 2));
+  // console.log("user Reviews:", user[0]);
   return res
     .status(200)
     .json(new ApiResponse(200, user[0], "User reviews fetched successfully"));
