@@ -130,3 +130,28 @@ export const deleteFlower = async_handler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, null, "Flower deleted successfully"));
 });
+
+export const fetchMixedBouquets = async_handler(async (req, res) => {
+  const { page = 1, limit = 10 } = req.query; //for pagination
+  const filter = { category: "Mixed Bouquets", stock: { $gt: 0 } };
+  const total = await Flower.countDocuments(filter);
+  const bouquets = await Flower.find(filter)
+    .populate("owner", "userName")
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(Number(limit));
+
+  console.log(
+    `📦 Mixed Bouquets - Total: ${total}, Page: ${page}, Returned: ${bouquets.length}`,
+  );
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { bouquets, total, page: Number(page), limit: Number(limit) },
+        "Mixed bouquets fetched successfully",
+      ),
+    );
+});

@@ -8,12 +8,14 @@ import {
   createFlower,
   updateFlower,
   deleteFlower,
+  fetchMixedBouquets,
 } from "../controllers/flower.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 
 const router = express.Router();
 
 router.get("/", getAllFlowers);
+router.get("/mixedBouquet", fetchMixedBouquets);
 router.get("/my", verifyJWT, verifyAdmin, getMyFlowers);
 router.get("/:flowerId", getFlowerById);
 
