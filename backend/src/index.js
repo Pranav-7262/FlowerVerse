@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
+// import { cacheMiddleware } from "./lib/redis.js";
 dotenv.config();
 const PORT = process.env.PORT;
 
@@ -27,6 +28,9 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 
 app.use(morgan("dev"));
+
+// Cache middleware - caches GET requests
+// app.use(cacheMiddleware);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/flowers", flowerRoutes);
