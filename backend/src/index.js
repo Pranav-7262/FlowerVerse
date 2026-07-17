@@ -14,6 +14,7 @@ import cartRoutes from "./routes/cart.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import adminRoutes from "./routes/admin.route.js";
 import reviewRoutes from "./routes/review.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
 const corsOptions = {
@@ -38,6 +39,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/ai", aiRoutes);
 
 connectDB()
   .then(

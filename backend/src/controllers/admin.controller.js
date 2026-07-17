@@ -3,18 +3,32 @@ import { ApiError } from "../lib/ApiError.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
 import User from "../models/user.model.js";
 import Order from "../models/order.model.js";
+import { deleteCache, flushAll, getCache, setCache } from "../lib/redis.js";
 
 export const getAllUsers = async_handler(async (req, res) => {
-  const { page = 1, limit = 10, role, search } = req.query; // eg like ?page=1&limit=10&role=admin&search=john
+  const { page = 1, limit = 10, role = "", search = "" } = req.query;
+
+  const cacheKey = `users:page_${page}:limit_${limit}:role_${role}:search_${search}`;
+
+  const cachedData = await getCache(cacheKey);
+  if (cachedData) {
+    console.log(`✅ Cache HIT: ${cacheKey}`);
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          cachedData,
+          "Users fetched successfully (from cache)",
+        ),
+      );
+  }
 
   let filter = {};
-
-  // Filter by role if provided
   if (role && ["customer", "admin"].includes(role)) {
     filter.role = role;
   }
 
-  // Search by userName or email
   if (search) {
     filter.$or = [
       { userName: { $regex: search, $options: "i" } },
@@ -22,7 +36,7 @@ export const getAllUsers = async_handler(async (req, res) => {
     ];
   }
 
-  const skip = (page - 1) * limit;
+  const skip = (parseInt(page) - 1) * parseInt(limit);
 
   const users = await User.find(filter)
     .select("-password -refreshToken -forgetPasswordToken")
@@ -31,23 +45,24 @@ export const getAllUsers = async_handler(async (req, res) => {
     .sort({ createdAt: -1 });
 
   const totalUsers = await User.countDocuments(filter);
-  const totalPages = Math.ceil(totalUsers / limit);
+  const totalPages = Math.ceil(totalUsers / parseInt(limit));
 
-  res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        users,
-        pagination: {
-          currentPage: parseInt(page),
-          totalPages,
-          totalUsers,
-          limit: parseInt(limit),
-        },
-      },
-      "Users fetched successfully",
-    ),
-  );
+  const responseData = {
+    users,
+    pagination: {
+      currentPage: parseInt(page),
+      totalPages,
+      totalUsers,
+      limit: parseInt(limit),
+    },
+  };
+
+  // 2. Set cache for 5 minutes (300 seconds)
+  await setCache(cacheKey, responseData, 300);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, responseData, "Users fetched successfully"));
 });
 
 export const changeUserRole = async_handler(async (req, res) => {
@@ -72,7 +87,7 @@ export const changeUserRole = async_handler(async (req, res) => {
 
   user.role = role;
   await user.save();
-
+  await deleteCache("admin_user_stats");
   const updatedUser = await User.findById(userId).select(
     "-password -refreshToken -forgetPasswordToken",
   );
@@ -82,8 +97,24 @@ export const changeUserRole = async_handler(async (req, res) => {
 });
 
 export const getUserStats = async_handler(async (req, res) => {
-  const totalUsers = await User.countDocuments(); // total number of users in the system
-  const adminUsers = await User.countDocuments({ role: "admin" }); // total number of admin users in the system
+  const cacheKey = "admin_user_stats";
+
+  const cachedStats = await getCache(cacheKey);
+  if (cachedStats) {
+    console.log(`✅ Cache HIT: ${cacheKey}`);
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          cachedStats,
+          "Dashboard statistics fetched successfully (from cache)",
+        ),
+      );
+  }
+
+  const totalUsers = await User.countDocuments();
+  const adminUsers = await User.countDocuments({ role: "admin" });
   const customerUsers = await User.countDocuments({
     $or: [{ role: "customer" }, { role: { $exists: false } }, { role: "" }],
   });
@@ -99,19 +130,26 @@ export const getUserStats = async_handler(async (req, res) => {
   ]);
   const revenueData = orderStats[0] || { totalRevenue: 0, totalOrders: 0 };
 
-  res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        totalUsers,
-        adminUsers,
-        customerUsers,
-        totalOrders: revenueData.totalOrders,
-        totalRevenue: revenueData.totalRevenue,
-      },
-      "Dashboard statistics fetched successfully",
-    ),
-  );
+  const statsData = {
+    totalUsers,
+    adminUsers,
+    customerUsers,
+    totalOrders: revenueData.totalOrders,
+    totalRevenue: revenueData.totalRevenue,
+  };
+
+  // Cache dashboard aggregations for 10 minutes
+  await setCache(cacheKey, statsData, 600);
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        statsData,
+        "Dashboard statistics fetched successfully",
+      ),
+    );
 });
 
 export const updateOrderStatus = async_handler(async (req, res) => {
@@ -138,7 +176,8 @@ export const updateOrderStatus = async_handler(async (req, res) => {
   if (!order) {
     throw new ApiError(404, "Order not found");
   }
-
+  await deleteCache("all_orders"); // Invalidate orders cache
+  await deleteCache("admin_user_stats"); // Invalidate dashboard stats cache
   return res
     .status(200)
     .json(
@@ -151,15 +190,30 @@ export const updateOrderStatus = async_handler(async (req, res) => {
 });
 
 export const getAllOrders = async_handler(async (req, res) => {
+  const cachekey = "all_orders";
+  const cahchedOrders = await getCache(cachekey);
+  if (cahchedOrders) {
+    console.log(`✅ Cache HIT: ${cachekey}`);
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          cahchedOrders,
+          "All global orders fetched successfully",
+        ),
+      );
+  }
   const orders = await Order.find()
-    .populate("buyer", "userName email") // Get name and email of the customer
-    .populate("items.flower", "name image price")
-    .sort({ createdAt: -1 });
+    .populate("buyer", "userName email")
+    .populate("items.flower", "name price image")
+    .sort({ createdAt: -1 }); // Sort by creation date in descending order
+
+  await setCache(cachekey, orders, 600); // Cache for 10 minutes
 
   if (!orders || orders.length === 0) {
     return res.status(200).json(new ApiResponse(200, [], "No orders found"));
   }
-
   return res
     .status(200)
     .json(

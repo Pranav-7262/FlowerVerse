@@ -29,6 +29,7 @@ import FilterPanel from "../components/FilterPanel";
 import FlowerCard from "../components/FlowerCard";
 import SortDropdown from "../components/SortDropdown";
 import ExploreBouquets from "../components/ExploreBouquets";
+import AIFlowerRecommender from "../components/AIFlowerRecommender";
 
 const CATEGORIES = [
   "All",
@@ -285,6 +286,10 @@ export default function Home() {
             </motion.div>
           </div>
         </motion.section>
+
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 py-2 sm:py-4">
+          <AIFlowerRecommender />
+        </section>
 
         {/* ===== FEATURES SECTION ===== */}
         <motion.section
