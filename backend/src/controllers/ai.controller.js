@@ -55,6 +55,131 @@ export const getFallbackRecommendations = (flowers, form = {}) => {
     .slice(0, 4);
 };
 
+const buildCatalogReply = (question = "", flowers = []) => {
+  const text = (question || "").trim().toLowerCase();
+
+  // Route based on question intent
+  if (
+    text.includes("order") ||
+    text.includes("place") ||
+    text.includes("checkout")
+  ) {
+    return "To place an order, browse our flowers, add them to your cart, and proceed to checkout where you can confirm delivery details and payment.";
+  }
+  if (
+    text.includes("delivery") ||
+    text.includes("ship") ||
+    text.includes("track")
+  ) {
+    return "Delivery timing depends on your location. You can select your preferred delivery date during checkout and track your order status.";
+  }
+  if (
+    text.includes("payment") ||
+    text.includes("pay") ||
+    text.includes("card")
+  ) {
+    return "We accept various payment methods during checkout. Your payment is processed securely.";
+  }
+  if (
+    text.includes("price") ||
+    text.includes("cost") ||
+    text.includes("cheap")
+  ) {
+    return "Prices vary depending on the bouquet. You can browse our collection to see options at different price points.";
+  }
+
+  // Default: return flower recommendations
+  const tokens = text.split(/\W+/).filter(Boolean);
+  const rankedFlowers = flowers
+    .map((flower) => {
+      const haystack = [
+        flower.name,
+        flower.category,
+        flower.description,
+        flower.color,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      let score = 0;
+      for (const token of tokens) {
+        if (haystack.includes(token)) score += 3;
+      }
+
+      return { ...flower.toObject(), score };
+    })
+    .filter((flower) => flower.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+
+  if (!rankedFlowers.length && flowers.length) {
+    const sample = flowers
+      .slice(0, 3)
+      .map((flower) => flower.name)
+      .join(", ");
+    return `I can help you find the perfect flowers. Our catalog includes ${sample} and more. What occasion are you shopping for?`;
+  }
+
+  const featured = rankedFlowers
+    .map((flower) => `${flower.name} (₹${flower.price})`)
+    .join(", ");
+
+  return `Here are some options: ${featured}. Would you like to know more about any of these?`;
+};
+
+export const projectSearch = async_handler(async (req, res) => {
+  const { question } = req.body || {};
+
+  if (!question?.trim()) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, null, "A question is required"));
+  }
+
+  const flowers = await Flower.find({ stock: { $gt: 0 } }).limit(20);
+  const fallbackAnswer = buildCatalogReply(question, flowers);
+
+  if (!openai) {
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { answer: fallbackAnswer },
+          "AI service unavailable",
+        ),
+      );
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      temperature: 0.5,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are BloomBot, a friendly flower-shop assistant. Answer questions about flowers, bouquets, orders, delivery, payments, gift ideas, and general shopping support. If the user asks something unrelated, gently guide the conversation back to flower shopping and offer help with flowers, orders, delivery, or payments. Keep the answer short, useful, and warm.",
+        },
+        { role: "user", content: question },
+      ],
+    });
+
+    const answer =
+      completion.choices[0].message.content?.trim() || fallbackAnswer;
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { answer }, "Flower assistant answer"));
+  } catch (error) {
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, { answer: fallbackAnswer }, "AI request failed"),
+      );
+  }
+});
+
 export const recommendFlowers = async_handler(async (req, res) => {
   const form = req.body || {};
   const flowers = await Flower.find({ stock: { $gt: 0 } }).limit(50);

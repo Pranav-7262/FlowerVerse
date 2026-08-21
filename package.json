@@ -1,12 +1,16 @@
 {
-  "name": "bloomcart",
+  "name": "flowerrmart",
   "version": "1.0.0",
-  "description": "",
+  "description": "FlowerrMart storefront and admin platform",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests configured yet\""
   },
-  "keywords": [],
+  "keywords": [
+    "flowerrmart",
+    "flowers",
+    "ecommerce"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module"

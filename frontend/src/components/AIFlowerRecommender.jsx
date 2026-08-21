@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Bot, Sparkles, Send, Gift, ArrowRight } from "lucide-react";
-import api from "../api/axios";
+import api from "../api/axios.js";
 
 const quickPrompts = ["Birthday", "Anniversary", "Wedding", "Just Because"];
 

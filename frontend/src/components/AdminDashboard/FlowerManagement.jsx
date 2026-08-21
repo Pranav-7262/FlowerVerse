@@ -1,7 +1,7 @@
 import React from "react";
 import { Edit2, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 
 const FlowerManagement = ({
   flowers,
@@ -12,13 +12,12 @@ const FlowerManagement = ({
   const navigate = useNavigate();
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5, ease: [0, 0.71, 0.2, 1.01] }}
-      
-      className="p-6">
-
+      className="p-6"
+    >
       <div className="overflow-x-auto rounded-xl border border-rose-200/50 bg-white/70">
         <table className="w-full">
           <thead className="bg-gradient-to-r from-white/50 to-white/30 border-b border-rose-200/50">
@@ -67,7 +66,7 @@ const FlowerManagement = ({
                   key={flower._id}
                   className="border-b border-rose-200/50 hover:bg-white/50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">>
+                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">
                     {flower.name}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">

@@ -1,4 +1,4 @@
-# 🌸 FlowerVerse - Flower E-Commerce Platform
+# 🌸 FlowerrMart - Flower E-Commerce Platform
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18+-blue.svg)](https://reactjs.org/)
@@ -7,7 +7,7 @@
 [![Cloudinary](https://img.shields.io/badge/Cloudinary-API-orange.svg)](https://cloudinary.com/)
 [![Vite](https://img.shields.io/badge/Vite-5.x-purple.svg)](https://vitejs.dev/)
 
-Welcome to **FlowerVerse**! 🌼 A full-stack e-commerce platform for buying and selling beautiful flowers. This project allows users to browse, add to cart, purchase flowers, and manage their accounts seamlessly. Sellers can create, edit, and manage their flower listings with image uploads powered by Cloudinary.
+Welcome to **FlowerrMart**! 🌼 A full-stack flower marketplace for browsing, ordering, and managing premium floral products. This project lets customers shop, save items, place orders, and manage their accounts securely, while sellers can create and update listings with Cloudinary-powered image uploads.
 
 ## 📋 Table of Contents
 
@@ -73,8 +73,8 @@ Welcome to **FlowerVerse**! 🌼 A full-stack e-commerce platform for buying and
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-username/bloomcart.git
-   cd bloomcart
+   git clone https://github.com/your-username/flowerrmart.git
+   cd flowerrmart
    ```
 
 2. **Install Backend Dependencies**
@@ -120,7 +120,7 @@ Welcome to **FlowerVerse**! 🌼 A full-stack e-commerce platform for buying and
 
 ```
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/bloomcart
+MONGODB_URI=mongodb://localhost:27017/flowerrmart
 JWT_SECRET=your_jwt_secret
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
@@ -185,7 +185,7 @@ For a complete list of API endpoints and testing instructions, refer to [API_TES
 ## 📁 Project Structure
 
 ```
-bloomcart/
+flowerrmart/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/     # Route handlers

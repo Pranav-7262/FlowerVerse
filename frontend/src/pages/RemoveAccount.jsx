@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import api from "../api/axios";
 
 const RemoveAccount = () => {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ const RemoveAccount = () => {
         </div>
 
         <p className="text-center mt-8 text-[10px] font-black text-slate-600 uppercase tracking-widest leading-loose">
-          FlowerMart Data Protection Agency
+          FlowerrMart Data Protection Agency
           <br />
           Compliance &copy; 2026
         </p>

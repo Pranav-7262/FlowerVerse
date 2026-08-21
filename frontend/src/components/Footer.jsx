@@ -37,7 +37,7 @@ const Footer = () => {
 
   const info = [
     { icon: Phone, text: "+1 (555) 123-4567", label: "Call Us" },
-    { icon: Mail, text: "hello@bloomcart.com", label: "Email" },
+    { icon: Mail, text: "hello@flowerrmart.com", label: "Email" },
     { icon: MapPin, text: "123 Flower Street, Garden City", label: "Visit Us" },
   ];
 
@@ -63,7 +63,7 @@ const Footer = () => {
               <div className="p-2 bg-gradient-to-br from-rose-600 to-pink-600 rounded-lg">
                 <Flower2 size={24} className="text-white" />
               </div>
-              <h2 className="text-2xl font-black text-rose-700">BloomCart</h2>
+              <h2 className="text-2xl font-black text-rose-700">FlowerrMart</h2>
             </div>
             <p className="text-sm text-slate-600 leading-relaxed">
               Bringing nature's beauty to your doorstep. Fresh flowers delivered
@@ -228,12 +228,12 @@ const Footer = () => {
             >
               <Heart size={14} className="text-rose-500" fill="currentColor" />
             </motion.div>
-            <span>by BloomCart</span>
+            <span>by FlowerrMart</span>
           </div>
 
           {/* Right */}
           <p className="text-xs text-slate-600 text-center md:text-right">
-            © {currentYear} BloomCart. All rights reserved.
+            © {currentYear} FlowerrMart. All rights reserved.
           </p>
         </motion.div>
       </div>

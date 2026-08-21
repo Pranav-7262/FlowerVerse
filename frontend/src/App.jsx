@@ -24,6 +24,7 @@ import RemoveAccount from "./pages/RemoveAccount";
 import Address from "./pages/Address";
 import Support from "./pages/Support";
 import AccountReviews from "./pages/AccountReviews";
+import AiAssistant from "./pages/AiAssistant";
 
 const App = () => {
   return (
@@ -71,6 +72,7 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
+          <Route path="/ai-assistant" element={<AiAssistant />} />
 
           {/* Protected Routes */}
           <Route

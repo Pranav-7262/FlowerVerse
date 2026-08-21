@@ -353,11 +353,10 @@ export const forgotPassword = async_handler(async (req, res) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: "Password Reset Request - FlowerMart",
-      message: `Hello ${user.userName || "there"}!\n\nYou requested a password reset for your FlowerMart account.\n\nClick the button below to reset your password. This link will expire in 15 minutes for security reasons.\n\nIf you didn't request this password reset, please ignore this email - your password will remain unchanged.`,
+      subject: "Password Reset Request - FlowerrMart",
+      message: `Hello ${user.userName || "there"}!\n\nYou requested a password reset for your FlowerrMart account.\n\nClick the button below to reset your password. This link will expire in 15 minutes for security reasons.\n\nIf you didn't request this password reset, please ignore this email - your password will remain unchanged.`,
       resetUrl: resetUrl,
     });
-    // when running locally, return the URL so clients/tests can use it
     const responseData = {};
     if (process.env.NODE_ENV !== "production") {
       responseData.resetUrl = resetUrl;

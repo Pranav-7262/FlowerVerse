@@ -288,7 +288,7 @@ const Address = () => {
                 Add New Shipping Profile
               </span>
             </motion.button>
-          )}}
+          )}
         </div>
       </div>
     </div>
