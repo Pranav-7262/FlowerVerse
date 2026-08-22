@@ -3,16 +3,23 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const redisClient = Redis.createClient({
-  socket: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: Number(process.env.REDIS_PORT) || 6379,
-  },
+  url: process.env.REDIS_URL,
+});
+redisClient.on("error", (err) => {
+  console.error("Redis Error:", err);
 });
 
-redisClient.on("error", (err) => console.error("Redis Error:", err));
-redisClient
-  .connect()
-  .catch((err) => console.error("Redis Connection Error:", err));
+redisClient.on("connect", () => {
+  console.log("Redis connecting...");
+});
+
+redisClient.on("ready", () => {
+  console.log("Redis connected and ready");
+});
+
+redisClient.connect().catch((err) => {
+  console.error("Redis Connection Error:", err);
+});
 
 // Get from cache
 const getCache = async (key) => {
