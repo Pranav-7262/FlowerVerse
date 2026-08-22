@@ -95,19 +95,22 @@ export const loginUser = async_handler(async (req, res) => {
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken",
   );
+  const isProduction = process.env.NODE_ENV === "production";
+
   const accessTokenOptions = {
-    maxAge: 15 * 60 * 1000, // 15m
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax", // different domains at dev
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: 15 * 60 * 1000,
     path: "/",
   };
+
   const refreshTokenOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax", // use "none" + secure=true if cross-domain
-    path: "/api/auth/refresh", // restrict refresh token exposure
-    maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/api/auth/refresh",
+    maxAge: 10 * 24 * 60 * 60 * 1000,
   };
 
   return res
@@ -185,20 +188,22 @@ export const logoutUser = async_handler(async (req, res) => {
       new: true,
     },
   );
+  const isProduction = process.env.NODE_ENV === "production";
+
   const accessTokenOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 15 * 60 * 1000, // 15 min
-    path: "/", // matches how access token was set
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: 15 * 60 * 1000,
+    path: "/",
   };
 
   const refreshTokenOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     path: "/api/auth/refresh",
-    maxAge: 10 * 24 * 60 * 60 * 1000, // must match original refresh token path
+    maxAge: 10 * 24 * 60 * 60 * 1000,
   };
 
   return res
