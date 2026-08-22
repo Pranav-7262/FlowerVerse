@@ -27,12 +27,11 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const res = await api.post("/auth/login", { email, password });
-      console.log("login user : ", res.data.data.user);
       setUser(res.data.data.user); // cookies already set in response
       return res.data;
     } catch (err) {
       setUser(null);
-      console.log("error in login context :", err?.message);
+      throw err;
     }
   };
 
@@ -127,21 +126,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
-// App Load
-//   ├─ loadUser() runs ONCE (useRef protection)
-//   ├─ Try GET /current-user
-//   ├─ If 401 → POST /refresh (interceptor handles auto-refresh too)
-//   ├─ Set accessToken in state & headers
-//   ├─ Retry GET /current-user
-//   └─ setLoading(false) → App renders
-
-// User Login
-//   ├─ POST /login → get token
-//   ├─ Set state & headers
-//   └─ Ready for protected routes
-
-// User Logout
-//   ├─ POST /logout
-//   ├─ Clear state & headers
-//   └─ Redirect to login

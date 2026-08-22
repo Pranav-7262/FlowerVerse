@@ -157,7 +157,7 @@ export const refreshAccessToken = async_handler(async (req, res) => {
     const accessTokenOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 15 * 60 * 1000, // 15 min
       path: "/",
     };
