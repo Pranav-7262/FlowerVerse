@@ -1,8 +1,22 @@
 import axios from "axios";
 
+const storedAccessToken = sessionStorage.getItem("accessToken");
+
 const api = axios.create({
-   baseURL: `${import.meta.env.VITE_API_URL}/api`,
-  withCredentials: true, // Send refresh token cookie
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  withCredentials: true,
+});
+
+if (storedAccessToken) {
+  api.defaults.headers.common.Authorization = `Bearer ${storedAccessToken}`;
+}
+
+api.interceptors.request.use((config) => {
+  const accessToken = sessionStorage.getItem("accessToken");
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  return config;
 });
 
 api.interceptors.response.use(
@@ -10,10 +24,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // ❌ Skip auth routes
     if (
-      originalRequest.url.includes("/auth/login") ||
-      originalRequest.url.includes("/auth/refresh")
+      !originalRequest ||
+      originalRequest.url?.includes("/auth/login") ||
+      originalRequest.url?.includes("/auth/refresh")
     ) {
       return Promise.reject(error);
     }
@@ -22,22 +36,27 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.post("/auth/refresh"); // cookies auto sent
+        const response = await api.post("/auth/refresh");
+        const accessToken = response.data?.data?.accessToken;
+        if (accessToken) {
+          sessionStorage.setItem("accessToken", accessToken);
+          api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        }
         return api(originalRequest);
       } catch (err) {
-        // Don't force-redirect to login when user is on public pages
         const currentPath = window.location.pathname;
         const publicPaths = [
+          "/",
           "/login",
           "/register",
           "/forgot-password",
           "/reset-password",
           "/flowers",
+          "/ai-assistant",
         ];
 
-        // Check if current path starts with any public path
         const isPublicPath = publicPaths.some((path) =>
-          currentPath.startsWith(path),
+          path === "/" ? currentPath === "/" : currentPath.startsWith(path),
         );
 
         if (!isPublicPath) {
