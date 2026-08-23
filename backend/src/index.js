@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
-dotenv.config();
+dotenv.config({ quiet: true });
 const PORT = process.env.PORT || 3000;
 
 import authRoutes from "./routes/auth.routes.js";
@@ -16,10 +16,18 @@ import reviewRoutes from "./routes/review.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
+const frontendOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((url) =>
+      url.trim().replace(/\/$/, ""),
+    )
+  : ["http://localhost:5173", "http://localhost:5174"];
 const corsOptions = {
-  origin: process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(",").map((url) => url.trim())
-    : ["http://localhost:5173", "http://localhost:5174"],
+  origin: (origin, callback) => {
+    if (!origin || frontendOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Origin is not allowed by CORS"));
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,

@@ -6,6 +6,23 @@ import crypto from "crypto";
 import { ApiError } from "../lib/ApiError.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
 
+const getCookieOptions = (path, maxAge) => {
+  const isProduction = process.env.NODE_ENV === "production";
+  const options = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge,
+    path,
+  };
+
+  if (process.env.COOKIE_DOMAIN) {
+    options.domain = process.env.COOKIE_DOMAIN;
+  }
+
+  return options;
+};
+
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -95,23 +112,11 @@ export const loginUser = async_handler(async (req, res) => {
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken",
   );
-  const isProduction = process.env.NODE_ENV === "production";
-
-  const accessTokenOptions = {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    maxAge: 15 * 60 * 1000,
-    path: "/",
-  };
-
-  const refreshTokenOptions = {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    path: "/api/auth/refresh",
-    maxAge: 10 * 24 * 60 * 60 * 1000,
-  };
+  const accessTokenOptions = getCookieOptions("/", 15 * 60 * 1000);
+  const refreshTokenOptions = getCookieOptions(
+    "/api/auth/refresh",
+    10 * 24 * 60 * 60 * 1000,
+  );
 
   return res
     .status(200)
@@ -154,13 +159,7 @@ export const refreshAccessToken = async_handler(async (req, res) => {
 
     // now we need to generate new access token only
     const accessToken = user.generateAccessToken();
-    const accessTokenOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 15 * 60 * 1000, // 15 min
-      path: "/",
-    };
+    const accessTokenOptions = getCookieOptions("/", 15 * 60 * 1000);
     return res
       .status(200)
       .cookie("accessToken", accessToken, accessTokenOptions)
@@ -188,23 +187,11 @@ export const logoutUser = async_handler(async (req, res) => {
       new: true,
     },
   );
-  const isProduction = process.env.NODE_ENV === "production";
-
-  const accessTokenOptions = {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    maxAge: 15 * 60 * 1000,
-    path: "/",
-  };
-
-  const refreshTokenOptions = {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    path: "/api/auth/refresh",
-    maxAge: 10 * 24 * 60 * 60 * 1000,
-  };
+  const accessTokenOptions = getCookieOptions("/", 15 * 60 * 1000);
+  const refreshTokenOptions = getCookieOptions(
+    "/api/auth/refresh",
+    10 * 24 * 60 * 60 * 1000,
+  );
 
   return res
     .status(200)

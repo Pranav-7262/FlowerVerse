@@ -1,28 +1,30 @@
 import Redis from "redis";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ quiet: true });
 
-const redisClient = Redis.createClient({
-  url: process.env.REDIS_URL,
-});
-redisClient.on("error", (err) => {
-  console.error("Redis Error:", err);
-});
+const redisUrl = process.env.REDIS_URL?.trim();
+const redisClient = redisUrl
+  ? Redis.createClient({
+      url: redisUrl,
+      socket: { reconnectStrategy: false },
+    })
+  : null;
 
-redisClient.on("connect", () => {
-  console.log("Redis connecting...");
-});
+if (redisClient) {
+  redisClient.on("error", (err) => {
+    console.warn("Redis unavailable; caching disabled:", err.message);
+  });
 
-redisClient.on("ready", () => {
-  console.log("Redis connected and ready");
-});
-
-redisClient.connect().catch((err) => {
-  console.error("Redis Connection Error:", err);
-});
+  redisClient
+    .connect()
+    .then(() => console.log("Redis connected"))
+    .catch(() => {});
+}
 
 // Get from cache
 const getCache = async (key) => {
+  if (!redisClient?.isReady) return null;
+
   try {
     const data = await redisClient.get(key);
     return data ? JSON.parse(data) : null;
@@ -34,6 +36,8 @@ const getCache = async (key) => {
 
 // Set in cache with TTL
 const setCache = async (key, data, ttl = 300) => {
+  if (!redisClient?.isReady) return;
+
   try {
     await redisClient.setEx(key, ttl, JSON.stringify(data));
   } catch (err) {
@@ -43,6 +47,8 @@ const setCache = async (key, data, ttl = 300) => {
 
 // Delete cache key
 const deleteCache = async (key) => {
+  if (!redisClient?.isReady) return;
+
   try {
     await redisClient.del(key);
   } catch (err) {
@@ -52,7 +58,7 @@ const deleteCache = async (key) => {
 
 // Cache middleware for GET requests
 const cacheMiddleware = async (req, res, next) => {
-  if (req.method !== "GET") return next();
+  if (req.method !== "GET" || !redisClient?.isReady) return next();
 
   const key = `${req.method}:${req.originalUrl}`;
 
@@ -77,6 +83,8 @@ const cacheMiddleware = async (req, res, next) => {
 
 // Flush all cache
 const flushAll = async () => {
+  if (!redisClient?.isReady) return;
+
   try {
     await redisClient.flushAll();
     console.log("🗑️  All cache cleared");
