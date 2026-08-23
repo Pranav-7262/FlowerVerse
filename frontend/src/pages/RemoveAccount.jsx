@@ -99,7 +99,7 @@ const RemoveAccount = () => {
         </div>
 
         <p className="text-center mt-8 text-[10px] font-black text-slate-600 uppercase tracking-widest leading-loose">
-          FlowerrMart Data Protection Agency
+          FlowerVerse Data Protection Agency
           <br />
           Compliance &copy; 2026
         </p>

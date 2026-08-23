@@ -1,13 +1,13 @@
 {
-  "name": "flowerrmart",
+  "name": "flowerverse",
   "version": "1.0.0",
-  "description": "FlowerrMart storefront and admin platform",
+  "description": "FlowerVerse online flower marketplace and admin platform",
   "main": "index.js",
   "scripts": {
     "test": "echo \"No tests configured yet\""
   },
   "keywords": [
-    "flowerrmart",
+    "flowerverse",
     "flowers",
     "ecommerce"
   ],

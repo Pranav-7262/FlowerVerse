@@ -2,27 +2,38 @@ import async_handler from "express-async-handler";
 import Cart from "../models/cart.model.js";
 import { ApiError } from "../lib/ApiError.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
+import { deleteCache, getCache, setCache } from "../lib/redis.js";
 import Flower from "../models/flower.model.js";
 
 export const getCart = async_handler(async (req, res) => {
   const userId = req.userId;
+  const cacheKey = `cart:${userId}`;
+  const cachedCart = await getCache(cacheKey);
+
+  if (cachedCart) {
+    return res.status(200).json(cachedCart);
+  }
+
   const cart = await Cart.findOne({ user: userId }).populate(
     "items.flower",
     "name price image stock category",
   );
 
   if (!cart) {
-    return res
-      .status(200)
-      .json(new ApiResponse(200, { items: [] }, "Cart is empty"));
+    const response = new ApiResponse(200, { items: [] }, "Cart is empty");
+    await setCache(cacheKey, response, 120);
+    return res.status(200).json(response);
   }
   cart.items = cart.items.filter((item) => item.flower);
 
-  // save only if something was removed
   await cart.save();
-  return res
-    .status(200)
-    .json(new ApiResponse(200, { Mycart: cart }, "Cart fetched successfully"));
+  const response = new ApiResponse(
+    200,
+    { Mycart: cart },
+    "Cart fetched successfully",
+  );
+  await setCache(cacheKey, response, 120);
+  return res.status(200).json(response);
 });
 export const addToCart = async_handler(async (req, res) => {
   const userId = req.userId;
@@ -77,6 +88,7 @@ export const addToCart = async_handler(async (req, res) => {
   }
 
   await cart.save();
+  await deleteCache(`cart:${userId}`);
 
   return res
     .status(201)
@@ -116,6 +128,7 @@ export const updateCartItem = async_handler(async (req, res) => {
 
   item.quantity = quantity;
   await cart.save();
+  await deleteCache(`cart:${userId}`);
 
   return res
     .status(200)
@@ -139,6 +152,7 @@ export const removeFromCart = async_handler(async (req, res) => {
   }
 
   await cart.save();
+  await deleteCache(`cart:${userId}`);
   return res
     .status(200)
     .json(new ApiResponse(200, cart, "Item removed from cart"));
@@ -152,5 +166,6 @@ export const clearCart = async_handler(async (req, res) => {
   }
   cart.items = [];
   await cart.save();
+  await deleteCache(`cart:${userId}`);
   return res.status(200).json(new ApiResponse(200, cart, "Cleared cart"));
 });

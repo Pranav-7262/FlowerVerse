@@ -195,7 +195,7 @@ const Security = () => {
         <ShieldCheck className="text-amber-500 shrink-0" size={24} />
         <p className="text-xs text-amber-200 leading-relaxed">
           <strong>Security Note:</strong> If you change your email, you may need
-          to re-verify your identity. FlowerrMart employees will never ask for
+          to re-verify your identity. FlowerVerse employees will never ask for
           your password over email or phone.
         </p>
       </div>

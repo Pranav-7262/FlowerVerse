@@ -36,7 +36,7 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = async () => {
-    if (!window.confirm("Log out of FlowerrMart?")) return;
+    if (!window.confirm("Log out of FlowerVerse?")) return;
     await logout();
     toast.success("Logged out! 🌸");
     navigate("/login");
@@ -87,7 +87,7 @@ const Navbar = () => {
             </motion.div>
             <div className="flex flex-col">
               <span className="bg-linear-to-r from-rose-700 to-pink-600 bg-clip-text text-2xl font-serif font-black tracking-tighter text-transparent leading-none">
-                FlowerrMart
+                FlowerVerse
               </span>
               <span className="mt-1 text-[9px] font-black uppercase tracking-[0.3em] text-rose-600">
                 Boutique

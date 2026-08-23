@@ -167,7 +167,7 @@ const Checkout = () => {
                     We need a destination to deliver your flowers.
                   </p>
                   <Link
-                    to="/address"
+                    to="/account/addresses"
                     className="px-8 py-3 bg-red-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg shadow-red-200"
                   >
                     Configure Now

@@ -74,10 +74,9 @@ const ExploreBouquets = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="mt-24 mb-32 pt-12"
+      className="w-full"
     >
-      {/* Section Header */}
-      <div className="mb-12">
+      <div className="mb-8">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -96,7 +95,7 @@ const ExploreBouquets = () => {
           transition={{ delay: 0.2 }}
           className="text-4xl font-black text-transparent bg-clip-text bg-linear-to-r from-rose-700 via-pink-600 to-red-600 mb-4"
         >
-          Explore Bouquets
+          Special Bouquets
         </motion.h2>
 
         <motion.p
@@ -110,12 +109,11 @@ const ExploreBouquets = () => {
         </motion.p>
       </div>
 
-      {/* Sort and Filter Bar */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-200"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-5 border-b border-gray-200"
       >
         <div className="text-sm text-gray-600">
           Showing{" "}
@@ -137,13 +135,13 @@ const ExploreBouquets = () => {
 
       {/* Bouquets Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8">
           {[...Array(8)].map((_, idx) => (
             <motion.div
               key={idx}
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="h-96 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl"
+              className="h-96 bg-linear-to-br from-gray-100 to-gray-50 rounded-2xl"
             />
           ))}
         </div>
@@ -151,7 +149,7 @@ const ExploreBouquets = () => {
         <>
           <motion.div
             layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8"
           >
             <AnimatePresence mode="popLayout">
               {sortedBouquets.map((bouquet, idx) => (
@@ -178,7 +176,7 @@ const ExploreBouquets = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="flex items-center justify-center gap-4 mt-12 pt-8 border-t border-gray-200"
+              className="flex flex-wrap items-center justify-center gap-3 mt-8 pt-6 border-t border-gray-200"
             >
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -240,7 +238,7 @@ const ExploreBouquets = () => {
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ delay: 0.5, duration: 0.8 }}
-        className="mt-16 h-1 bg-linear-to-r from-transparent via-rose-400/40 to-transparent rounded-full"
+        className="mt-10 h-1 bg-linear-to-r from-transparent via-rose-400/40 to-transparent rounded-full"
       />
     </motion.div>
   );

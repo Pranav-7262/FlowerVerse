@@ -10,27 +10,19 @@ import {
   Shield,
   Award,
   Star,
-  Mail,
-  Send,
-  ChevronRight,
   Sparkles,
-  BarChart3,
   Users,
   Flower2,
   Gift,
-  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useFlower } from "../contexts/FlowerContext";
 import { useCart } from "../contexts/CartContext";
 
-// Components
 import FilterPanel from "../components/FilterPanel";
 import FlowerCard from "../components/FlowerCard";
 import SortDropdown from "../components/SortDropdown";
 import ExploreBouquets from "../components/ExploreBouquets";
-import AIFlowerRecommender from "../components/AIFlowerRecommender";
-
 const CATEGORIES = [
   "All",
   "Roses",
@@ -118,13 +110,11 @@ export default function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const {
-    flowers = [],
     filteredFlowers = [],
     search,
     selectedCategory,
     loading,
     currentPage,
-    totalFlowers,
     ITEMS_PER_PAGE,
     fetchFlowers,
     searchFlowers,
@@ -133,39 +123,20 @@ export default function Home() {
   } = useFlower();
   const { addToCart } = useCart();
 
-  const [email, setEmail] = useState("");
-  const [subscribeLoading, setSubscribeLoading] = useState(false);
-
   const [sortBy, setSortBy] = useState("newest");
   const [priceRange, setPriceRange] = useState([0, PRICE_MAX]);
   const [panelOpen, setPanelOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const [hasInitialized, setHasInitialized] = useState(false);
-
-  // Initialize flowers on first mount
   useEffect(() => {
-    if (!hasInitialized) {
-      fetchFlowers("All", 1);
-      setHasInitialized(true);
-    }
-  }, []);
+    fetchFlowers("All", 1);
+  }, [fetchFlowers]);
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, priceRange, sortBy]);
+  }, [search, priceRange, sortBy, setCurrentPage]);
 
-  // Handle category filter changes
-  useEffect(() => {
-    if (selectedCategory !== "All") {
-      fetchFlowers(selectedCategory, 1);
-    }
-  }, [selectedCategory]);
-
-  // Combined Filtering & Sorting Logic
-  const filteredAndSorted = (
-    filteredFlowers.length > 0 ? filteredFlowers : flowers
-  )
+  const filteredAndSorted = filteredFlowers
+    .slice()
     .filter((f) => f.price >= priceRange[0] && f.price <= priceRange[1])
     .sort((a, b) => {
       if (sortBy === "price_asc") return a.price - b.price;
@@ -176,18 +147,28 @@ export default function Home() {
       return 0;
     });
 
-  // Simple pagination using slice
   const totalPages = Math.ceil(filteredAndSorted.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const displayed = filteredAndSorted.slice(startIndex, endIndex);
+  const pageStart = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+  const pageEnd = Math.min(totalPages, pageStart + 4);
+  const pageNumbers = Array.from(
+    { length: pageEnd - pageStart + 1 },
+    (_, index) => pageStart + index,
+  );
+
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages, setCurrentPage]);
 
   const activeFilters =
     selectedCategory !== "All" ||
     priceRange[0] > 0 ||
     priceRange[1] < PRICE_MAX;
 
-  // Handle page change
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -195,42 +176,21 @@ export default function Home() {
     }
   };
 
-  // Newsletter subscription handler
-  const handleNewsletterSubscribe = async (e) => {
-    e.preventDefault();
-    if (!email) return;
-
-    setSubscribeLoading(true);
-    try {
-      // Simulate subscription (integrate with your backend later)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setEmail("");
-      alert("Thank you for subscribing!");
-    } catch (error) {
-      console.error("Subscription failed:", error);
-    } finally {
-      setSubscribeLoading(false);
-    }
-  };
-
   return (
     <div className="w-full min-h-screen bg-white">
-      {/* Fixed Background Glows */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-rose-200/5 blur-[120px] rounded-full" />
         <div className="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-pink-100/5 blur-[100px] rounded-full" />
       </div>
 
       <div className="relative z-10 w-full">
-        {/* ===== HERO BANNER SECTION ===== */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16 mb-8 sm:mb-12"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -265,7 +225,6 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Image */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -287,17 +246,12 @@ export default function Home() {
           </div>
         </motion.section>
 
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 py-2 sm:py-4">
-          <AIFlowerRecommender />
-        </section>
-
-        {/* ===== FEATURES SECTION ===== */}
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14 mb-8 sm:mb-12"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {FEATURES.map((feature, index) => {
@@ -326,13 +280,12 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* ===== STATS SECTION ===== */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14 mb-8 sm:mb-12"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {STATS.map((stat, index) => {
@@ -359,13 +312,12 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* ===== TESTIMONIALS SECTION ===== */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14 mb-8 sm:mb-12"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12"
         >
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
@@ -412,27 +364,24 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* ===== EXPLORE BOUQUETS SECTION ===== */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14 mb-8 sm:mb-12"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12"
         >
           <ExploreBouquets />
         </motion.section>
 
-        {/* ===== FLOWERS GRID SECTION ===== */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
           id="flowers-grid"
-          className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14 pb-16 sm:pb-20"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12"
         >
-          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -447,7 +396,7 @@ export default function Home() {
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
-              Explore Flowers
+              Fresh Flower Collection
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Discover our magnificent selection of fresh, handpicked flowers,
@@ -455,9 +404,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Unified Search & Action Bar */}
           <div className="flex flex-wrap items-center gap-3 mb-10">
-            {/* Search Input */}
             <div className="relative flex-1 min-w-70 group">
               <Search
                 size={18}
@@ -472,7 +419,6 @@ export default function Home() {
               />
             </div>
 
-            {/* Sort & Filter Group */}
             <div className="flex items-center gap-3">
               <SortDropdown
                 options={SORT_OPTIONS}
@@ -512,14 +458,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Filter Panel */}
           <AnimatePresence>
             {panelOpen && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="mb-10 p-6 bg-white/60 border border-rose-200/50 rounded-[2.5rem] backdrop-blur-md shadow-lg"
+                className="mb-8 p-5 bg-white/60 border border-rose-200/50 rounded-[2.5rem] backdrop-blur-md shadow-lg"
               >
                 <FilterPanel
                   categories={CATEGORIES}
@@ -533,7 +478,6 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* Flowers Grid */}
           <motion.div
             layout
             className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 md:gap-8"
@@ -575,9 +519,8 @@ export default function Home() {
             )}
           </motion.div>
 
-          {/* Flowers Count Info */}
           {!loading && filteredAndSorted.length > 0 && (
-            <div className="mt-6 text-center text-sm text-slate-600">
+            <div className="mt-8 text-center text-sm text-slate-600">
               Showing{" "}
               <span className="font-bold text-rose-700">
                 {Math.min(displayed.length, ITEMS_PER_PAGE)}
@@ -590,9 +533,8 @@ export default function Home() {
             </div>
           )}
 
-          {/* Pagination Controls */}
           {!loading && displayed.length > 0 && totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -606,21 +548,19 @@ export default function Home() {
               </button>
 
               <div className="flex items-center gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (pageNum) => (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
-                        pageNum === currentPage
-                          ? "bg-rose-600 text-white shadow-lg"
-                          : "bg-white text-rose-600 border border-rose-200 hover:bg-rose-50"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  ),
-                )}
+                {pageNumbers.map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
+                      pageNum === currentPage
+                        ? "bg-rose-600 text-white shadow-lg"
+                        : "bg-white text-rose-600 border border-rose-200 hover:bg-rose-50"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
               </div>
 
               <button

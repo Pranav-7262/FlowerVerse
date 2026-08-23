@@ -111,7 +111,7 @@ const Orders = () => {
                     Your vault is currently empty
                   </h3>
                   <button
-                    onClick={() => (window.location.href = "/flowers")}
+                    onClick={() => (window.location.href = "/")}
                     className="mt-8 px-10 py-4 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-rose-700 transition-all"
                   >
                     Explore Blooms

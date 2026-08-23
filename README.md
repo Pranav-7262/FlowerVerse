@@ -1,4 +1,4 @@
-# 🌸 FlowerrMart - Flower E-Commerce Platform
+# 🌸 FlowerVerse - Your online flower marketplace
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18+-blue.svg)](https://reactjs.org/)
@@ -7,7 +7,7 @@
 [![Cloudinary](https://img.shields.io/badge/Cloudinary-API-orange.svg)](https://cloudinary.com/)
 [![Vite](https://img.shields.io/badge/Vite-5.x-purple.svg)](https://vitejs.dev/)
 
-Welcome to **FlowerrMart**! 🌼 A full-stack flower marketplace for browsing, ordering, and managing premium floral products. This project lets customers shop, save items, place orders, and manage their accounts securely, while sellers can create and update listings with Cloudinary-powered image uploads.
+Welcome to **FlowerVerse**! 🌼 Your online flower marketplace for browsing, ordering, and managing premium floral products. This project lets customers shop, save items, place orders, and manage their accounts securely, while sellers can create and update listings with Cloudinary-powered image uploads.
 
 ## 📋 Table of Contents
 
@@ -73,8 +73,8 @@ Welcome to **FlowerrMart**! 🌼 A full-stack flower marketplace for browsing, o
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-username/flowerrmart.git
-   cd flowerrmart
+   git clone https://github.com/your-username/flowerverse.git
+   cd flowerverse
    ```
 
 2. **Install Backend Dependencies**
@@ -185,7 +185,7 @@ For a complete list of API endpoints and testing instructions, refer to [API_TES
 ## 📁 Project Structure
 
 ```
-flowerrmart/
+flowerverse/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/     # Route handlers

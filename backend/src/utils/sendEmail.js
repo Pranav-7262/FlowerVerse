@@ -11,7 +11,7 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: "FlowerrMart Support <support@flowerrmart.com>",
+    from: "FlowerVerse Support <support@flowerverse.com>",
     to: options.email,
     subject: options.subject,
     text: options.message,
@@ -19,7 +19,7 @@ const sendEmail = async (options) => {
       options.html ||
       `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background: linear-gradient(135deg, #f43f5e, #ec4899); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 24px;">🌸 FlowerrMart</h1>
+        <h1 style="color: white; margin: 0; font-size: 24px;">🌸 FlowerVerse</h1>
         <p style="color: #ffe4e6; margin: 10px 0 0 0;">Fresh flowers, delivered with care.</p>
       </div>
       <div style="background: white; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 10px 10px;">
@@ -41,7 +41,7 @@ const sendEmail = async (options) => {
         }
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
         <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
-          Need help? Contact our support team at support@flowerrmart.com
+          Need help? Contact our support team at support@flowerverse.com
         </p>
       </div>
     </div>`,

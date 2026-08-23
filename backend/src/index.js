@@ -46,7 +46,7 @@ app.use("/api/ai", aiRoutes);
 connectDB()
   .then(() => {
     app.listen(PORT, "0.0.0.0", () => {
-      console.log(`FlowerrMart API is running on port ${PORT}`);
+      console.log(`FlowerVerse API is running on port ${PORT}`);
     });
   })
   .catch((err) => {

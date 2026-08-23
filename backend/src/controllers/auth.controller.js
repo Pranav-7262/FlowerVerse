@@ -318,7 +318,6 @@ export const getuserReviews = async_handler(async (req, res) => {
   if (!user || user.length === 0) {
     throw new ApiError(404, "User not found");
   }
-  // console.log("user Reviews:", user[0]);
   return res
     .status(200)
     .json(new ApiResponse(200, user[0], "User reviews fetched successfully"));
@@ -341,7 +340,7 @@ export const forgotPassword = async_handler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User with this email does not exist");
   }
-  // Generate a unique token and set expiry (e.g., 1 hour)
+
   const resetToken = crypto.randomBytes(32).toString("hex"); // generate random token of 32 bytes ,
   user.forgetPasswordToken = crypto
     .createHash("sha256")
@@ -358,8 +357,8 @@ export const forgotPassword = async_handler(async (req, res) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: "Password Reset Request - FlowerrMart",
-      message: `Hello ${user.userName || "there"}!\n\nYou requested a password reset for your FlowerrMart account.\n\nClick the button below to reset your password. This link will expire in 15 minutes for security reasons.\n\nIf you didn't request this password reset, please ignore this email - your password will remain unchanged.`,
+      subject: "Password Reset Request - FlowerVerse",
+      message: `Hello ${user.userName || "there"}!\n\nYou requested a password reset for your FlowerVerse account.\n\nClick the button below to reset your password. This link will expire in 15 minutes for security reasons.\n\nIf you didn't request this password reset, please ignore this password reset email - your password will remain unchanged.`,
       resetUrl: resetUrl,
     });
     const responseData = {};
