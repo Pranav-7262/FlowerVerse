@@ -8,10 +8,12 @@ import { ApiResponse } from "../lib/ApiResponse.js";
 
 const getCookieOptions = (path, maxAge) => {
   const isProduction = process.env.NODE_ENV === "production";
+  const secure = process.env.COOKIE_SECURE === "true" || isProduction;
+  const sameSite = process.env.COOKIE_SAME_SITE || (secure ? "none" : "lax");
   const options = {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
+    secure,
+    sameSite,
     maxAge,
     path,
   };
