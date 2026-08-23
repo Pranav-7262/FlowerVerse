@@ -11,7 +11,17 @@ export const getCart = async_handler(async (req, res) => {
   const cachedCart = await getCache(cacheKey);
 
   if (cachedCart) {
-    return res.status(200).json(cachedCart);
+    console.log(`✅ Cache HIT: ${cacheKey}`);
+    console.log(`✅ Cache HIT: ${cacheKey}`);
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          cachedCart,
+          "Users card successfully (from cache)",
+        ),
+      );
   }
 
   const cart = await Cart.findOne({ user: userId }).populate(
