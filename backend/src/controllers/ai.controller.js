@@ -1,14 +1,9 @@
 import async_handler from "express-async-handler";
-import OpenAI from "openai";
 import Flower from "../models/flower.model.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
-
-const openai = process.env.OPENAI_API_KEY
-  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null;
+import { askOllama } from "../lib/ollama.js";
 
 export const getFallbackRecommendations = (flowers, form = {}) => {
-  //this endpoint used for ,when openai is not available, it will use a simple scoring system to recommend flowers based on the form inputs.
   const keywordMap = {
     birthday: ["birthday", "celebration", "joy", "cheerful"],
     anniversary: ["love", "romantic", "anniversary"],
@@ -58,7 +53,6 @@ export const getFallbackRecommendations = (flowers, form = {}) => {
 const buildCatalogReply = (question = "", flowers = []) => {
   const text = (question || "").trim().toLowerCase();
 
-  // Route based on question intent
   if (
     text.includes("order") ||
     text.includes("place") ||
@@ -88,7 +82,6 @@ const buildCatalogReply = (question = "", flowers = []) => {
     return "Prices vary depending on the bouquet. You can browse our collection to see options at different price points.";
   }
 
-  // Default: return flower recommendations
   const tokens = text.split(/\W+/).filter(Boolean);
   const rankedFlowers = flowers
     .map((flower) => {
@@ -140,21 +133,8 @@ export const projectSearch = async_handler(async (req, res) => {
   const flowers = await Flower.find({ stock: { $gt: 0 } }).limit(20);
   const fallbackAnswer = buildCatalogReply(question, flowers);
 
-  if (!openai) {
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { answer: fallbackAnswer },
-          "AI service unavailable",
-        ),
-      );
-  }
-
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const answer = await askOllama({
       temperature: 0.5,
       messages: [
         {
@@ -165,9 +145,7 @@ export const projectSearch = async_handler(async (req, res) => {
         { role: "user", content: question },
       ],
     });
-
-    const answer =
-      completion.choices[0].message.content?.trim() || fallbackAnswer;
+    console.log("data :", answer);
     return res
       .status(200)
       .json(new ApiResponse(200, { answer }, "Flower assistant answer"));
@@ -189,19 +167,6 @@ export const recommendFlowers = async_handler(async (req, res) => {
       .status(200)
       .json(
         new ApiResponse(200, { recommendations: [] }, "No flowers available"),
-      );
-  }
-
-  if (!openai) {
-    const recommendations = getFallbackRecommendations(flowers, form);
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { recommendations },
-          "AI recommendations generated locally",
-        ),
       );
   }
 
@@ -232,17 +197,16 @@ export const recommendFlowers = async_handler(async (req, res) => {
       ${catalog}
     `;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const content = await askOllama({
       temperature: 0.7,
-      response_format: { type: "json_object" },
+      json: true,
       messages: [
         { role: "system", content: "You are a helpful florist assistant." },
         { role: "user", content: prompt },
       ],
     });
 
-    const parsed = JSON.parse(completion.choices[0].message.content);
+    const parsed = JSON.parse(content);
     const recommended = parsed.recommendations || [];
 
     const matchedFlowers = recommended

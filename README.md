@@ -43,6 +43,7 @@ Welcome to **FlowerVerse**! 🌼 Your online flower marketplace for browsing, or
 - **Authentication**: JWT (JSON Web Tokens)
 - **File Uploads**: Multer + Cloudinary
 - **Email**: Nodemailer
+- **AI**: Ollama (local inference)
 
 ### Frontend
 
@@ -127,6 +128,17 @@ CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_email_password
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+OLLAMA_MODEL=llama3.2
+OLLAMA_TIMEOUT_MS=30000
+```
+
+The AI endpoints use Ollama's local API. Install Ollama, start it, and download
+the configured model before starting the backend:
+
+```bash
+ollama serve
+ollama pull llama3.2
 ```
 
 #### Frontend (.env)

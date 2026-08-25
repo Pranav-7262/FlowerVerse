@@ -5,8 +5,47 @@ const api = axios.create({
   withCredentials: true,
 });
 
+let refreshPromise = null;
+let refreshFailed = false;
+
+const refreshAccessToken = () => {
+  if (refreshFailed) {
+    return Promise.reject(new Error("Authentication session expired"));
+  }
+
+  if (!refreshPromise) {
+    refreshPromise = api
+      .post("/auth/refresh")
+      .then((response) => {
+        const accessToken = response.data?.data?.accessToken;
+
+        if (accessToken) {
+          sessionStorage.setItem("accessToken", accessToken);
+          api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        }
+
+        return response;
+      })
+      .catch((error) => {
+        refreshFailed = true;
+        throw error;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+
+  return refreshPromise;
+};
+
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.config.url?.includes("/auth/login")) {
+      refreshFailed = false;
+    }
+
+    return response;
+  },
 
   async (error) => {
     const originalRequest = error.config;
@@ -23,7 +62,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await api.post("/auth/refresh");
+        await refreshAccessToken();
 
         return api(originalRequest);
       } catch (err) {
