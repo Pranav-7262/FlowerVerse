@@ -34,14 +34,14 @@ export default function AiAssistant() {
 
     setLoading(true);
     setAnswer("Thinking of the best flower-friendly answer...");
-
     try {
       const res = await api.post("/ai/flower-assistant", { question: query });
       setAnswer(res.data?.data?.answer);
     } catch (error) {
       console.error("Assistant request failed:", error);
       setAnswer(
-        "I’m here to help with flowers, orders, payments, and delivery questions.",
+        error.response?.data?.message ||
+          "The assistant is temporarily unavailable. Please try again shortly.",
       );
     } finally {
       setLoading(false);

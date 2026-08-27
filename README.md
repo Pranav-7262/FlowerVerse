@@ -1,259 +1,227 @@
-# 🌸 FlowerVerse - Your online flower marketplace
+# BloomCart
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-18+-blue.svg)](https://reactjs.org/)
-[![Express](https://img.shields.io/badge/Express-4.x-lightgrey.svg)](https://expressjs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-7.x-green.svg)](https://www.mongodb.com/)
-[![Cloudinary](https://img.shields.io/badge/Cloudinary-API-orange.svg)](https://cloudinary.com/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-purple.svg)](https://vitejs.dev/)
+BloomCart is a full-stack flower marketplace. Customers can browse flowers and
+mixed bouquets, create accounts, manage addresses, add products to a cart,
+checkout, view orders, and leave reviews. Administrators can manage flowers,
+users, roles, orders, and dashboard statistics.
 
-Welcome to **FlowerVerse**! 🌼 Your online flower marketplace for browsing, ordering, and managing premium floral products. This project lets customers shop, save items, place orders, and manage their accounts securely, while sellers can create and update listings with Cloudinary-powered image uploads.
+The repository contains a React frontend, an Express API, MongoDB persistence,
+optional Redis caching, Cloudinary image uploads, email notifications, and an
+optional Ollama-powered flower assistant.
 
-## 📋 Table of Contents
+## What is in the project
 
-- [✨ Features](#-features)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [🚀 Installation](#-installation)
-- [🔧 Configuration](#-configuration)
-- [📖 Usage](#-usage)
-- [🔗 API Endpoints](#-api-endpoints)
-- [📁 Project Structure](#-project-structure)
-- [🧪 Testing](#-testing)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
+### Customer features
 
-## ✨ Features
+- Registration, login, logout, token refresh, and password reset
+- Account, security, address, and account-removal pages
+- Flower catalog, flower details, sorting, filtering, and mixed bouquets
+- Shopping cart and checkout
+- Customer order history and order cancellation
+- Flower reviews and ratings
+- Protected flower assistant page for product and support questions
 
-- 🔐 **User Authentication**: Secure login, registration, password reset, and account management.
-- 🛒 **Shopping Cart**: Add, update, and remove items from the cart.
-- 📦 **Order Management**: Place orders, view order history, and track status.
-- 🌺 **Flower Listings**: Browse, create, edit, and delete flower products with image uploads.
-- ☁️ **Cloudinary Integration**: Seamless image uploads for flower photos.
-- 📧 **Email Notifications**: Automated emails for orders and password resets.
-- 🔒 **Protected Routes**: Secure access to user-specific pages.
-- 📱 **Responsive Design**: Optimized for desktop and mobile devices.
+### Administrator features
 
-## 🛠️ Tech Stack
+- Admin dashboard with user and order statistics
+- Create, update, and delete flower listings
+- Cloudinary image upload support
+- View and manage users and user roles
+- View seller orders and update order status
 
-### Backend
+### Backend API
 
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: MongoDB with Mongoose
-- **Authentication**: JWT (JSON Web Tokens)
-- **File Uploads**: Multer + Cloudinary
-- **Email**: Nodemailer
-- **AI**: Ollama (local inference)
+The API is an Express application in `backend/src`. Its route groups are:
 
-### Frontend
+| Base path      | Responsibility                                              |
+| -------------- | ----------------------------------------------------------- |
+| `/api/auth`    | Authentication, account, password, and address operations   |
+| `/api/flowers` | Flower catalog and admin flower management                  |
+| `/api/cart`    | Cart operations                                             |
+| `/api/orders`  | Checkout, customer orders, seller orders, and cancellations |
+| `/api/reviews` | Flower reviews                                              |
+| `/api/admin`   | Admin users, statistics, and orders                         |
+| `/api/ai`      | Optional Ollama flower assistant                            |
+| `/health`      | Backend health check                                        |
 
-- **Framework**: React 18
-- **Build Tool**: Vite
-- **State Management**: React Context API
-- **Styling**: CSS Modules
-- **HTTP Client**: Axios
+## Technology
 
-### DevOps & Tools
+- **Frontend:** React 19, React Router, Vite, Tailwind CSS, Framer Motion,
+  Lucide icons, Axios, and React Context
+- **Backend:** Node.js, Express 5, Mongoose, MongoDB, JWT, bcrypt, Multer,
+  Cloudinary, Nodemailer, and Redis
+- **Optional AI:** Ollama and the configured local model
+- **Deployment:** Dockerfiles for frontend and backend, plus Docker Compose
 
-- **Version Control**: Git
-- **Package Manager**: npm
-- **Linting**: ESLint
-- **Environment**: dotenv for configuration
+## Requirements
 
-## 🚀 Installation
+For local development:
 
-### Prerequisites
+- Node.js 20 or newer
+- npm
+- MongoDB, local or hosted
+- Cloudinary credentials for flower image uploads
+- SMTP credentials for password-reset and order emails
 
-- Node.js (v18 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn
-- Cloudinary account for image uploads
+Redis is included by `docker-compose.yml`. Ollama is not required for the
+store or for production. It is only needed if the AI assistant is enabled.
 
-### Steps
+## Local development
 
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/your-username/flowerverse.git
-   cd flowerverse
-   ```
-
-2. **Install Backend Dependencies**
+1. Install dependencies:
 
    ```bash
    cd backend
    npm install
-   ```
-
-3. **Install Frontend Dependencies**
-
-   ```bash
    cd ../frontend
    npm install
    ```
 
-4. **Set Up Environment Variables**
-   - Copy `.env.example` to `.env` in both `backend` and `frontend` directories.
-   - Fill in your MongoDB URI, JWT secret, Cloudinary credentials, and email settings.
-   - Refer to [EMAIL_SETUP.md](EMAIL_SETUP.md) for email configuration.
+2. Create `backend/.env` from `backend/.env.example` and provide the required
+   database, authentication, Cloudinary, email, and frontend settings.
 
-5. **Start the Backend Server**
+3. Create `frontend/.env`:
+
+   ```env
+   VITE_API_URL=http://localhost:3000
+   ```
+
+4. Start the backend in one terminal:
 
    ```bash
    cd backend
-   npm start
+   npm run dev
    ```
 
-   The server will run on `http://localhost:5000`.
+5. Start the frontend in another terminal:
 
-6. **Start the Frontend Development Server**
    ```bash
    cd frontend
    npm run dev
    ```
-   The app will be available at `http://localhost:5173`.
 
-## 🔧 Configuration
+Open `http://localhost:5173`. The backend listens on `http://localhost:3000`.
 
-### Environment Variables
+## Environment variables
 
-#### Backend (.env)
+### Backend
 
+Copy `backend/.env.example` to `backend/.env` and configure at least:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/flowerrmart
+ACCESS_TOKEN_SECRET=replace_with_a_long_secret
+REFRESH_TOKEN_SECRET=replace_with_a_different_long_secret
+FRONTEND_URL=http://localhost:5173
+COOKIE_SECURE=false
+COOKIE_SAME_SITE=lax
 ```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/flowerrmart
-JWT_SECRET=your_jwt_secret
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+
+Cloudinary and email settings are required for image uploads and email
+notifications:
+
+```env
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
 EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_password
+EMAIL_PASS=your_app_specific_password
+```
+
+Redis can be configured with `REDIS_URL`. Compose overrides it with
+`redis://redis:6379`.
+
+Ollama is optional:
+
+```env
+OLLAMA_ENABLED=false
 OLLAMA_BASE_URL=http://127.0.0.1:11434
 OLLAMA_MODEL=llama3.2
-OLLAMA_TIMEOUT_MS=30000
+OLLAMA_TIMEOUT_MS=120000
 ```
 
-The AI endpoints use Ollama's local API. Install Ollama, start it, and download
-the configured model before starting the backend:
+Keep `OLLAMA_ENABLED=false` in production. To use the assistant locally, set
+it to `true`, run Ollama, and install the configured model:
 
 ```bash
 ollama serve
 ollama pull llama3.2
 ```
 
-#### Frontend (.env)
+When disabled, the backend still starts and all non-AI marketplace features
+remain available. The AI endpoint returns an unavailable response.
 
-```
-VITE_API_BASE_URL=http://localhost:5000/api
-```
+## Docker Compose
 
-For detailed email setup, see [EMAIL_SETUP.md](EMAIL_SETUP.md).
-
-## 📖 Usage
-
-1. **Register/Login**: Create an account or log in to access the platform.
-2. **Browse Flowers**: View available flowers on the home page.
-3. **Add to Cart**: Click "Add to Cart" on flower details.
-4. **Checkout**: Review cart and place orders.
-5. **Manage Listings** (Sellers): Create, edit, or delete your flower products.
-6. **View Orders**: Check order history and status.
-
-### Screenshots
-
-_(Add screenshots here if available)_
-
-## 🔗 API Endpoints
-
-For a complete list of API endpoints and testing instructions, refer to [API_TESTING_GUIDE.md](API_TESTING_GUIDE.md).
-
-### Key Endpoints
-
-#### Authentication
-
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/forgot-password` - Request password reset
-- `POST /api/auth/reset-password` - Reset password
-
-#### Flowers
-
-- `GET /api/flowers` - Get all flowers
-- `POST /api/flowers` - Create a new flower (authenticated)
-- `PUT /api/flowers/:id` - Update a flower (owner only)
-- `DELETE /api/flowers/:id` - Delete a flower (owner only)
-
-#### Cart
-
-- `GET /api/cart` - Get user's cart
-- `POST /api/cart` - Add item to cart
-- `PUT /api/cart/:id` - Update cart item
-- `DELETE /api/cart/:id` - Remove item from cart
-
-#### Orders
-
-- `GET /api/orders` - Get user's orders
-- `POST /api/orders` - Place a new order
-
-## 📁 Project Structure
-
-```
-flowerverse/
-├── backend/
-│   ├── src/
-│   │   ├── controllers/     # Route handlers
-│   │   ├── lib/            # Database and utility classes
-│   │   ├── middleware/     # Authentication and file upload middleware
-│   │   ├── models/         # MongoDB schemas
-│   │   ├── routes/         # API routes
-│   │   └── utils/          # Cloudinary and email utilities
-│   ├── package.json
-│   └── index.js            # Server entry point
-├── frontend/
-│   ├── src/
-│   │   ├── api/            # Axios configuration
-│   │   ├── components/     # Reusable React components
-│   │   ├── contexts/       # React Context for state management
-│   │   ├── pages/          # Page components
-│   │   └── assets/         # Static assets
-│   ├── package.json
-│   └── index.html          # HTML template
-├── API_TESTING_GUIDE.md    # API documentation
-├── EMAIL_SETUP.md          # Email configuration guide
-└── README.md               # This file
-```
-
-## 🧪 Testing
-
-### API Testing
-
-Use tools like Postman or Thunder Client to test the API endpoints. Refer to [API_TESTING_GUIDE.md](API_TESTING_GUIDE.md) for detailed instructions and sample requests.
-
-### Running Tests
+The root `docker-compose.yml` starts Redis, the backend, and the Nginx-served
+frontend:
 
 ```bash
-# Backend tests (if implemented)
-cd backend
-npm test
-
-# Frontend tests (if implemented)
-cd frontend
-npm test
+docker compose up --build
 ```
 
-## 🤝 Contributing
+Before starting Compose, create `backend/.env`. The frontend is available at
+`http://localhost:5173` and the API at `http://localhost:3000`.
 
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/your-feature-name`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin feature/your-feature-name`
-5. Open a pull request.
+The Compose file does not start MongoDB or Ollama. Provide a reachable
+`MONGO_URI`; leave Ollama disabled unless it is hosted separately and explicitly
+enabled.
 
-Please ensure your code follows the project's coding standards and includes appropriate tests.
+## Useful commands
 
-## 📄 License
+```bash
+# Backend
+cd backend
+npm start                 # production-style start
+npm run dev               # start with nodemon
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+# Frontend
+cd frontend
+npm run dev               # development server
+npm run build             # production build
+npm run lint              # ESLint
+```
 
----
+There are currently no automated test scripts configured in the backend or
+frontend packages.
 
-Made with ❤️ for flower lovers everywhere! 🌻
+## Repository structure
+
+```text
+BloomCart/
+├── backend/
+│   ├── src/
+│   │   ├── controllers/   # Request handlers and business operations
+│   │   ├── lib/           # Database, Redis, API, and Ollama helpers
+│   │   ├── middleware/    # Authentication, admin, and upload middleware
+│   │   ├── models/        # Mongoose models
+│   │   ├── routes/        # Express route definitions
+│   │   └── utils/         # Cloudinary and email integrations
+│   ├── .env.example
+│   ├── Dockerfile
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── api/           # Axios API client
+│   │   ├── components/    # Shared UI and admin components
+│   │   ├── contexts/      # Auth, cart, flower, order, and address state
+│   │   └── pages/         # Application screens
+│   ├── Dockerfile
+│   ├── package.json
+│   └── vite.config.js
+├── docker-compose.yml
+├── package.json
+└── README.md
+```
+
+## Security notes
+
+- Do not commit `.env` files or real credentials.
+- Use separate, long secrets for access and refresh tokens.
+- Set `COOKIE_SECURE=true` and configure the production frontend origin when
+  running behind HTTPS.
+- Keep Ollama disabled in production unless the AI service is intentionally
+  deployed and secured.

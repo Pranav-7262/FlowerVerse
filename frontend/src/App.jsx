@@ -46,9 +46,7 @@ const App = () => {
       />
 
       <Routes>
-        {/* Layout wrapper route - includes Navbar, Outlet, and Footer */}
         <Route element={<Layout />}>
-          {/* Public Routes */}
           <Route path="/" element={<Home />} />
 
           <Route
@@ -72,9 +70,14 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
-          <Route path="/ai-assistant" element={<AiAssistant />} />
-
-          {/* Protected Routes */}
+          <Route
+            path="/ai-assistant"
+            element={
+              <ProtectedRoute>
+                <AiAssistant />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/account"
             element={
@@ -155,7 +158,6 @@ const App = () => {
             }
           />
 
-          {/* Admin Routes */}
           <Route
             path="/flowers/create-flower"
             element={
