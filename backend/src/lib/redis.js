@@ -56,30 +56,40 @@ const deleteCache = async (key) => {
   }
 };
 
-// Cache middleware for GET requests
-const cacheMiddleware = async (req, res, next) => {
-  if (req.method !== "GET" || !redisClient?.isReady) return next();
+// Cache middleware for selected GET routes
+const cacheMiddleware =
+  (options = {}) =>
+  async (req, res, next) => {
+    if (req.method !== "GET" || !redisClient?.isReady) return next();
 
-  const key = `${req.method}:${req.originalUrl}`;
+    const ttl = options.ttl ?? 300;
+    const keyGenerator =
+      typeof options.keyGenerator === "function"
+        ? options.keyGenerator
+        : (request) => `${request.method}:${request.originalUrl}`;
 
-  try {
-    const cachedData = await getCache(key);
-    if (cachedData) {
-      console.log(`✅ Cache HIT: ${key}`);
-      return res.json(cachedData);
+    const key = keyGenerator(req);
+
+    try {
+      const cachedData = await getCache(key);
+      if (cachedData) {
+        console.log(`✅ Cache HIT: ${key}`);
+        return res.status(200).json(cachedData);
+      }
+
+      const originalJson = res.json.bind(res);
+      res.json = (data) => {
+        setCache(key, data, ttl).catch((err) => {
+          console.error("Cache SET error:", err);
+        });
+        return originalJson(data);
+      };
+    } catch (err) {
+      console.error("Cache middleware error:", err);
     }
 
-    const originalJson = res.json.bind(res);
-    res.json = (data) => {
-      setCache(key, data, 300);
-      return originalJson(data);
-    };
-  } catch (err) {
-    console.error("Cache middleware error:", err);
-  }
-
-  next();
-};
+    next();
+  };
 
 // Flush all cache
 const flushAll = async () => {

@@ -1,22 +1,12 @@
 import async_handler from "express-async-handler";
-import jwt from "jsonwebtoken";
 import Flower from "../models/flower.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
 import { ApiError } from "../lib/ApiError.js";
-import { getCache, setCache, deleteCache, flushAll } from "../lib/redis.js";
+import { flushAll } from "../lib/redis.js";
 
 export const getAllFlowers = async_handler(async (req, res) => {
   const { category, page = 1, limit = 1000 } = req.query;
-  const cacheKey = `flowers:${category || "all"}:${page}:${limit}`;
-
-  const cachedFlowers = await getCache(cacheKey);
-  if (cachedFlowers) {
-    console.log(`✅ Cache HIT: ${cacheKey}`);
-    return res
-      .status(200)
-      .json(new ApiResponse(200, cachedFlowers, "All flowers (cached)"));
-  }
 
   const filter = { stock: { $gt: 0 } };
   if (category) filter.category = category;
@@ -34,7 +24,6 @@ export const getAllFlowers = async_handler(async (req, res) => {
     page: Number(page),
     limit: Number(limit),
   };
-  await setCache(cacheKey, responseData, 300);
 
   return res
     .status(200)
@@ -43,15 +32,6 @@ export const getAllFlowers = async_handler(async (req, res) => {
 
 export const getFlowerById = async_handler(async (req, res) => {
   const flowerId = req.params.flowerId;
-  const cacheKey = `flower:${flowerId}`;
-
-  const cachedFlower = await getCache(cacheKey);
-  if (cachedFlower) {
-    console.log(`✅ Cache HIT: ${cacheKey}`);
-    return res
-      .status(200)
-      .json(new ApiResponse(200, cachedFlower, "Flower details (cached)"));
-  }
 
   const flower = await Flower.findById(flowerId)
     .populate("owner", "userName")
@@ -64,7 +44,6 @@ export const getFlowerById = async_handler(async (req, res) => {
     throw new ApiError(404, "Flower not found");
   }
 
-  await setCache(cacheKey, flower, 600);
   return res.status(200).json(new ApiResponse(200, flower, "Flower details"));
 });
 
@@ -87,7 +66,7 @@ export const getMyFlowers = async_handler(async (req, res) => {
 
 export const createFlower = async_handler(async (req, res) => {
   const userId = req.userId;
-  const { name, price, image, description, category, stock } = req.body;
+  const { name, price, description, category, stock } = req.body;
 
   if (
     [name, price, category].some((field) => field?.toString().trim() === "")
@@ -168,15 +147,6 @@ export const deleteFlower = async_handler(async (req, res) => {
 
 export const fetchMixedBouquets = async_handler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
-  const cacheKey = `mixedBouquets:${page}:${limit}`;
-
-  const cachedBouquets = await getCache(cacheKey);
-  if (cachedBouquets) {
-    console.log(`✅ Cache HIT: ${cacheKey}`);
-    return res
-      .status(200)
-      .json(new ApiResponse(200, cachedBouquets, "Mixed bouquets (cached)"));
-  }
 
   const filter = { category: "Mixed Bouquets", stock: { $gt: 0 } };
   const total = await Flower.countDocuments(filter);
@@ -192,7 +162,6 @@ export const fetchMixedBouquets = async_handler(async (req, res) => {
     page: Number(page),
     limit: Number(limit),
   };
-  await setCache(cacheKey, responseData, 300);
 
   return res
     .status(200)

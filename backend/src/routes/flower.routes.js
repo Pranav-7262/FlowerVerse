@@ -11,13 +11,37 @@ import {
   fetchMixedBouquets,
 } from "../controllers/flower.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
+import { cacheMiddleware } from "../lib/redis.js";
 
 const router = express.Router();
+router.get(
+  "/",
 
-router.get("/", getAllFlowers);
-router.get("/mixedBouquet", fetchMixedBouquets);
+  cacheMiddleware({
+    ttl: 300,
+    keyGenerator: (req) =>
+      `flowers:all:${req.query.category || "all"}:${req.query.page || 1}:${req.query.limit || 1000}`,
+  }),
+  getAllFlowers,
+);
+router.get(
+  "/mixedBouquet",
+  cacheMiddleware({
+    ttl: 300,
+    keyGenerator: (req) =>
+      `mixedBouquets:${req.query.page || 1}:${req.query.limit || 10}`,
+  }),
+  fetchMixedBouquets,
+);
 router.get("/my", verifyJWT, verifyAdmin, getMyFlowers);
-router.get("/:flowerId", getFlowerById);
+router.get(
+  "/:flowerId",
+  cacheMiddleware({
+    ttl: 600,
+    keyGenerator: (req) => `flower:${req.params.flowerId}`,
+  }),
+  getFlowerById,
+);
 
 router.post(
   "/create-flower",

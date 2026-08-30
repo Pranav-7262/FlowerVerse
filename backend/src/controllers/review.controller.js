@@ -3,6 +3,7 @@ import Review from "../models/review.model.js";
 import Flower from "../models/flower.model.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
 import { ApiError } from "../lib/ApiError.js";
+import { flushAll } from "../lib/redis.js";
 
 export const addReview = async_handler(async (req, res) => {
   const userId = req.userId;
@@ -59,6 +60,8 @@ export const addReview = async_handler(async (req, res) => {
   await flower.save();
 
   const populatedReview = await review.populate("reviewer", "userName");
+
+  await flushAll();
 
   return res
     .status(201)
@@ -136,6 +139,8 @@ export const updateReview = async_handler(async (req, res) => {
 
   const populatedReview = await review.populate("reviewer", "userName");
 
+  await flushAll();
+
   return res
     .status(200)
     .json(new ApiResponse(200, populatedReview, "Review updated successfully"));
@@ -178,6 +183,8 @@ export const deleteReview = async_handler(async (req, res) => {
   }
 
   await flower.save();
+
+  await flushAll();
 
   return res
     .status(200)

@@ -3,28 +3,12 @@ import { ApiError } from "../lib/ApiError.js";
 import { ApiResponse } from "../lib/ApiResponse.js";
 import User from "../models/user.model.js";
 import Order from "../models/order.model.js";
-import { deleteCache, flushAll, getCache, setCache } from "../lib/redis.js";
+import { deleteCache } from "../lib/redis.js";
 
 export const getAllUsers = async_handler(async (req, res) => {
   const { page = 1, limit = 10, role = "", search = "" } = req.query;
 
-  const cacheKey = `users:page_${page}:limit_${limit}:role_${role}:search_${search}`;
-
-  const cachedData = await getCache(cacheKey);
-  if (cachedData) {
-    console.log(`✅ Cache HIT: ${cacheKey}`);
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          cachedData,
-          "Users fetched successfully (from cache)",
-        ),
-      );
-  }
-
-  let filter = {};
+  const filter = {};
   if (role && ["customer", "admin"].includes(role)) {
     filter.role = role;
   }
@@ -56,9 +40,6 @@ export const getAllUsers = async_handler(async (req, res) => {
       limit: parseInt(limit),
     },
   };
-
-  // 2. Set cache for 5 minutes (300 seconds)
-  await setCache(cacheKey, responseData, 300);
 
   res
     .status(200)
@@ -97,22 +78,6 @@ export const changeUserRole = async_handler(async (req, res) => {
 });
 
 export const getUserStats = async_handler(async (req, res) => {
-  const cacheKey = "admin_user_stats";
-
-  const cachedStats = await getCache(cacheKey);
-  if (cachedStats) {
-    console.log(`✅ Cache HIT: ${cacheKey}`);
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          cachedStats,
-          "Dashboard statistics fetched successfully (from cache)",
-        ),
-      );
-  }
-
   const totalUsers = await User.countDocuments();
   const adminUsers = await User.countDocuments({ role: "admin" });
   const customerUsers = await User.countDocuments({
@@ -137,9 +102,6 @@ export const getUserStats = async_handler(async (req, res) => {
     totalOrders: revenueData.totalOrders,
     totalRevenue: revenueData.totalRevenue,
   };
-
-  // Cache dashboard aggregations for 10 minutes
-  await setCache(cacheKey, statsData, 600);
 
   res
     .status(200)
@@ -190,26 +152,10 @@ export const updateOrderStatus = async_handler(async (req, res) => {
 });
 
 export const getAllOrders = async_handler(async (req, res) => {
-  const cachekey = "all_orders";
-  const cahchedOrders = await getCache(cachekey);
-  if (cahchedOrders) {
-    console.log(`✅ Cache HIT: ${cachekey}`);
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          cahchedOrders,
-          "All global orders fetched successfully",
-        ),
-      );
-  }
   const orders = await Order.find()
     .populate("buyer", "userName email")
     .populate("items.flower", "name price image")
     .sort({ createdAt: -1 }); // Sort by creation date in descending order
-
-  await setCache(cachekey, orders, 600); // Cache for 10 minutes
 
   if (!orders || orders.length === 0) {
     return res.status(200).json(new ApiResponse(200, [], "No orders found"));
