@@ -16,16 +16,7 @@ const refreshAccessToken = () => {
   if (!refreshPromise) {
     refreshPromise = api
       .post("/auth/refresh")
-      .then((response) => {
-        const accessToken = response.data?.data?.accessToken;
-
-        if (accessToken) {
-          sessionStorage.setItem("accessToken", accessToken);
-          api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-        }
-
-        return response;
-      })
+      .then((response) => response)
       .catch((error) => {
         refreshFailed = true;
         throw error;

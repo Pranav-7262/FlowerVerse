@@ -16,7 +16,6 @@ import { cacheMiddleware } from "../lib/redis.js";
 const router = express.Router();
 router.get(
   "/",
-
   cacheMiddleware({
     ttl: 300,
     keyGenerator: (req) =>

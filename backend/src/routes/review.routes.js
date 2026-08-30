@@ -10,7 +10,7 @@ import { cacheMiddleware } from "../lib/redis.js";
 
 const router = express.Router();
 
-// Get all reviews for a flower (public)
+
 router.get(
   "/:flowerId",
   cacheMiddleware({
@@ -21,7 +21,6 @@ router.get(
   getFlowerReviews,
 );
 
-// Add a review (authenticated)
 router.post("/:flowerId", verifyJWT, addReview);
 
 // Update a review (authenticated)

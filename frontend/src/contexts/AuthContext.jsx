@@ -27,12 +27,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const res = await api.post("/auth/login", { email, password });
-      const accessToken = res.data?.data?.accessToken;
-      if (accessToken) {
-        sessionStorage.setItem("accessToken", accessToken);
-        api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-      }
-      setUser(res.data.data.user); // cookies already set in response
+      setUser(res.data.data.user); // cookies are set by the server
       return res.data;
     } catch (err) {
       setUser(null);
@@ -53,8 +48,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post("/auth/logout"); // clears cookies
       setUser(null);
-      sessionStorage.removeItem("accessToken");
-      delete api.defaults.headers.common.Authorization;
     } catch (err) {
       console.error("Logout failed:", err);
       setUser(null);
